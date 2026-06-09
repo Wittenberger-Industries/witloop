@@ -1,7 +1,12 @@
+# Whitelist approach: ignore everything by default...
+*
 
+# ...but descend into directories so nested whitelist rules can match...
+!*/
 
-!/.claude-plugin/
-!/plugins/
-!/scripts/
+# ...then re-include only the plugin's published paths.
+!/.claude-plugin/**
+!/plugins/**
+!/scripts/**
 !/README.md
 !/.gitignore

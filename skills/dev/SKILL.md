@@ -45,11 +45,15 @@ artifacts, gates), `/goal` provides the keep-running-until-done loop.
    - **GitHub Copilot CLI** (no `/goal` — use Autopilot, condition in the prompt):
 
      ```
-     copilot --autopilot --max-autopilot-continues <N> --no-ask-user -p "Drive the <slug> goal to done:
+     copilot --autopilot --max-autopilot-continues <N> --no-ask-user --allow-all -p "Drive the <slug> goal to done:
      build then ship until the <slug> PR is open, its branch passes <lint + test commands>, and
      .wi/goals/<slug>/progress.md Phase is done. Only files named in tasks.md change; never force-push;
      never weaken tests."
      ```
+
+   ⚠️ `--no-ask-user --allow-all` runs Copilot fully unattended (prompts suppressed, all tools/paths
+   granted) — bounded only by `--max-autopilot-continues <N>` and the in-prompt constraints. Use it in
+   repos you trust; drop `--allow-all` if you want Copilot to still confirm risky actions.
 
    Armed, the run continues across turns until the condition holds (wi works without it, just less
    robustly through a stalled turn). The per-platform mechanism is in

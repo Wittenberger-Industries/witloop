@@ -93,11 +93,15 @@ they just approved) for the current platform:
 - **GitHub Copilot CLI** (Autopilot — condition in the prompt):
 
   ```
-  copilot --autopilot --max-autopilot-continues <N> --no-ask-user -p "Drive the <slug> goal to done:
+  copilot --autopilot --max-autopilot-continues <N> --no-ask-user --allow-all -p "Drive the <slug> goal to done:
   build then ship until the <slug> PR is open, its branch passes <lint + test commands>, and
   .wi/goals/<slug>/progress.md Phase is done. Only files named in tasks.md change; never force-push;
   never weaken tests."
   ```
+
+⚠️ `--no-ask-user --allow-all` runs Copilot fully unattended (prompts suppressed, all tools/paths granted)
+— bounded only by `--max-autopilot-continues <N>` and the in-prompt constraints. Use it in repos you trust;
+drop `--allow-all` if you want Copilot to still confirm risky actions.
 
 Then proceed: **build** (`wi:build`) — worktree + parallel waves — then **ship** (`wi:ship`), which ends
 with the PR and the final report (token table included). The keep-alive loop (/goal or Autopilot) is the

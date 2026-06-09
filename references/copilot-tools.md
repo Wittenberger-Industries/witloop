@@ -26,8 +26,10 @@ This is why per-skill `gh skill install` is discouraged: cross-skill refs such a
 
 ## /goal keep-alive
 Copilot has no predicate `/goal`. Use **Autopilot**: relaunch with the completion condition in the prompt —
-`copilot --autopilot --max-autopilot-continues <N> --no-ask-user -p "<prompt incl. done-condition>"`.
-Completion is model-judged and continuation-capped, not a hard predicate.
+`copilot --autopilot --max-autopilot-continues <N> --no-ask-user --allow-all -p "<prompt incl. done-condition>"`.
+Completion is model-judged and continuation-capped, not a hard predicate. `--no-ask-user --allow-all` runs
+fully unattended (prompts suppressed, all tools/paths granted); drop `--allow-all` to keep risky-action
+confirmations.
 
 ## Command namespace
 `/wi:dev` etc. do not exist (Copilot has no custom slash commands). Invoke the skill as `/<skill-name>`

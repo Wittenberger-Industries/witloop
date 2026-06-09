@@ -33,6 +33,7 @@ manifests = [
     ROOT / ".claude-plugin" / "marketplace.json",
     ROOT / ".claude-plugin" / "plugin.json",
 ]
+manifests.append(ROOT / ".codex-plugin" / "plugin.json")
 for m in manifests:
     if not m.is_file():
         errors.append(f"missing manifest: {m.relative_to(ROOT)}")
@@ -41,6 +42,20 @@ for m in manifests:
         json.loads(m.read_text(encoding="utf-8"))
     except Exception as e:
         errors.append(f"invalid JSON {m.relative_to(ROOT)}: {e}")
+
+# Codex manifest must declare name/version/skills, and skills must resolve
+codex = ROOT / ".codex-plugin" / "plugin.json"
+if codex.is_file():
+    try:
+        cd = json.loads(codex.read_text(encoding="utf-8"))
+        for k in ("name", "version", "skills"):
+            if not cd.get(k):
+                errors.append(f".codex-plugin/plugin.json: missing '{k}'")
+        skills_path = cd.get("skills", "")
+        if skills_path and not (ROOT / skills_path).is_dir():
+            errors.append(f".codex-plugin/plugin.json: skills path '{skills_path}' is not a dir")
+    except Exception:
+        pass  # JSON validity already reported by the loop above
 
 # 2. Frontmatter on SKILL.md + agents -------------------------------------
 fm_files = sorted(ROOT.glob("skills/**/SKILL.md")) + sorted(ROOT.glob("agents/*.md"))

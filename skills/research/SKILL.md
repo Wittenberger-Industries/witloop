@@ -6,15 +6,14 @@ description: >
   when the user types "/wi:research", "research the approach", "design this feature", or when resuming a
   goal whose progress.md Phase is research, plan, or design-gate. It dispatches parallel researcher
   agents, writes ADR/spec/tasks/pitfalls into .wi/, and on approval — or auto-approval via
-  "/wi:dev --auto" — hands off to implementation (the build and ship skills), with Claude Code's
-  BUILT-IN /goal command as the recommended keep-alive wrapper.
+  "/wi:dev --auto" — hands off to implementation (the build and ship skills), with a keep-alive loop (Claude/Codex /goal, or Copilot Autopilot) as the recommended persistence wrapper.
 ---
 
 # research — design it, prove it, get the nod
 
 `dev` captured the WHAT; you decide the HOW and get it confirmed. You own three phases — research →
 plan → **design gate** — and then implementation proceeds (build → ship) to the PR, kept alive by the
-built-in `/goal` if the user armed it.
+keep-alive loop (`/goal` or Autopilot) if the user armed it.
 
 ## Operating principles
 
@@ -31,7 +30,7 @@ built-in `/goal` if the user armed it.
 
 ### 0 - Engage & resume
 First act, always: append a Log line to `progress.md` — `research engine engaged (wi <version>)`, reading
-<version> from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (don't guess) — so it's auditable on disk. Then re-enter the phase it names (research | plan | design-gate).
+<version> from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (don't guess; if that file isn't reachable — e.g. a per-skill Copilot install — omit the version rather than inventing one) — so it's auditable on disk. Then re-enter the phase it names (research | plan | design-gate).
 
 ### 1 - Research -> pick the approach
 Dispatch **researcher** agents (`agents/researcher.md`) with `brief.md` + constitution + repo-map — in
@@ -80,17 +79,32 @@ Then check **Gate mode** in `progress.md`:
 Only an explicit approve (or auto-approve) advances to goal.
 
 ### 4 - Hand off to implementation
-If the built-in `/goal` wasn't armed at handoff, print the ready-made line again (the user is present —
-they just approved) so they can paste it:
+If persistence wasn't armed at handoff, print the ready-made keep-alive again (the user is present —
+they just approved) for the current platform:
 
-```
-/goal The <slug> PR is open and its branch passes <lint + test commands from repo-map.md>;
-.wi/goals/<slug>/progress.md Phase is done. Constraints: only files named in tasks.md change;
-never force-push; tests are never weakened to pass.
-```
+- **Claude Code / Codex CLI** (built-in `/goal`):
+
+  ```
+  /goal The <slug> PR is open and its branch passes <lint + test commands from repo-map.md>;
+  .wi/goals/<slug>/progress.md Phase is done. Constraints: only files named in tasks.md change;
+  never force-push; tests are never weakened to pass.
+  ```
+
+- **GitHub Copilot CLI** (Autopilot — condition in the prompt):
+
+  ```
+  copilot --autopilot --max-autopilot-continues <N> --no-ask-user --allow-all -p "Drive the <slug> goal to done:
+  build then ship until the <slug> PR is open, its branch passes <lint + test commands>, and
+  .wi/goals/<slug>/progress.md Phase is done. Only files named in tasks.md change; never force-push;
+  never weaken tests."
+  ```
+
+⚠️ `--no-ask-user --allow-all` runs Copilot fully unattended (prompts suppressed, all tools/paths granted)
+— bounded only by `--max-autopilot-continues <N>` and the in-prompt constraints. Use it in repos you trust;
+drop `--allow-all` if you want Copilot to still confirm risky actions.
 
 Then proceed: **build** (`wi:build`) — worktree + parallel waves — then **ship** (`wi:ship`), which ends
-with the PR and the final report (token table included). The built-in `/goal` is the persistence
-wrapper; build/ship are the method. No questions from here on.
+with the PR and the final report (token table included). The keep-alive loop (/goal or Autopilot) is the
+persistence wrapper; build/ship are the method. No questions from here on.
 
 Phase contracts & resumability: `${CLAUDE_PLUGIN_ROOT}/skills/research/references/workflow.md`.

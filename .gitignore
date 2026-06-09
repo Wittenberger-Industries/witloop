@@ -8,5 +8,6 @@
 !/.claude-plugin/**
 !/plugins/**
 !/scripts/**
+!/docs/**
 !/README.md
 !/.gitignore

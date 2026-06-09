@@ -250,3 +250,21 @@ agents/delegate 2025-10-28, AGENTS.md 2025-08-28), fleet & autopilot concept pag
 **Pattern reference:** `obra/superpowers` 5.1.0 — `.codex-plugin/plugin.json`, `.claude-plugin/` manifests,
 `hooks/session-start`, `skills/using-superpowers/references/{copilot,codex}-tools.md`, README install
 sections.
+
+## 14. Verification results (2026-06-09)
+
+Implemented on branch `feat/cross-platform-copilot-codex` (9 commits, `cea4c98`..`9322426`).
+`python scripts/validate.py` → `[OK]` (3 manifests, 10 frontmatter files). The build environment had only
+the `claude` CLI; `codex` and `copilot` were not installed, so live-CLI checks could not run here.
+
+| Risk | Status | Evidence / what remains |
+|------|--------|-------------------------|
+| **R1** Claude loads flat layout | ✅ static · ⏳ live | `marketplace.json` `source: "./"`, `.claude-plugin/plugin.json` valid, `skills/` at root by convention, frontmatter valid. Run `/plugin marketplace add <path>` + `/plugin install wi@wi` to confirm live. |
+| **R2** `${CLAUDE_PLUGIN_ROOT}` in Codex skill ctx | ⏳ not run | Needs Codex CLI (absent). Docs confirm the compat var for hooks; `references/codex-tools.md` documents the plugin-root rule as the fallback. |
+| **R3** Copilot discovery + cross-skill ref | ✅ partial · ⏳ live | Cross-skill ref target `skills/scan/scripts/check_mermaid.py` exists; `/skills add <dir>` registers any dir. Live discovery needs Copilot CLI (absent). |
+| **R4** Codex parallel fan-out + sandbox fallback | ⏳ not run | Needs Codex CLI (absent). Fallback documented in `worktrees-and-subagents.md` + `codex-tools.md`. |
+| **R5** Auto-trigger off-Claude | ⏳ not run | Needs a live CLI. Hook deferred (§9.4); ship the AGENTS.md route, add a session-start hook only if a build-intent message doesn't fire the skill. |
+
+**Net:** everything statically verifiable passes; the three live-CLI checks (R2, R4, R5) and the live
+halves of R1/R3 await a machine with `codex`/`copilot` installed. None are blockers — each has a documented
+fallback — but they should be run before announcing GA on those platforms.

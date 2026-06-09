@@ -5,12 +5,15 @@ validate.py — pre-release check for the wi plugin. Run from anywhere:
     python3 scripts/validate.py
 
 Checks (from the repo root, detected automatically):
-  1. JSON validity of `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json`.
+  1. JSON validity of `.claude-plugin/marketplace.json`, `.claude-plugin/plugin.json`, and
+     `.codex-plugin/plugin.json`; the Codex manifest declares name/version/skills and `skills` resolves.
   2. Every `skills/**/SKILL.md` / `agents/*.md` has valid YAML frontmatter with `name` + `description`
      — this catches the col-0 `<example>` / block-scalar bug that stopped the agents loading.
      Needs PyYAML for the full parse (`pip install pyyaml`); without it, the YAML parse is skipped
      and only delimiters + key presence are checked.
   3. Every `${CLAUDE_PLUGIN_ROOT}/<path>` reference in `.md` files resolves to a real file under the repo root.
+  4. Cross-platform portability files exist (`references/{codex,copilot}-tools.md`, `AGENTS.md`) and the
+     dev/research skills carry the Copilot Autopilot handoff branch.
 
 Exit 0 if all pass; non-zero otherwise. Stdlib only (PyYAML optional).
 """
@@ -32,8 +35,8 @@ except ImportError:
 manifests = [
     ROOT / ".claude-plugin" / "marketplace.json",
     ROOT / ".claude-plugin" / "plugin.json",
+    ROOT / ".codex-plugin" / "plugin.json",
 ]
-manifests.append(ROOT / ".codex-plugin" / "plugin.json")
 for m in manifests:
     if not m.is_file():
         errors.append(f"missing manifest: {m.relative_to(ROOT)}")

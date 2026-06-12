@@ -36,6 +36,11 @@ Outputs: `spec.md`, `tasks.md`, `pitfalls.md` (the approach ADR is usually writt
    apply to *this* change. For each, note the specific way it could bite here and how a task will prevent
    it. This is cheap foresight that saves an expensive debug later.
 
+   **Consume the research risks — all of them.** Every `Risks / unknowns` line from the researcher
+   reports (and any unanswered question left in `research/questions.md`) ends up in exactly one place:
+   resolved here (say how), or a `pitfalls.md` entry with the task that prevents/verifies it. A risk line
+   that appears in no artifact was dropped — that's a defect, not a judgment call.
+
 4. **Break it into tasks** → `tasks.md` (format below). Aim for small, independently verifiable steps.
    Each task names the files it touches and the exact command/test that proves it. Default to TDD: the
    first task for a piece of behavior writes the failing test. **Delegation check:** if
@@ -91,4 +96,5 @@ builds and ships without drama.
 - If a task can't name its verification, split it until each piece can.
 - If two tasks always change the same file in lockstep, merge them; if two *parallel* tasks merely brush
   the same file, move the shared piece into its own prerequisite task — shared files serialize a wave.
-- 3-9 tasks is typical for a feature. Many more usually means the g
+- 3-9 tasks is typical for a feature. Many more usually means the goal is too big — split it
+  (one goal = one feature = one PR).

@@ -12,17 +12,19 @@ small and current; these are working artifacts, not essays.
 ├── architecture.md         # mermaid architecture diagram (scan; kept current by ship's docs-sync).
 ├── glossary.md             # project domain terms (brainstorm): canonical names + aliases to avoid.
 ├── adr/                    # project-wide decision log: ADR-0001, ADR-0002, ... + index.md
-├── learnings/              # per-goal non-obvious knowledge harvested at ship (compounds across goals).
+├── learnings.md            # INDEX of learnings: one line + hook per goal (ship). Read this, not the dir.
+├── learnings/              # substantial per-goal learnings, each its own .md (ship; indexed above).
 ├── roadmap.md              # optional. Ordered list of goals for a larger effort.
 └── goals/
     └── <slug>/             # one folder per goal (feature), slug is kebab-case
         ├── progress.md     # the state machine for this goal — single source of truth
         ├── brief.md        # brainstorm output: desired behavior, scope, constraints
-        ├── research/       # researcher notes + the chosen-approach rationale (autonomous phase)
+        ├── research/       # questions.md (dispatch plan) + researcher notes + chosen-approach rationale
         ├── spec.md         # plan output: what/why + testable acceptance criteria
         ├── tasks.md        # plan output: small ordered tasks, each with files + verification
         ├── pitfalls.md     # plan output: known failure modes for this change
-        └── tokens.md       # token ledger: exact subagent usage + orchestrator estimate
+        ├── tokens.md       # token ledger: exact subagent usage + orchestrator (finalized by ship pre-PR)
+        └── PR.md           # the PR description (ship §6) — committed, consumed by gh pr create
 ```
 
 ## Conventions
@@ -39,8 +41,12 @@ small and current; these are working artifacts, not essays.
   before the PR (unless the constitution says keep it). After `done`, a goal folder holds exactly the
   seven-file dossier: progress, brief, spec, tasks, pitfalls, tokens, PR.
 - **Project-level memory persists & compounds.** `constitution.md`, `repo-map.md`, `overview.md`,
-  `architecture.md`, `glossary.md`, `adr/`, `roadmap.md`, and `learnings/` belong to the project — never pruned.
-  Each goal reads them at the start and ship writes back into them, so the project gets smarter per goal.
+  `architecture.md`, `glossary.md`, `adr/`, `roadmap.md`, `learnings.md`, and `learnings/` belong to the
+  project — never pruned. Each goal reads them at the start and ship writes back into them, so the project
+  gets smarter per goal.
+- **Learnings recall is via the index.** Phases read `.wi/learnings.md` (one line + hook per goal) and
+  open a `learnings/<slug>.md` detail file only when its hook is relevant to the current goal — never
+  bulk-read the directory.
 
 ## `progress.md` template
 
@@ -89,11 +95,16 @@ report.
 | build W1 | task-runner: task 2 | <n> | exact |
 | orchestrator | main thread, all phases | `ship/scripts/token_report.py` (parses the session transcript) | the only reliable measure; **unavailable** if the parse fails — never substitute or estimate |
 
-**Subagents (exact): <sum>.** For the orchestrator/main-thread total, run
-`python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py` — it parses the session transcript (the
-harness records per-turn `usage`) and reports the token consumption (output, fresh input, cache write/read). That parsed
-figure is the **only** reliable orchestrator measure; if the parse fails, report it **unavailable** — never
-substitute an unreliable source, and never invent a number or a percentage of the subagents.
+**Subagents (exact): <sum>.**
+
+## Orchestrator
+
+_PENDING — ship replaces this section during the dossier tidy (BEFORE the dossier commit and the PR) with
+the output of `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py`, which parses the
+session transcript (the harness records per-turn `usage`: output, fresh input, cache write/read). That
+parsed figure is the **only** reliable orchestrator measure; if the parse fails, ship writes
+`Orchestrator: unavailable for this run` — never a substitute, estimate, or invented figure. A tokens.md
+still reading PENDING after ship is a defect._
 ```
 
 ## `roadmap.md` template (optional, multi-goal efforts)
@@ -108,4 +119,4 @@ substitute an unreliable source, and never invent a number or a percentage of th
 | 3 | <goal> | <slug> | planned | 1 |
 
 ## Notes
-- Sequencing rationale, parking-lot ideas, things explicitly out of scop
+- Sequencing rationale, parking-lot ideas, things explicitly out of scope.

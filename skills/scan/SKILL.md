@@ -9,7 +9,10 @@ description: >
   both; bootstraps the project constitution; and checks whether the plugins wi works best with
   (obra/superpowers, frontend-design) are installed, offering to install the missing ones from their
   official marketplaces. For an empty or stack-less folder it runs a short guided setup to define the
-  languages and tools. Python-first, stack-agnostic.
+  languages and tools. Also use it as "/wi:scan --refresh" (or "refresh the scan", "update the repo map",
+  "is the scan stale?") on an already-scanned project: a cheap drift check that re-verifies repo-map
+  facts, flags architecture divergence, and consolidates the learnings index — instead of re-documenting.
+  Python-first, stack-agnostic.
 ---
 
 # /wi:scan — understand the project, then bootstrap wi
@@ -18,6 +21,9 @@ scan does the one-time groundwork so `/wi:dev` can run smoothly later. Two jobs:
 
 1. **Understand** what's in this folder and write it down.
 2. **Bootstrap** wi: the constitution, and the optional plugins wi leans on.
+
+Already scanned? **`/wi:scan --refresh`** (section below) re-verifies instead of re-documenting — run it
+when the repo has moved on without wi.
 
 Outputs (all under a committed `.wi/`):
 - `repo-map.md` — terse facts: stack, the exact test/lint/typecheck/run commands, layout, conventions.
@@ -72,6 +78,59 @@ Plus a plugin check that may install the skills wi delegates to.
 
 6. **Report** (4-8 lines): stack, frontend/backend, what docs were written, which plugins are present vs
    newly installed, and anything left `UNKNOWN`.
+
+## `--refresh` — drift check + memory hygiene (already-scanned projects)
+
+Repos move on without wi — humans commit, dependencies change, modules appear. `--refresh` keeps the
+`.wi/` facts honest **without re-documenting**: verify what a later phase would actually trust, touch only
+what drifted. Precondition: `.wi/repo-map.md` exists (otherwise this IS a first scan — run the full
+procedure). `dev` runs this automatically at goal start when the scan looks stale.
+
+### A · Drift check (facts, not prose)
+
+Anchor on the repo-map's `scanned <YYYY-MM-DD>` stamp and diff reality against the recorded facts:
+
+1. **Config & commands:** `git log --since=<scan date> --name-only -- <config/lock files>` (pyproject,
+   package.json, lockfiles, CI workflows, tool configs — the stack-detection cookbook lists them). If any
+   changed, re-verify the affected `Commands` rows the cheap way (read the scripts/tool sections; run a
+   `--version`/`--help` probe only when reading is inconclusive) and update `repo-map.md`. Unchanged
+   config ⇒ commands stand; don't re-run the suite to "check".
+2. **Stack & classification:** new language/framework in the lockfiles? frontend appeared in a
+   backend-only repo? Update the facts and the frontend/backend line.
+3. **Structure vs `architecture.md`:** `git diff --stat <approx. scan date>..HEAD` at directory level —
+   modules/dirs added or removed that the diagram doesn't show? Update the mermaid (validate with
+   `check_mermaid.py`, rules above) when the change is structural; leave it alone for churn inside
+   existing nodes.
+4. **`overview.md`:** update only sections made wrong (organization, run steps, external services).
+5. **`constitution.md` is user-owned — never rewrite it.** If reality now contradicts a rule (e.g. the
+   lint tool changed), surface the contradiction in the report and let the user amend.
+
+Re-stamp `repo-map.md` (`scanned <today>, refreshed`). If the **Kind or core stack fundamentally changed**
+(greenfield grew real code, repo swapped language), say so and run the full scan instead.
+
+### B · Memory hygiene (learnings consolidation)
+
+If `.wi/learnings.md` exists (dev or rpa projects alike), give the compounding memory a maintenance pass —
+the index only stays useful if it stays lean:
+
+1. **Dedupe:** index lines (or detail files) describing the same gotcha → merge into one, keep the
+   clearest hook, fix the links.
+2. **Promote:** a learning that has recurred across goals (or reads as a standing rule, not an incident)
+   → fold the rule into its source of truth — `constitution.md` (confirm with the user — it's user-owned),
+   `repo-map.md`, or `glossary.md` — then shrink the index line to a tombstone:
+   `- <hook> → promoted to constitution (<date>)`. Delete the detail file once promoted.
+3. **Prune stale:** the code/tool the learning warns about is gone (verify against the repo, not memory)
+   → delete the detail file and its index line.
+4. **Target:** keep the index readable at a glance (roughly ≤30 lines). If it's bigger after
+   consolidation, the bar for "worth a line" in ship §4 was too low — note that in the report.
+
+Glossary gets the same light pass: merge duplicate/aliased terms, drop ones the codebase no longer uses.
+ADRs are **immutable history — never pruned** (supersede with a new ADR instead).
+
+### C · Report (refresh)
+
+3-6 lines: what drifted and was fixed (commands, diagram, facts), contradictions flagged for the user,
+learnings merged/promoted/pruned (counts), or "no drift — scan is current."
 
 ## `repo-map.md` template
 

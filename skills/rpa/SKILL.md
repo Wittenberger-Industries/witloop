@@ -61,7 +61,8 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
    knowingly defer each open dep** — no silent "later". Confirm: approve / amend / stop — **and have the user approve the build
    paradigm: XAML-only (pure activities, default) or coded `.cs`** (a HARD binary — **no Invoke-Code middle
    ground**), recorded in `progress.md` (`Build paradigm:`). `--auto` records and proceeds on the constitution default (XAML-only). On
-   approval, **harvest the design-phase learnings** into `.wi/learnings/<slug>.md` — non-obvious decisions,
+   approval, **harvest the design-phase learnings** into `.wi/learnings/<slug>.md` (+ its line in the
+   `.wi/learnings.md` index) — non-obvious decisions,
    gap resolutions, and domain rules surfaced in the brainstorm, marked *candidate (pre-build)*. wi:rpa's
    front and back halves often run in **different environments**, so without a gate-time harvest a
    front-half-only run leaves no compounded knowledge; ship later confirms these against the build and
@@ -75,8 +76,10 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
    register any new reusable component back into `.wi/components.md`.
 7. **Verify & ship.** Gate = `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/verification-gate.md` (**paradigm =
    XAML REFramework** + Workflow Analyzer + `uip` validate + `tokens.md` present). Then reuse the **ship**
-   skill (`wi:ship`) for the docs-sync, PR, close-out, **compound/learnings** (confirm + promote the candidate
-   `.wi/learnings/<slug>.md` written at the gate), and the **token report (`tokens.md` — mandatory)**.
+   skill (`wi:ship`) for the docs-sync, PR (`PR.md` committed, then `gh pr create --body-file`), close-out
+   checklist, **compound/learnings** (confirm + promote the candidate `.wi/learnings/<slug>.md` written at
+   the gate; update its `.wi/learnings.md` index line), and the **token report (`tokens.md` — finalized
+   before the dossier commit, mandatory)**.
    **Ship is dev-shaped — map its artifacts to the RPA ones:** gate → the RPA verification gate above;
    `spec.md` (acceptance criteria, review) → **`sdd.md`** (acceptance + §7 process details); `pitfalls.md` →
    the **`assumptions.md`** register; `brief.md` → **`pdd.md`**; `repo-map.md` → n/a. The dev "7-file dossier"

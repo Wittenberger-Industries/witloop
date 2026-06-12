@@ -76,7 +76,8 @@ robustly through a stalled turn.
 ├── architecture.md      # mermaid architecture diagram (scan; kept current by ship)
 ├── glossary.md          # project domain terms (brainstorm): canonical names + aliases
 ├── adr/                 # project-wide decision log: ADR-0001, ADR-0002, ... (+ index.md)
-├── learnings/           # non-obvious knowledge harvested at ship — compounds across goals
+├── learnings.md         # learnings index: one line + hook per goal — phases read this, not the dir
+├── learnings/           # substantial per-goal learnings in their own .mds — compounds across goals
 ├── roadmap.md           # optional: ordered goals for a larger effort
 └── goals/<slug>/
     ├── progress.md      # the goal's state machine (source of truth)
@@ -85,21 +86,22 @@ robustly through a stalled turn.
     ├── spec.md          # plan: what/why + testable acceptance criteria
     ├── tasks.md         # plan: small ordered tasks (files + verification)
     ├── pitfalls.md      # plan: failure modes for this change
-    └── tokens.md        # token ledger: the per-run cost report
+    ├── tokens.md        # token ledger: the per-run cost report (finalized before the PR)
+    └── PR.md            # the PR description — committed, used by gh pr create
 ```
 
 ## Skills & agents
 
 | Skill | Invoke (Claude) | Role |
 |-------|-----------------|------|
-| `scan` | `/wi:scan` | Document an existing project and bootstrap wi |
+| `scan` | `/wi:scan` | Document an existing project and bootstrap wi; `--refresh` = drift check + learnings consolidation |
 | `dev` | `/wi:dev "idea"` | The interactive entry: brainstorm, then hand off |
 | `rpa` | `/wi:rpa "pdd"` | RPA entry: ingest PDD -> refine TO-BE -> SDD -> REFramework build via UiPath skills -> PR |
 | `brainstorm` | via `dev` | The requirements dialogue (the one interactive phase) + glossary upkeep |
 | `research` | via `dev` | The design half: research -> plan -> design gate (your confirmation) |
 | `plan` | via `research` | spec + tasks + pitfalls (+ ADR) |
 | `build` | post-gate | worktree + parallel waves of task subagents (TDD) |
-| `ship` | post-gate | gate -> review -> docs-sync -> learnings -> open PR |
+| `ship` | post-gate | gate -> review -> docs-sync -> learnings -> tokens -> PR.md -> open PR -> checklist |
 
 Agents: **task-runner** (executes one build task in isolation) and **researcher** (picks the approach in
 the autonomous phase). Every skill auto-triggers from natural language too.

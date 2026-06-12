@@ -33,12 +33,35 @@ First act, always: append a Log line to `progress.md` — `research engine engag
 <version> from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (don't guess; if that file isn't reachable — e.g. a per-skill Copilot install — omit the version rather than inventing one) — so it's auditable on disk. Then re-enter the phase it names (research | plan | design-gate).
 
 ### 1 - Research -> pick the approach
-Dispatch **researcher** agents (`agents/researcher.md`) with `brief.md` + constitution + repo-map — in
-parallel, in the same turn, when there are independent questions (typically one surveying prior art in
-the repo, another evaluating external options). Reconcile their reports into one recommended approach and
-adopt it; for a small question one researcher is enough. If the decision is **hard to reverse**, record it as
-the next **ADR-NNNN** in the project-wide `.wi/adr/` log (global numbering + an index.md row, per the
-plan skill's ADR template). Set Phase = `plan`.
+
+**a · Check what's already settled.** `.wi/adr/index.md` first: an existing ADR **settles its question** —
+don't re-evaluate the background-job library ADR-0007 already chose. If the brief genuinely contradicts a
+standing ADR, that's a deliberate **supersede** (a new ADR citing the old one), never a silent
+re-litigation. Then `.wi/learnings.md` (the index): open a `learnings/<slug>.md` detail file only when its
+hook is relevant — past runs' gotchas are the cheapest research there is.
+
+**b · Decompose into load-bearing unknowns.** From `brief.md`, list the questions whose answer would
+change the design: the integration seam, a library/technique choice, the data shape, a migration/compat
+risk. Most goals have 1-3; **cap at 4**; anything settled in (a) drops off the list. Tag each question
+with its mode — **`[repo-question]`** (the repo should answer it: prior art, existing seam, conventions)
+or **`[tech-choice]`** (new capability / greenfield / the existing pattern looks legacy — the researcher
+must survey the current state of the art + best practices on the web, not answer from priors). Write them
+to `research/questions.md`, one line each — that's the dispatch plan, and plan checks leftovers against it.
+
+**c · Dispatch with disjoint charters.** One **researcher** (`agents/researcher.md`) per unknown — in
+parallel, in the same turn. Each charter names: its single question **and mode** (the mode sets how hard
+the researcher hits the web — see the agent), what is OUT of scope (the sibling charters, by name), and
+any standing ADR it must respect. Ship each researcher `brief.md` + the relevant constitution rules +
+`repo-map.md` + any relevant learning. One small question = one researcher; never fan out for the sake
+of it.
+
+**d · Reconcile -> decide.** Merge the reports into one recommended approach and adopt it. A report that
+returns empty, blows its budget, or wanders off-charter gets **one** narrower re-dispatch; after that,
+proceed on the best evidence available and log the gap in `progress.md`. Carry every report's
+`Risks / unknowns` line forward to plan — each must end up resolved, spiked, or in `pitfalls.md`;
+dropping one silently is a defect. If the decision is **hard to reverse**, record it as the next
+**ADR-NNNN** in the project-wide `.wi/adr/` log (global numbering + an index.md row, per the plan skill's
+ADR template). Set Phase = `plan`.
 
 ### 2 - Plan
 Run **plan** (`wi:plan`): brief + research -> `spec.md` (testable acceptance criteria), `tasks.md` (small

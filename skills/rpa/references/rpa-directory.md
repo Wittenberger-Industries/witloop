@@ -11,7 +11,8 @@
 ├── components.md            # project: reusable components registry — reuse before build
 ├── orchestrator.md          # project: Orchestrator resource manifest (link, agents, queues, assets, buckets, processes, triggers)
 ├── glossary.md              # project: domain terms
-├── learnings/               # project: compounded non-obvious knowledge
+├── learnings.md             # project: learnings INDEX — one line + hook per run; read this, not the dir
+├── learnings/               # project: substantial learnings, each its own .md (indexed above)
 └── goals/
     └── <run-slug>/          # one /wi:rpa run = one PDD -> solution
         ├── progress.md      # state machine for the run (single source of truth)
@@ -31,7 +32,7 @@
 ## Conventions
 
 - **Project-level files persist & compound** across runs: `rpa-constitution.md`, `sdd-template.md` (if
-  present), `inputs.md`, `components.md`, `orchestrator.md`, `glossary.md`, `learnings/`. Never pruned. Build + compound write
+  present), `inputs.md`, `components.md`, `orchestrator.md`, `glossary.md`, `learnings.md`, `learnings/`. Never pruned. Build + compound write
   back (especially new reusable components → `components.md`).
 - **The SDD structure is overridable** (clients differ): an existing project `sdd.md`'s ToC wins; else
   `.wi/sdd-template.md`; else the bundled base ToC (see `references/sdd-template.md`).

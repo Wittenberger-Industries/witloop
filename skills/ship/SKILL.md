@@ -4,8 +4,9 @@ description: >
   Take a built goal through the verification gate and out as a clean, reviewed pull request. Use this
   skill when the user says "/wi:ship", "ship it", "open the PR", "wrap this up", "finish the branch", or as
   the final phase of the loop (autonomous). It runs the repo's real test/lint/typecheck gate, self-reviews against the
-  spec's acceptance criteria and pitfalls, writes the PR description, opens the PR autonomously,
-  and cleans up the worktree. Soft-integrates superpowers' verification-before-completion,
+  spec's acceptance criteria and pitfalls, harvests learnings into the .wi/learnings.md index, finalizes
+  the tokens.md ledger before the dossier commit, writes the PR description to the goal's PR.md, opens the
+  PR autonomously, and closes out against a hard checklist. Soft-integrates superpowers' verification-before-completion,
   requesting-code-review, and finishing-a-development-branch when installed.
 ---
 
@@ -59,7 +60,51 @@ The feature is built and verified — make the docs match reality before the PR.
 Commit the doc updates with the feature (`docs(<slug>): …`) so the PR carries current docs. Honest docs
 are cheap to keep now and expensive to reconstruct later.
 
-## 4 · Tidy the history & the goal dossier
+## 4 · Compound — capture what's worth remembering
+
+Harvest the **non-obvious** knowledge from this run while context is fresh — this is the one thing that
+compounds wi across goals. Do it **now, before the PR**, so the learnings ride the branch and reach the
+team through review. The bar is strict: only things that would have *saved real time if known up front*:
+- a constraint or dependency that wasn't in any doc and bit the run;
+- an approach that looked right but failed, and why;
+- a non-obvious, reusable pattern or gotcha (stack quirk, CI surprise, test-harness trap).
+
+Do **not** record what's already obvious from the code, the constitution, or the PR ("we added X").
+
+Two tiers, one index:
+1. **Substantial learnings** get their own file `.wi/learnings/<slug>.md` (create the dir lazily):
+
+   ```markdown
+   ---
+   goal: <slug>
+   date: <YYYY-MM-DD>
+   tags: [<area>, ...]
+   ---
+   # <goal title> — learnings
+   ## What didn't work
+   ## Non-obvious decisions
+   ## Gotchas / patterns to reuse
+   ```
+
+2. **The index `.wi/learnings.md`** (create lazily) is updated **every goal** — it is how later phases
+   recall learnings without opening every file. One line per learning, hook included:
+
+   ```markdown
+   # Learnings index
+
+   - [<goal title>](learnings/<slug>.md) — <one-line hook: the gotcha/pattern in ~10 words>
+   - <slug> (<YYYY-MM-DD>) — nothing above the bar
+   ```
+
+   A goal with no substantial learnings gets the one-liner directly in the index and **no** detail file.
+
+**Feed it back.** If a learning contradicts or extends a project file, update the source of truth, not
+just the note: a confirmed new rule → `constitution.md`; a corrected stack fact → `repo-map.md`; a
+resolved term → `.wi/glossary.md`. That is how the next goal starts smarter.
+
+Commit: `docs(<slug>): learnings` (or fold into the docs-sync commit).
+
+## 5 · Tidy the history & the goal dossier
 
 - Ensure each commit is coherent (`<type>: <subject>`). Squash only if the project prefers a single commit
   per PR (check the constitution).
@@ -72,17 +117,32 @@ are cheap to keep now and expensive to reconstruct later.
   1. *Sweep strays:* every goal-specific file must live under `.wi/goals/<slug>/`. Anything this run left
      loose in `.wi/` or elsewhere (scratch notes, drafts, working files) moves into the slug folder or is
      deleted if worthless. Project-level files stay where they are: `constitution.md`, `repo-map.md`,
-     `overview.md`, `architecture.md`, `glossary.md`, `roadmap.md`, `adr/`, `learnings/`.
+     `overview.md`, `architecture.md`, `glossary.md`, `roadmap.md`, `adr/`, `learnings.md`, `learnings/`.
   2. *Prune the ephemera:* delete `research/` working notes — their value must already be distilled into
      the ADR and `spec.md`; if something in them is still load-bearing, that's a sign to fold it into the
      ADR first. (Skip pruning if the constitution says to keep research notes.)
-  3. *What remains is the fixed dossier:* `progress.md`, `brief.md`, `spec.md`, `tasks.md`,
-     `pitfalls.md`, `tokens.md`, `PR.md` — seven small files, the durable record of the goal.
-  4. Commit it: `chore(<slug>): tidy goal dossier`.
+  3. *Finalize `tokens.md` — NOW, not at close-out.* The file must be complete **inside the dossier
+     commit**, or it never rides the PR. Run the bundled transcript parser — the model can't read its own
+     running total mid-turn, but the harness records per-turn `usage` in the session transcript:
+     `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py` (auto-detects the active session
+     transcript under `~/.claude/projects/`; pass the path if you know it). **Write its output into
+     `tokens.md`**, replacing the `## Orchestrator` placeholder — the parsed transcript is the only
+     reliable orchestrator measure. Then write the **Subagents (exact)** sum line from the ledger rows.
+     **If the script fails** (no transcript or no `usage`), write `Orchestrator: unavailable for this run`
+     in that section — never substitute, estimate, or fabricate. Printing the report to the console does
+     **not** count as done: the file is the deliverable; the console report at close-out is read *from* it.
+  4. *What remains is the fixed dossier:* `progress.md`, `brief.md`, `spec.md`, `tasks.md`,
+     `pitfalls.md`, `tokens.md`, `PR.md` — seven small files, the durable record of the goal (`PR.md` is
+     written in the next step, before this commit is pushed).
+  5. Commit it: `chore(<slug>): tidy goal dossier`.
 
-## 5 · PR description
+## 6 · PR description — write `.wi/goals/<slug>/PR.md`
 
-Write it from the goal's own artifacts — they were made for exactly this. Template:
+Write it from the goal's own artifacts — they were made for exactly this. The description is a **file,
+not console output**: save it as `.wi/goals/<slug>/PR.md` and commit it (`docs(<slug>): PR description`).
+It is part of the seven-file dossier and exists **whether or not** a PR can be opened this run — it is
+what `gh pr create --body-file` consumes, and what a human uses if they must create the PR by hand.
+Template:
 
 ```markdown
 ## <type>: <goal title>
@@ -108,63 +168,46 @@ Write it from the goal's own artifacts — they were made for exactly this. Temp
 <link any ADRs: .wi/adr/ADR-NNNN-*.md>
 ```
 
-## 6 · Open the PR (autonomous)
+## 7 · Open the PR (autonomous)
 
-The user chose hands-off-to-PR, so open it without asking. If `gh` is available:
-`gh pr create --title "<…>" --body-file <description>` (add `--draft` if the run ended blocked or
-partial). If `gh` isn't available, push the branch (`git push -u origin wi/<slug>`) and write the
-PR-ready description plus a one-line create-PR command into `progress.md` for the user. **Never
+The user chose hands-off-to-PR, so open it without asking. Push the branch
+(`git push -u origin wi/<slug>`), then:
+`gh pr create --title "<…>" --body-file .wi/goals/<slug>/PR.md` (add `--draft` if the run ended blocked
+or partial). Log the PR URL in `progress.md`.
+
+**A pushed branch is not a shipped goal.** If `gh` is unavailable or `pr create` fails, the run is **not
+done**: record in `progress.md`'s Decisions/blockers the exact recovery command —
+`gh pr create --title "<…>" --body-file .wi/goals/<slug>/PR.md` — plus the failure reason, and tell the
+user in the final report that the PR still needs creating. Never silently stop at the push. **Never
 force-push.** If `superpowers:finishing-a-development-branch` is installed, use it for the close-out.
 
-## 7 · Close out
+## 8 · Close out — checklist, then the report
 
 After the PR is open (or merged), clean up: remove the worktree and delete the merged branch (see the
-worktree reference), set `progress.md` Phase = `done`, and add a final Log line with the PR link. If a
-`roadmap.md` exists, mark this goal done and surface the next one.
+worktree reference). Then run the **close-out checklist** — every box, against the actual repo state, not
+memory. `progress.md` Phase = `done` is **earned by this checklist**; an unticked box means ship is not
+finished, no matter what the console already said:
 
-Then deliver the **final run report** in the console: the approach (cite ADR-NNNN), what was built, the gate
-results, the PR URL, and the **token table** compiled from `tokens.md`. **Subagent rows are exact** (from
-completion notifications) — that sum is the real, measurable cost of the delegated work; report it as the
-headline.
+- [ ] PR is **open** and its URL is logged in `progress.md` (sole substitute: branch pushed + failure
+      reason + exact `gh pr create … --body-file .wi/goals/<slug>/PR.md` command recorded as a blocker)
+- [ ] `.wi/goals/<slug>/PR.md` exists and is committed on the branch
+- [ ] `tokens.md` has the subagent ledger rows **and** a finalized `## Orchestrator` section (parsed
+      figure or explicit `unavailable`) — verify by reading the **file**, not the console log
+- [ ] `.wi/learnings.md` index has this goal's line (and the detail file exists if one was warranted)
+- [ ] dossier = exactly the seven files; `research/` pruned; no strays anywhere in `.wi/`
+- [ ] worktree removed; merged branch deleted
 
-For the **orchestrator (main-thread)** total, run the bundled transcript parser — the model can't read its own
-running total mid-turn, but the harness records per-turn `usage` in the session transcript:
-`python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py` (auto-detects the active session transcript
-under `~/.claude/projects/`; pass the path if you know it). Write its output into `tokens.md` as the
-**Orchestrator** section (token consumption: output + fresh input + cache write/read) — **the parsed transcript is the
-only reliable orchestrator measure.** **If the script fails** (no transcript or no `usage`), report the
-orchestrator total as **unavailable for this run** and keep the **subagent-exact sum** as the headline. Do
-**not** fall back to any unreliable substitute and do **not** fabricate an overhead figure. The two numbers wi
-trusts: **subagent-exact** (completion notifications) and **orchestrator-from-transcript** (this script). If a keep-alive loop is armed (Claude/Codex `/goal` or Copilot Autopilot), this is the state in which its condition holds and the loop clears.
+All green: set Phase = `done`, add a final Log line with the PR link, and if `roadmap.md` exists mark this
+goal done and surface the next one.
 
-## 8 · Compound — capture what's worth remembering
-
-Before the goal is truly done, harvest the **non-obvious** knowledge from this run while context is fresh
-— this is the one thing that compounds wi across goals. Write project-level `.wi/learnings/<slug>.md`
-(committed; create the dir lazily). The bar is strict: only things that would have *saved real time if
-known up front*:
-- a constraint or dependency that wasn't in any doc and bit the run;
-- an approach that looked right but failed, and why;
-- a non-obvious, reusable pattern or gotcha (stack quirk, CI surprise, test-harness trap).
-
-Do **not** record what's already obvious from the code, the constitution, or the PR ("we added X"). If
-nothing clears the bar, write one line saying so — most small goals won't have much.
-
-**Feed it back.** If a learning contradicts or extends a project file, update the source of truth, not
-just the note: a confirmed new rule → `constitution.md`; a corrected stack fact → `repo-map.md`; a
-resolved term → `.wi/glossary.md`. That is how the next goal starts smarter.
-
-```markdown
----
-goal: <slug>
-date: <YYYY-MM-DD>
-tags: [<area>, ...]
----
-# <goal title> — learnings
-## What didn't work
-## Non-obvious decisions
-## Gotchas / patterns to reuse
-```
+Then deliver the **final run report** in the console: the approach (cite ADR-NNNN), what was built, the
+gate results, the PR URL, and the **token table read from the finalized `tokens.md`** — the file was
+completed back in the dossier tidy; do not recompute it here. **Subagent rows are exact** (from completion
+notifications) — that sum is the real, measurable cost of the delegated work; report it as the headline,
+with the orchestrator figure (or `unavailable`) alongside. The two numbers wi trusts: **subagent-exact**
+(completion notifications) and **orchestrator-from-transcript** (`token_report.py`). If a keep-alive loop
+is armed (Claude/Codex `/goal` or Copilot Autopilot), the checklist passing is the state in which its
+condition holds and the loop clears.
 
 ## Offer
 

@@ -39,6 +39,14 @@ Self-review the diff with fresh eyes, specifically against:
 **Delegation check:** if `superpowers:requesting-code-review` is in your available skills you MUST run
 the review through it (log `review via superpowers:requesting-code-review`); unaided self-review is the
 fallback only when it's absent.
+
+**Goal-level check (checker · result mode).** Dispatch the **checker** (`agents/checker.md`) in `result`
+mode against `spec.md`'s acceptance criteria + locked decisions (ADRs, constitution); it confirms each is
+delivered and **wired**, not just present, refreshing `verification.md`. This is goal/coverage-level,
+distinct from the line-level review above. A result-mode **BLOCKER** — an unmet criterion, or a decision
+silently reduced to a stub — sends the goal **back to build**; ship never opens the PR on a goal the
+checker says isn't met.
+
 Address findings before proceeding; note anything deliberately deferred.
 
 ## 3 · Sync docs & architecture
@@ -119,9 +127,10 @@ Commit: `docs(<slug>): learnings` (or fold into the docs-sync commit).
      loose in `.wi/` or elsewhere (scratch notes, drafts, working files) moves into the slug folder or is
      deleted if worthless. Project-level files stay where they are: `constitution.md`, `repo-map.md`,
      `overview.md`, `architecture.md`, `glossary.md`, `roadmap.md`, `adr/`, `learnings.md`, `learnings/`.
-  2. *Prune the ephemera:* delete `research/` working notes — their value must already be distilled into
-     the ADR and `spec.md`; if something in them is still load-bearing, that's a sign to fold it into the
-     ADR first. (Skip pruning if the constitution says to keep research notes.)
+  2. *Prune the ephemera:* delete `research/` working notes **and the checker's `verification.md`** —
+     their value must already be distilled (research → the ADR and `spec.md`; the verification verdict →
+     the `### Verification` block in `PR.md`). If something in them is still load-bearing, fold it in
+     first. (Skip pruning if the constitution says to keep them.)
   3. *Finalize `tokens.md` — NOW, not at close-out.* The file must be complete **inside the dossier
      commit**, or it never rides the PR. Run the bundled transcript parser — the model can't read its own
      running total mid-turn, but the harness records per-turn `usage` in the session transcript:
@@ -161,6 +170,10 @@ Template:
 
 ### Testing
 <what was run and the result: test suite, lint, typecheck. Note new tests added.>
+
+### Verification
+<checker result-mode verdict: every acceptance criterion + locked decision delivered and wired; any waived
+findings with severity. Distilled from verification.md, which is pruned at close-out.>
 
 ### Risk & rollout
 <feature flag? migration order? back-out plan. From spec.md Rollout.>

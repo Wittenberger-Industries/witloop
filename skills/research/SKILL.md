@@ -66,7 +66,15 @@ ADR template). Set Phase = `plan`.
 
 ### 2 - Plan
 Run **plan** (`wi:plan`): brief + research -> `spec.md` (testable acceptance criteria), `tasks.md` (small
-ordered tasks with files + verify, plus the Waves section), `pitfalls.md`. Phase = `design-gate`.
+ordered tasks with files + verify, plus the Waves section), `pitfalls.md`.
+
+**Pre-gate check (checker · plan mode).** Before the gate, dispatch the **checker** (`agents/checker.md`)
+in `plan` mode over `spec.md` + `tasks.md` + `pitfalls.md` + `constitution.md` + the relevant ADRs (and any
+**Runtime State Inventory** rows). It builds a goal-backward coverage matrix and returns
+BLOCKER/WARNING/INFO findings, writing `verification.md`. Feed them back: a BLOCKER — an unmapped
+acceptance criterion, a silently down-scoped decision — loops to plan to fix, then the checker re-checks
+(**max 2 rounds**). Whatever remains is **carried into the gate summary** with its severity, so the user
+decides with eyes open. Then Phase = `design-gate`.
 
 ### 3 - Design gate
 The user decides **from the console**. Render the summary inline in your response — never just point at
@@ -90,8 +98,9 @@ inlined from the ADR/spec/tasks you just wrote):
 
 **Top risks being handled:** <2-3 pitfalls, one line each>
 **Touches:** <n> files — <key paths>
+**Checker (plan mode):** <PASS — or N findings; list any unresolved BLOCKER/WARNING the user must weigh>
 
-Full detail: .wi/goals/<slug>/ (spec.md, tasks.md, pitfalls.md) and .wi/adr/ADR-NNNN-*.md
+Full detail: .wi/goals/<slug>/ (spec.md, tasks.md, pitfalls.md, verification.md) and .wi/adr/ADR-NNNN-*.md
 ```
 
 Then check **Gate mode** in `progress.md`:

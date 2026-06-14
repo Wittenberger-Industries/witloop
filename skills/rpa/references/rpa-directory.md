@@ -31,6 +31,7 @@ folder for the whole solution, with **one SDD** covering its 1..N processes.
         ├── process-inventory.md   # the N processes + dependencies
         ├── assumptions.md   # gap/assumption register (per-process sections) + PDD->SDD trace
         ├── tasks.md         # the multi-process build DAG (components -> processes -> sub-workflows)
+        ├── verification.md  # checker output (plan mode pre-gate, result mode at ship) — EPHEMERAL; verdict folds into PR.md
         ├── tokens.md        # token ledger
         ├── PR.md            # PR description
         └── processes/
@@ -62,9 +63,16 @@ Same profile as `wi:dev` (see [wi-directory](/skills/research/references/wi-dire
 `Component Registry`, `orchestrator.md` → `Orchestrator Manifest`; per run: `progress.md` →
 `RPA Run Progress`, `pdd.md` → `PDD`, `architecture.md` → `Architecture`, `sdd.md` → `SDD`,
 `process-inventory.md` → `Process Inventory`, `assumptions.md` → `Assumption Register`, `tasks.md` →
-`Task List`, `tokens.md` → `Token Ledger`, `PR.md` → `PR Description`; per process:
+`Task List`, `verification.md` → `Verification` *(ephemeral — checker output, pruned at close-out)*,
+`tokens.md` → `Token Ledger`, `PR.md` → `PR Description`; per process:
 `processes/<p>/tobe.md` → `TO-BE`. `orchestrator.md` SHOULD carry a `resource:` pointing at the
 Orchestrator folder URL (names only, never secret values).
+
+For a **rename/rebrand** run, the researcher's **Runtime State Inventory** (the five-category sweep) maps
+onto the existing RPA registries rather than a new file: Orchestrator **queue/asset/process names** and
+**in-flight queue items** → `orchestrator.md` (live config + stored data), credential **names** →
+`orchestrator.md` (names only, per the rpa-constitution), the **published package name** → a build
+artifact. Each load-bearing row still becomes its own migration task in `tasks.md`.
 
 ## `progress.md` template (run-level)
 

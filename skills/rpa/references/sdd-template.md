@@ -1,3 +1,11 @@
+---
+type: Template
+title: SDD template
+description: Base ToC + precedence rules for an OKF-conformant Solution Design Document (.wi/goals/<run>/sdd.md).
+timestamp: 2026-06-14
+tags: [sdd, template, okf, rpa]
+---
+
 # SDD template
 
 The Solution Design Document is the high-fidelity spec handed to `uipath-rpa-workflows` — the "robust
@@ -24,6 +32,14 @@ gap to resolve, not a TODO to leave.
 Copy to `.wi/goals/<run>/sdd.md` (or the client's structure):
 
 ```markdown
+---
+type: SDD
+title: Solution Design Document — <solution / project name>
+description: <the solution this SDD specifies, one line>
+goal: <run-slug>
+timestamp: <YYYY-MM-DD>
+---
+
 # Solution Design Document — <solution / project name>
 
 ## 1. Introduction

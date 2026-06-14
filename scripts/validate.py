@@ -14,6 +14,9 @@ Checks (from the repo root, detected automatically):
   3. Every `${CLAUDE_PLUGIN_ROOT}/<path>` reference in `.md` files resolves to a real file under the repo root.
   4. Cross-platform portability files exist (`references/{codex,copilot}-tools.md`, `AGENTS.md`) and the
      dev/research skills carry the Copilot Autopilot handoff branch.
+  5. OKF conformance (see docs/specs/2026-06-14-okf-knowledge-format.md): every concept doc under
+     skills/ · agents/ · references/ · docs/ plus README.md/AGENTS.md opens with parseable YAML
+     frontmatter carrying a non-empty `type`. `index.md` / `log.md` are reserved and exempt.
 
 Exit 0 if all pass; non-zero otherwise. Stdlib only (PyYAML optional).
 """
@@ -113,9 +116,44 @@ for s in ("skills/dev/SKILL.md", "skills/research/SKILL.md"):
     if "autopilot" not in (ROOT / s).read_text(encoding="utf-8").lower():
         errors.append(f"{s}: missing Copilot Autopilot handoff branch")
 
+# 5. OKF conformance: every concept doc has parseable frontmatter + non-empty `type` --
+RESERVED = {"index.md", "log.md"}  # OKF reserved filenames — exempt from the `type` rule
+concept_md = (
+    list(ROOT.glob("skills/**/*.md"))
+    + list(ROOT.glob("agents/*.md"))
+    + list(ROOT.glob("references/*.md"))
+    + list(ROOT.glob("docs/**/*.md"))
+    + [ROOT / "AGENTS.md", ROOT / "README.md"]
+)
+okf_checked = 0
+for f in sorted(set(concept_md)):
+    if not f.is_file() or f.name in RESERVED:
+        continue
+    okf_checked += 1
+    rel = f.relative_to(ROOT)
+    txt = f.read_text(encoding="utf-8")
+    if not txt.startswith("---"):
+        errors.append(f"{rel}: OKF — no frontmatter (needs a non-empty 'type')")
+        continue
+    parts = txt.split("---", 2)
+    if len(parts) < 3:
+        errors.append(f"{rel}: OKF — unterminated frontmatter")
+        continue
+    if HAVE_YAML:
+        try:
+            d = yaml.safe_load(parts[1])
+        except Exception as e:
+            errors.append(f"{rel}: OKF — frontmatter YAML error: {e}")
+            continue
+        if not isinstance(d, dict) or not d.get("type"):
+            errors.append(f"{rel}: OKF — missing non-empty 'type'")
+    elif "type:" not in parts[1]:
+        errors.append(f"{rel}: OKF — missing 'type'")
+
 # Report -------------------------------------------------------------------
 note = "" if HAVE_YAML else "  [PyYAML absent → YAML parse skipped; `pip install pyyaml` for the full check]"
-print(f"validate.py — {len(manifests)} manifest(s), {len(fm_files)} frontmatter file(s){note}")
+print(f"validate.py — {len(manifests)} manifest(s), {len(fm_files)} frontmatter file(s), "
+      f"{okf_checked} OKF concept doc(s){note}")
 if errors:
     print(f"\n[FAIL] {len(errors)} issue(s):")
     for e in errors:

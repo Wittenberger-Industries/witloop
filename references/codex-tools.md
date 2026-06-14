@@ -1,3 +1,11 @@
+---
+type: Reference
+title: Codex CLI — tool & capability mapping for wi
+description: Claude Code → Codex CLI tool-name and capability equivalents used when running wi on Codex.
+timestamp: 2026-06-09
+tags: [codex, tools, portability, reference]
+---
+
 # Codex CLI — tool & capability mapping for wi
 
 wi's skills are written with Claude Code names. On Codex CLI, use these equivalents.

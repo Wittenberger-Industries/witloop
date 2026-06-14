@@ -1,4 +1,5 @@
 ---
+type: Agent
 name: task-runner
 model: inherit
 color: green
@@ -71,4 +72,4 @@ Lint/typecheck: <pass/fail>
 Notes: <anything surprising, plan-amendment suggestions, or out-of-scope work spotted>
 ```
 
-A tight, honest report is the whole point — the orchestrator acts on it without reading your transcript.
+A tight, honest report is the whol

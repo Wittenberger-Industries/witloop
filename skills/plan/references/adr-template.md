@@ -1,3 +1,11 @@
+---
+type: Template
+title: ADR — template
+description: Template + conventions for an OKF-conformant Architecture Decision Record under .wi/adr/.
+timestamp: 2026-06-14
+tags: [adr, template, okf, decisions]
+---
+
 # ADR — template
 
 Architecture Decision Record. Write one only for decisions that are **hard to reverse** or that future
@@ -12,6 +20,15 @@ After writing an ADR, **append a row to `.wi/adr/index.md`** (create it from the
 absent) so the decision log stays browsable at a glance.
 
 ```markdown
+---
+type: ADR
+title: <short imperative title, e.g. "Use Postgres for the event store">
+description: <the decision in one line>
+goal: <slug>
+status: proposed   # proposed | accepted | superseded by ADR-MMMM
+timestamp: <YYYY-MM-DD>
+---
+
 # ADR-NNNN: <short imperative title, e.g. "Use Postgres for the event store">
 
 - **Status:** proposed | accepted | superseded by ADR-MMMM
@@ -35,8 +52,9 @@ now. Neutral — state the problem, not the answer.>
 - **<option>** — <why not>.
 - **<option>** — <why not>.
 
-## Sources  (optional — required if web research informed the decision)
-- <docs/links consulted; research/ notes get pruned at ship, so evidence lives here>
+## Citations  (optional — required if web research informed the decision)
+[1] [<source title>](<url>) — <what it supports>
+[2] <…>   (research/ notes get pruned at ship, so the evidence lives here)
 ```
 
 ## Tips

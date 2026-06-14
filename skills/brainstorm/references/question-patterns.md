@@ -1,3 +1,11 @@
+---
+type: Reference
+title: "Asking sharp clarifying questions"
+description: "The brainstorm phase gets **one round** of questions."
+timestamp: 2026-06-07
+tags: [brainstorm, reference]
+---
+
 # Asking sharp clarifying questions
 
 The brainstorm phase gets **one round** of questions. Make them count. The goal is to remove the
@@ -28,5 +36,4 @@ ambiguity that would otherwise cause a wrong plan — not to interrogate the use
 
 ## Smell test
 
-A good question, answered either way, changes the plan. If both answers lead to the same plan, don't ask
-it — just proceed.
+A good question, answered either way, changes the plan. If both answers lead to the same plan, d

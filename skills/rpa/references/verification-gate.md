@@ -1,3 +1,11 @@
+---
+type: Reference
+title: "RPA verification gate"
+description: "The bar a built UiPath solution must clear before it ships."
+timestamp: 2026-06-08
+tags: [rpa, reference]
+---
+
 # RPA verification gate
 
 The bar a built UiPath solution must clear before it ships. It uses UiPath's own tooling via the `uip`
@@ -40,4 +48,4 @@ claim green you didn't verify).
 
 No PASS without a fresh run this session — analyzer/validate output from *this* build, not quoted from
 earlier and not "should pass". A red gate stops the ship: fix the workflow (loop back to build) or, if the
-SDD was wrong, amend it deliberately and note it. Never weaken a rule to go green.
+SDD was wrong, amend it deliberately and 

@@ -1,3 +1,11 @@
+---
+type: Reference
+title: "Worktrees & subagent dispatch"
+description: "The mechanics behind the build phase's two levers: isolation (worktrees) and delegation (subagents)."
+timestamp: 2026-06-09
+tags: [build, reference]
+---
+
 # Worktrees & subagent dispatch
 
 The mechanics behind the build phase's two levers: isolation (worktrees) and delegation (subagents).
@@ -124,5 +132,4 @@ full TDD execution in-runner.
 
 - One task → one commit. Subject: `<type>: <task title>` (`feat`, `fix`, `refactor`, `test`, `docs`).
 - Keep generated files, large blobs, and secrets out. If `scan` found a `.gitignore`, trust it; if a new
-  artifact type appears, add it.
-- Don't squash yet — small commits make the ship-phase review legible. Squashing (if wanted) happens at PR.
+  artifact type a

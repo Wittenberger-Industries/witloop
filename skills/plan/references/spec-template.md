@@ -1,9 +1,25 @@
+---
+type: Template
+title: Spec — template
+description: Template for an OKF-conformant goal spec (.wi/goals/<slug>/spec.md).
+timestamp: 2026-06-14
+tags: [spec, template, okf, plan]
+---
+
 # Spec — template
 
 Copy to `.wi/goals/<slug>/spec.md`. The spec answers *what* and *why* and *how we'll know it's done* —
 not *how to build it* (that's `tasks.md`). Keep it tight; every section earns its place.
 
 ```markdown
+---
+type: Spec
+title: <goal title>
+description: <what this delivers, one line>
+goal: <slug>
+timestamp: <YYYY-MM-DD>
+---
+
 # Spec: <goal title>
 
 ## Summary
@@ -41,6 +57,9 @@ existing code from repo-map.md. Diagrams optional; prose is fine. Reference any 
 
 ## Open questions
 - <anything still unresolved that the user must decide before/at the gate>
+
+## Citations  (optional — sources consulted while specifying; numbered)
+[1] [<source title>](<url>) — <what it supports>
 ```
 
 ## Quality bar

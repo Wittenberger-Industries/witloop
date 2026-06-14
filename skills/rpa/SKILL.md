@@ -1,4 +1,5 @@
 ---
+type: Skill
 name: rpa
 description: >
   Turn a UiPath PDD into a built RPA solution. Use this skill when the user types "/wi:rpa", points at a
@@ -91,4 +92,4 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
 
 The design gate, isolated worktrees, **parallel build waves**, the ship PR + **docs-sync** (architecture
 diagrams kept current), **compound/learnings**, the **token report**, `check_mermaid.py`, and
-plugin-bootstrap all work unchanged — `wi:rpa` swaps the *domain* (UiPath/SDD/PDD) into the same machine.
+plugin-bootstr

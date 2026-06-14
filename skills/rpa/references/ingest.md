@@ -1,3 +1,11 @@
+---
+type: Reference
+title: "Ingest — parse the PDD, register inputs & components"
+description: "Before any design, capture the *whole* input surface."
+timestamp: 2026-06-08
+tags: [rpa, reference]
+---
+
 # Ingest — parse the PDD, register inputs & components
 
 Before any design, capture the *whole* input surface. The build can only use what you register here, so
@@ -21,6 +29,13 @@ tables, sample inputs, screenshots, business-rule sheets, credential lists (name
 one — the build and the UiPath handoff reference this registry.
 
 ```markdown
+---
+type: Input Registry
+title: Inputs registry — <project>
+description: Registry of inputs/assets (API refs, CSVs, samples) the build and UiPath handoff reference.
+timestamp: <YYYY-MM-DD>
+---
+
 # Inputs registry — <project>
 
 | File | Type | Purpose | Used by |
@@ -47,20 +62,17 @@ discovery-agent output) for reusable workflows / UiPath **Library** projects / s
 register them with their interface so later processes invoke instead of recreate.
 
 ```markdown
+---
+type: Component Registry
+title: Components registry — <project>
+description: Reusable components registry — build reads it first (reuse) and registers new ones.
+timestamp: <YYYY-MM-DD>
+---
+
 # Components registry — <project>
 
 | Component | Kind | Purpose | Interface (in -> out) | Location |
 |-----------|------|---------|-----------------------|----------|
 | SendNotification | workflow | standard email/Teams notify | (to, subject, body) -> () | Shared/SendNotification.xaml |
 | LoginSystemX | workflow | authenticate to SystemX | (config) -> (session) | Shared/LoginSystemX.xaml |
-| Common.Activities | Library (.nupkg) | org-wide helpers | (various) | feed/Common.Activities |
-```
-
-This registry is **project-level and persists across runs** — build reads it first (reuse), and registers
-any new reusable component it creates. That is how the second process in a project starts ahead of the
-first.
-
-## Output
-
-`pdd.md` (per run), and the project-level `inputs.md` + `components.md` created/updated. Report a 3-5 line
-summary: PDD pages/sections found, N supporting inputs registered, M reusable components found.
+| Common.Activities | Library (.nupkg) | org-wide helpers | (various) | 

@@ -1,3 +1,11 @@
+---
+type: Reference
+title: "Plugin bootstrap — the skills wi works best with"
+description: "wi runs standalone, but it's deliberately thin and gets much stronger when it can delegate to a few existing skills."
+timestamp: 2026-06-07
+tags: [scan, reference]
+---
+
 # Plugin bootstrap — the skills wi works best with
 
 wi runs standalone, but it's deliberately thin and gets much stronger when it can delegate to a few
@@ -30,4 +38,4 @@ After detecting what's missing, ask once with AskUserQuestion, e.g.:
 
 Record the outcome in your scan report ("installed: superpowers; skipped: find-skills"). wi's phase skills
 each detect availability again at run time and fall back gracefully, so a "skip now" is never fatal — the
-user can re-run `/wi:scan` or install later.
+user can re-r

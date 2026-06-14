@@ -1,3 +1,11 @@
+---
+type: Reference
+title: "Build — delegate XAML generation to the UiPath skills"
+description: "Build runs after the design gate."
+timestamp: 2026-06-08
+tags: [rpa, reference]
+---
+
 # Build — delegate XAML generation to the UiPath skills
 
 Build runs after the design gate. wi does **not** write XAML — it orchestrates `uipath-rpa-workflows`
@@ -61,4 +69,4 @@ commit secrets or local robot artifacts; respect `.gitignore` for `.local`, `*.u
 
 - If `uipath-rpa-workflows` isn't installed, build can't proceed — stop with the complete SDD pack and say
   so (the front-half artifacts are still a deliverable).
-- Keep `Main.xaml`/`Config.xlsx` edits serialized (shared files) even when sub-workflows parallelize.
+- Keep `Main.xaml`/`Config.xlsx` edits 

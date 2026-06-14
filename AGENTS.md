@@ -1,3 +1,11 @@
+---
+type: Bootstrap
+title: wi — cross-platform bootstrap
+description: Entry point for non-Claude harnesses — how to read and run wi's skills on Codex CLI and Copilot CLI.
+timestamp: 2026-06-09
+tags: [wi, bootstrap, cross-platform, codex, copilot]
+---
+
 # wi — cross-platform bootstrap
 
 This repository **is** the wi plugin: an opinionated, low-token, spec-driven dev loop. Its capabilities

@@ -1,11 +1,21 @@
+---
+type: Reference
+title: The `.wi/` directory — WI's on-repo state
+description: Layout, conventions, and OKF frontmatter for the .wi/ knowledge store wi writes per repo.
+timestamp: 2026-06-14
+tags: [wi-directory, okf, conventions, state]
+---
+
 # The `.wi/` directory — WI's on-repo state
 
-All WI state lives in a single `.wi/` folder at the repo root. It is plain Markdown, meant to be
-**committed** so the team (and your future self) can see how a feature was reasoned about. Keep every file
-small and current; these are working artifacts, not essays.
+All WI state lives in a single `.wi/` folder at the repo root. It is an
+[OKF](/docs/specs/2026-06-14-okf-knowledge-format.md) knowledge bundle: plain Markdown with YAML
+frontmatter, meant to be **committed** so the team (and your future self) can see how a feature was
+reasoned about. Keep every file small and current; these are working artifacts, not essays.
 
 ```
 .wi/
+├── index.md                # OKF root index (optional): directory listing + okf_version. No frontmatter.
 ├── constitution.md         # project ground rules. Written once by scan, read by every phase.
 ├── repo-map.md             # cached scan facts: stack, commands, conventions, frontend/backend.
 ├── overview.md             # readable docs of an EXISTING project (scan; absent for greenfield).
@@ -48,11 +58,44 @@ small and current; these are working artifacts, not essays.
   open a `learnings/<slug>.md` detail file only when its hook is relevant to the current goal — never
   bulk-read the directory.
 
+## OKF frontmatter & conventions
+
+Every `.wi/` file is an [OKF](/docs/specs/2026-06-14-okf-knowledge-format.md) concept: it opens with a
+YAML frontmatter block whose only required key is `type`. The full profile lives in that spec; the short
+version:
+
+- **Frontmatter.** `type` (required) + `title`, `description`, `timestamp` (ISO 8601), optional `tags`,
+  plus wi extensions `goal` / `status` / `resource` where they apply. Keep the body's `# Title` H1 and
+  `##` sections as they are.
+- **`type` per file:** `constitution.md` → `Constitution`, `repo-map.md` → `Repo Map`, `overview.md` →
+  `Overview`, `architecture.md` → `Architecture`, `glossary.md` → `Glossary`, `adr/ADR-*.md` → `ADR`,
+  `learnings.md` → `Learnings Index`, `learnings/<slug>.md` → `Learning`, `roadmap.md` → `Roadmap`; per
+  goal: `progress.md` → `Goal Progress`, `brief.md` → `Brief`, `spec.md` → `Spec`, `tasks.md` →
+  `Task List`, `pitfalls.md` → `Pitfalls`, `tokens.md` → `Token Ledger`, `PR.md` → `PR Description`,
+  `research/*.md` → `Research Note`.
+- **Index files** carry no frontmatter — except the optional root `.wi/index.md`, which may declare
+  `okf_version: "0.1"`. `learnings.md` and `adr/index.md` are typed indexes whose entries reuse each
+  concept's `description`.
+- **Log.** `progress.md`'s `## Log` uses ISO dates and a leading bold keyword (`**Created**`,
+  `**Update**`, `**Decision**`); it stays append-order as a resumable run timeline.
+- **Citations.** External sources go under a numbered `## Citations` heading at the foot of the doc.
+- **Links.** Prefer bundle-relative `/goals/<slug>/spec.md`; a broken link (not-yet-written knowledge) is
+  normal, never an error.
+
 ## `progress.md` template
 
 Seed it when the goal is created (by `dev`):
 
 ```markdown
+---
+type: Goal Progress
+title: <one-line feature title>
+description: <what this goal delivers, one line>
+goal: <slug>
+status: brainstorm   # brainstorm | research | plan | design-gate | build | ship | done
+timestamp: <YYYY-MM-DD>
+---
+
 # Goal: <one-line feature title>
 
 - **Slug:** <slug>
@@ -86,6 +129,13 @@ only in that notification. goal compiles the totals at Done and `dev` includes t
 report.
 
 ```markdown
+---
+type: Token Ledger
+title: <goal title>
+goal: <slug>
+timestamp: <YYYY-MM-DD>
+---
+
 # Token ledger: <goal title>
 
 | Phase | Source | Tokens | Basis |
@@ -110,6 +160,13 @@ still reading PENDING after ship is a defect._
 ## `roadmap.md` template (optional, multi-goal efforts)
 
 ```markdown
+---
+type: Roadmap
+title: <project / epic name>
+description: <one-line epic summary>
+timestamp: <YYYY-MM-DD>
+---
+
 # Roadmap: <project / epic name>
 
 | # | Goal | Slug | Status | Depends on |

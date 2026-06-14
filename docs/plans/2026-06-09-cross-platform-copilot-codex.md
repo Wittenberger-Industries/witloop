@@ -1,3 +1,11 @@
+---
+type: Plan
+title: "Cross-platform wi (Codex CLI + Copilot CLI) implementation plan"
+description: Task-by-task plan for cross-platform wi — packaging, portability layer, and the per-platform autonomy spine.
+timestamp: 2026-06-09
+tags: [cross-platform, codex, copilot, plan]
+---
+
 # Cross-platform wi (Codex CLI + Copilot CLI) Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.

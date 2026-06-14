@@ -1,3 +1,11 @@
+---
+type: Readme
+title: WI — a cross-platform agentic dev loop
+description: An opinionated, low-token dev loop (scan/dev/rpa) that runs on Claude Code, Codex CLI, and Copilot CLI from one source.
+timestamp: 2026-06-12
+tags: [wi, readme, overview]
+---
+
 # WI — a cross-platform agentic dev loop
 
 `wi` is an opinionated, low-token development loop that runs on **Claude Code**, **Codex CLI**, and

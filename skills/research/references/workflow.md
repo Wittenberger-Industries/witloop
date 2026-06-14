@@ -1,3 +1,11 @@
+---
+type: Reference
+title: "Phase contracts & resumability"
+description: "The loop is one interactive phase (**brainstorm**, run by `dev`) followed by an autonomous pipeline (**research -> plan -> build -> ship**, run by..."
+timestamp: 2026-06-09
+tags: [research, reference]
+---
+
 # Phase contracts & resumability
 
 The loop is one interactive phase (**brainstorm**, run by `dev`) followed by an autonomous pipeline
@@ -71,5 +79,4 @@ transcripts never enter `goal`'s context. That is what makes a hands-off, multi-
 The cost is also *measured* where it can be: `tokens.md` records each subagent's **exact** usage (from its
 completion notification). The main thread can't read its own usage *mid-turn*, but the harness
 records it: ship runs `token_report.py` to sum the session transcript's per-turn `usage` for a real
-orchestrator total. If that parse fails it's reported **unavailable** — never a fabricated number or a
-fraction of subagent work.
+orchestrator total. If that parse fails it's reported **una

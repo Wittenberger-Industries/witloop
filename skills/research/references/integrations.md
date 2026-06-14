@@ -1,3 +1,11 @@
+---
+type: Reference
+title: "Integrations — borrow, don't reinvent"
+description: "wi is deliberately thin."
+timestamp: 2026-06-12
+tags: [research, reference]
+---
+
 # Integrations — borrow, don't reinvent
 
 wi is deliberately thin. Where a good skill already exists, wi **detects it and hands off**, adding only
@@ -56,5 +64,4 @@ generically from whatever `scan` recorded in `repo-map.md`.
 
 `wi:rpa` (planned) will be another command in this same `wi` plugin, following the same `.wi/` +
 brainstorm-then-autonomous shape for UiPath RPA workflows — leaning on UiPath skills the way wi leans
-on superpowers. Keep the cross-cutting conventions (the `.wi/` spec, the handoff, integration-detection)
-stable so the muscle memory transfers.
+on

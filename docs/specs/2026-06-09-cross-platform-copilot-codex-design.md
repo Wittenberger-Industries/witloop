@@ -1,3 +1,12 @@
+---
+type: Design Spec
+title: "Cross-platform wi: Codex CLI + Copilot CLI support"
+description: Approved design for running wi on Codex and Copilot from one source (flatten to a root-manifest plugin).
+status: accepted
+timestamp: 2026-06-09
+tags: [cross-platform, codex, copilot, design]
+---
+
 # Cross-platform wi: Codex CLI + Copilot CLI support
 
 - **Status:** Approved design — 2026-06-09

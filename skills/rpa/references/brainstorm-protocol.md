@@ -1,3 +1,11 @@
+---
+type: Reference
+title: "Brainstorm — refine the TO-BE (the one conversation)"
+description: "This is the interactive phase and the value of `wi:rpa`: a PDD is usually AS-IS-heavy and gap-ridden, so turn it into a buildable TO-BE."
+timestamp: 2026-06-09
+tags: [rpa, reference]
+---
+
 # Brainstorm — refine the TO-BE (the one conversation)
 
 This is the interactive phase and the value of `wi:rpa`: a PDD is usually AS-IS-heavy and gap-ridden, so turn
@@ -144,6 +152,14 @@ Under `--auto` (or when the user doesn't have them yet) **propose convention-bas
 blank §7. Secrets stay names-only (constitution rule).
 
 ```markdown
+---
+type: Orchestrator Manifest
+title: Orchestrator manifest — <solution>
+description: Concrete Orchestrator resources (folder, processes, queues, assets, buckets, agents, triggers) — names only.
+resource: <Orchestrator folder URL>
+timestamp: <YYYY-MM-DD>
+---
+
 # Orchestrator manifest — <solution>
 
 ## Link
@@ -188,24 +204,14 @@ call, not a default.** (`--auto` records each for after-the-fact review and says
 ## `tobe.md` format (per process)
 
 ```markdown
+---
+type: TO-BE
+title: TO-BE — <process name>
+description: <the refined target process, one line>
+goal: <run-slug>
+timestamp: <YYYY-MM-DD>
+---
+
 # TO-BE — <process name>  (refined from PDD ToBe; <date>)
 
-## Trigger
-<what starts it; inputs per unit>
-
-## Steps
-1. <step> — **impl: connector(Outlook) / API / UI activity** — <notes; reuses Component X?>
-2. <decision: if <cond>> → <branch A> ; else → <branch B>
-3. ...
-
-## Exceptions
-- <business exception> → no retry, route to <exception queue/notify>
-- <system exception> → retry per Config
-
-## Outputs
-<what is produced and where it goes>
-```
-
-Include a small **mermaid flowchart** of the TO-BE (validate with
-`${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py`). Keep `tobe.md` faithful to the refined
-process — the SDD turns it into the technical design.
+## Trig

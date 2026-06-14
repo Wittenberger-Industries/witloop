@@ -1,3 +1,11 @@
+---
+type: Reference
+title: "Stack detection cookbook"
+description: "Detect by reading config files and lockfiles, not source."
+timestamp: 2026-06-07
+tags: [scan, reference]
+---
+
 # Stack detection cookbook
 
 Detect by reading config files and lockfiles, not source. Below: what to look for, and what command to
@@ -69,4 +77,4 @@ build executes tasks in concurrent waves, so record whether the suite tolerates 
 - Can't tell cheaply -> **unknown** (build will then run Verify commands serially after each wave instead
   of guessing).
 
-Record the answer as `Tests parallel-safe:` in `repo-map.md`'s Commands block.
+Record t

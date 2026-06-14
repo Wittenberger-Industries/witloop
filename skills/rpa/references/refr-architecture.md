@@ -1,3 +1,11 @@
+---
+type: Reference
+title: "REFramework architecture & the solution runtime diagram"
+description: "The house default is the **Robotic Enterprise Framework** (REFramework): a state-machine template with queue-based transaction processing and built..."
+timestamp: 2026-06-08
+tags: [rpa, reference]
+---
+
 # REFramework architecture & the solution runtime diagram
 
 The house default is the **Robotic Enterprise Framework** (REFramework): a state-machine template with
@@ -83,5 +91,4 @@ the runtime diagram must show all of them.
    serialize.
 4. **Wire-up** — queues/assets/triggers via `uipath-platform`.
 
-Same "shared foundation as an early task so the rest fan out" rule as `wi:dev`, applied at the process
-level then again at the sub-workflow level.
+Same "shared foundation as an early task so the rest fan out" 

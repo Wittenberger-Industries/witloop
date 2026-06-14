@@ -1,7 +1,16 @@
+---
+type: Reference
+title: The `.wi/` layout for RPA
+description: The RPA tier of the .wi/ knowledge store (project → run → process) and its OKF frontmatter.
+timestamp: 2026-06-14
+tags: [rpa, wi-directory, okf, conventions]
+---
+
 # The `.wi/` layout for RPA
 
-`wi:rpa` reuses the `.wi/` model with an extra tier: **project → run (a PDD/solution) → process**. One
-`/wi:rpa` run is one goal folder for the whole solution, with **one SDD** covering its 1..N processes.
+`wi:rpa` reuses the `.wi/` model — same [OKF](/docs/specs/2026-06-14-okf-knowledge-format.md) frontmatter
+profile — with an extra tier: **project → run (a PDD/solution) → process**. One `/wi:rpa` run is one goal
+folder for the whole solution, with **one SDD** covering its 1..N processes.
 
 ```
 .wi/
@@ -45,9 +54,30 @@
 - ADRs for hard-to-reverse choices (REFramework vs coded, dispatcher split, queue model) go in the
   project-wide `.wi/adr/` log, same as `wi:dev`.
 
+## OKF frontmatter (RPA types)
+
+Same profile as `wi:dev` (see [wi-directory](/skills/research/references/wi-directory.md) and the
+[OKF spec](/docs/specs/2026-06-14-okf-knowledge-format.md)); the RPA-specific `type` values are:
+`rpa-constitution.md` → `RPA Constitution`, `inputs.md` → `Input Registry`, `components.md` →
+`Component Registry`, `orchestrator.md` → `Orchestrator Manifest`; per run: `progress.md` →
+`RPA Run Progress`, `pdd.md` → `PDD`, `architecture.md` → `Architecture`, `sdd.md` → `SDD`,
+`process-inventory.md` → `Process Inventory`, `assumptions.md` → `Assumption Register`, `tasks.md` →
+`Task List`, `tokens.md` → `Token Ledger`, `PR.md` → `PR Description`; per process:
+`processes/<p>/tobe.md` → `TO-BE`. `orchestrator.md` SHOULD carry a `resource:` pointing at the
+Orchestrator folder URL (names only, never secret values).
+
 ## `progress.md` template (run-level)
 
 ```markdown
+---
+type: RPA Run Progress
+title: <PDD / solution name>
+description: <what this solution automates, one line>
+goal: <run-slug>
+status: ingest   # bootstrap | ingest | brainstorm | plan | design-gate | build | ship | done
+timestamp: <YYYY-MM-DD>
+---
+
 # RPA run: <PDD / solution name>
 
 - **Slug:** <run-slug>

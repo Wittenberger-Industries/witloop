@@ -1,3 +1,11 @@
+---
+type: Template
+title: "RPA constitution — template"
+description: "Copy to `.wi/rpa-constitution.md`, fill in from what bootstrap/discovery found, and confirm the lines marked `(confirm)`."
+timestamp: 2026-06-08
+tags: [rpa, reference]
+---
+
 # RPA constitution — template
 
 Copy to `.wi/rpa-constitution.md`, fill in from what bootstrap/discovery found, and confirm the lines
@@ -5,6 +13,13 @@ marked `(confirm)`. Every phase reads this. It is the cheapest place to encode "
 here." Keep it short and declarative.
 
 ```markdown
+---
+type: RPA Constitution
+title: RPA constitution — <project>
+description: RPA house standards (REFramework, connectors-over-UI, naming, gate).
+timestamp: <YYYY-MM-DD>
+---
+
 # RPA constitution — <project>
 
 ## Framework & approach
@@ -66,7 +81,4 @@ here." Keep it short and declarative.
 
 ## Defaults wi:rpa assumes when a rule is blank
 
-REFramework; connectors/APIs preferred over UI (but UI is fine where needed); secrets as Orchestrator
-assets; business vs system exceptions with 3 retries; Workflow Analyzer error-clean as the gate; reuse
-before build. An opinionated baseline beats no opinion — the constitution is where a project overrides it.
-```
+REFramework; connectors/APIs preferred over UI (but UI is fine wher

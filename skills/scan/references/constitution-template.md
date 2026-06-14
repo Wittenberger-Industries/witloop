@@ -1,3 +1,11 @@
+---
+type: Template
+title: Project constitution — template
+description: Template for an OKF-conformant .wi/constitution.md (the project's ground rules).
+timestamp: 2026-06-14
+tags: [constitution, template, okf, scan]
+---
+
 # Project constitution — template
 
 Copy this to `.wi/constitution.md`, fill in from what `scan` detected, and ask the user to confirm the
@@ -8,6 +16,13 @@ conventions in every plan and every build subagent.
 Keep it short and declarative. If a rule isn't worth enforcing, don't write it.
 
 ```markdown
+---
+type: Constitution
+title: Constitution — <project name>
+description: The project's ground rules — read by every wi phase.
+timestamp: <YYYY-MM-DD>
+---
+
 # Constitution — <project name>
 
 > The rules wi follows for this repo. Edit freely; this overrides wi's defaults.

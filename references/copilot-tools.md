@@ -1,3 +1,11 @@
+---
+type: Reference
+title: Copilot CLI — tool & capability mapping for wi
+description: Claude Code → GitHub Copilot CLI tool-name and capability equivalents used when running wi on Copilot.
+timestamp: 2026-06-09
+tags: [copilot, tools, portability, reference]
+---
+
 # Copilot CLI — tool & capability mapping for wi
 
 wi's skills are written with Claude Code names. On Copilot CLI, use these equivalents.

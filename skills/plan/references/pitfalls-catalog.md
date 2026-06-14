@@ -1,3 +1,11 @@
+---
+type: Reference
+title: "Pitfalls catalog"
+description: "A foresight checklist."
+timestamp: 2026-06-07
+tags: [plan, reference]
+---
+
 # Pitfalls catalog
 
 A foresight checklist. During planning, skim these categories and pull the few that genuinely apply to the
@@ -63,6 +71,4 @@ don't apply.
 
 ## Process
 - Scope creep mid-build (plan and code diverge silently).
-- Touching files outside the goal's stated scope.
-- Committing generated files, large blobs, or secrets.
-```
+- Touching files outside the goal's stated s

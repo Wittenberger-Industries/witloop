@@ -1,3 +1,11 @@
+---
+type: Reference
+title: "RPA prerequisites — bootstrap"
+description: "`wi:rpa` is thin: it produces the spec and delegates the build."
+timestamp: 2026-06-08
+tags: [rpa, reference]
+---
+
 # RPA prerequisites — bootstrap
 
 `wi:rpa` is thin: it produces the spec and delegates the build. Two prerequisites make it work; check for
@@ -60,4 +68,4 @@ seed `.wi/components.md`). This is the RPA analog of `wi:scan`; borrow it, don't
 ## Record the outcome
 
 Note in the run log which prerequisites were present vs installed (e.g. "markitdown installed; uipath
-plugin present; discovery delegated"), so the run is auditable and the next run starts informed.
+plugin present; discovery delegated

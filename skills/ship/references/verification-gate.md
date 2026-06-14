@@ -1,3 +1,11 @@
+---
+type: Reference
+title: "The verification gate"
+description: "The gate is the objective bar a goal must clear before it can ship."
+timestamp: 2026-06-08
+tags: [ship, reference]
+---
+
 # The verification gate
 
 The gate is the objective bar a goal must clear before it can ship. It uses the **repo's own commands**
@@ -68,5 +76,4 @@ Stop. A red gate is information, not an obstacle to route around. Options, in or
 ## Don't gold-plate
 
 The gate proves the goal's acceptance criteria, not the whole codebase's perfection. Resist expanding
-scope to fix unrelated issues you notice — log them (a new goal or a roadmap line) and ship the goal you
-planned.
+scope to fix unrelated issues you notice — l

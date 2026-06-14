@@ -29,10 +29,11 @@ reasoned about. Keep every file small and current; these are working artifacts, 
     └── <slug>/             # one folder per goal (feature), slug is kebab-case
         ├── progress.md     # the state machine for this goal — single source of truth
         ├── brief.md        # brainstorm output: desired behavior, scope, constraints
-        ├── research/       # questions.md (dispatch plan) + researcher notes + chosen-approach rationale
+        ├── research/       # questions.md + researcher notes + chosen-approach (+ runtime-state-inventory.md for rename/migration goals) — EPHEMERAL
         ├── spec.md         # plan output: what/why + testable acceptance criteria
         ├── tasks.md        # plan output: small ordered tasks, each with files + verification
         ├── pitfalls.md     # plan output: known failure modes for this change
+        ├── verification.md # checker output (plan mode pre-gate, result mode at ship) — EPHEMERAL; verdict folds into PR.md, pruned at close-out
         ├── tokens.md       # token ledger: exact subagent usage + orchestrator (finalized by ship pre-PR)
         └── PR.md           # the PR description (ship §6) — committed, consumed by gh pr create
 ```
@@ -47,9 +48,11 @@ reasoned about. Keep every file small and current; these are working artifacts, 
 - **One writer per phase.** A phase owns its outputs; later phases read but don't silently rewrite them.
 - **No strays.** Everything goal-specific lives under `goals/<slug>/` — never loose in `.wi/`. If a phase
   needs a scratch file, it goes in the slug folder (ship sweeps and deletes strays at close-out).
-- **`research/` is ephemeral.** Working notes exist to produce the ADR and spec; ship prunes the folder
-  before the PR (unless the constitution says keep it). After `done`, a goal folder holds exactly the
-  seven-file dossier: progress, brief, spec, tasks, pitfalls, tokens, PR.
+- **`research/` and `verification.md` are ephemeral.** Working notes exist to produce the ADR and spec;
+  the checker's `verification.md` exists to feed the design gate (plan mode) and the ship review (result
+  mode). Its verdict + any waived findings fold into `PR.md`, then ship prunes both `research/` and
+  `verification.md` before the PR (unless the constitution says keep them). After `done`, a goal folder
+  holds exactly the seven-file dossier: progress, brief, spec, tasks, pitfalls, tokens, PR.
 - **Project-level memory persists & compounds.** `constitution.md`, `repo-map.md`, `overview.md`,
   `architecture.md`, `glossary.md`, `adr/`, `roadmap.md`, `learnings.md`, and `learnings/` belong to the
   project — never pruned. Each goal reads them at the start and ship writes back into them, so the project
@@ -71,8 +74,9 @@ version:
   `Overview`, `architecture.md` → `Architecture`, `glossary.md` → `Glossary`, `adr/ADR-*.md` → `ADR`,
   `learnings.md` → `Learnings Index`, `learnings/<slug>.md` → `Learning`, `roadmap.md` → `Roadmap`; per
   goal: `progress.md` → `Goal Progress`, `brief.md` → `Brief`, `spec.md` → `Spec`, `tasks.md` →
-  `Task List`, `pitfalls.md` → `Pitfalls`, `tokens.md` → `Token Ledger`, `PR.md` → `PR Description`,
-  `research/*.md` → `Research Note`.
+  `Task List`, `pitfalls.md` → `Pitfalls`, `verification.md` → `Verification`, `tokens.md` →
+  `Token Ledger`, `PR.md` → `PR Description`, `research/*.md` → `Research Note`,
+  `research/runtime-state-inventory.md` → `Runtime State Inventory`.
 - **Index files** carry no frontmatter — except the optional root `.wi/index.md`, which may declare
   `okf_version: "0.1"`. `learnings.md` and `adr/index.md` are typed indexes whose entries reuse each
   concept's `description`.

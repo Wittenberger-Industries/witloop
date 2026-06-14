@@ -215,9 +215,11 @@ tolerate anything outside the list.
 | `progress.md` | `Goal Progress` |
 | `brief.md` | `Brief` |
 | `research/*.md` | `Research Note` *(ephemeral — pruned at ship; conformance optional)* |
+| `research/runtime-state-inventory.md` | `Runtime State Inventory` *(optional — rename/migration goals; else a `## Runtime State Inventory` section in the Research Note; ephemeral)* |
 | `spec.md` | `Spec` |
 | `tasks.md` | `Task List` |
 | `pitfalls.md` | `Pitfalls` |
+| `verification.md` | `Verification` *(ephemeral — checker output; verdict folds into `PR.md`, file pruned at close-out)* |
 | `tokens.md` | `Token Ledger` |
 | `PR.md` | `PR Description` |
 

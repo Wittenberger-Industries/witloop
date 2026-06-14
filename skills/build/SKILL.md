@@ -49,11 +49,15 @@ run it as wide as the DAG allows. Repeat until every task is ticked:
 3. **TDD per task** (per the constitution): failing test first, minimal implementation, green, refactor.
    `[frontend]` tasks MUST route through `frontend-design` when it's installed (log it; build markup blind
    only when it's absent) and still verify behavior.
-4. **As each report returns:** check its Verify result, commit that task (`<type>: <task title>`) — you
-   are the only committer, so commits stay serialized and clean — tick `progress.md`, append the runner's
-   token count to the goal's `tokens.md` (it's in the task-completion notification and is NOT retrievable
-   later), then recompute the ready set and dispatch the next wave without waiting for stragglers it
-   doesn't depend on.
+4. **As each report returns:** check its Verify result and **honor its `Self-Check` line** — tick
+   `progress.md` and commit the task (`<type>: <task title>`) only when the runner reports `Self-Check:
+   PASS`; a stub or an unmet Verify means the task is *not* done, no matter what the console printed. You
+   are the only committer, so commits stay serialized and clean. Append the runner's token count to the
+   goal's `tokens.md` (it's in the task-completion notification and is NOT retrievable later), then
+   recompute the ready set and dispatch the next wave without waiting for stragglers it doesn't depend on.
+   A runner that returns **`auth-gate`** (a `401` / `run <x> login` / missing `ENV` wall) is **not** a
+   failure to retry: don't commit it, record the exact unblock steps in `progress.md`, and let the
+   keep-alive loop pause cleanly — it resumes once the human clears the gate.
 
 Escalations — two ready tasks that must touch the same file, or tests that can't run concurrently — are in
 the reference (per-task worktrees; serial verify as a last resort). Sequential execution is the fallback

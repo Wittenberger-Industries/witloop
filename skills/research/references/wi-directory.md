@@ -43,8 +43,8 @@ reasoned about. Keep every file small and current; these are working artifacts, 
 - **Slugs** are short, kebab-case, derived from the feature, **prefixed with a global 4-digit ordinal
   assigned at creation**: "Add Stripe webhooks" -> `0001-stripe-webhooks`. The prefix mirrors `ADR-NNNN`
   (global across `.wi/goals/`, monotonic, **never renumbered**) so `.wi/goals/` lists in implementation
-  order; next number = highest existing `.wi/goals/` ordinal + 1 (else `0001`). Legacy unnumbered goals
-  are left as-is and contribute nothing to the max.
+  order; next number = highest existing `.wi/goals/` ordinal + 1 (else `0001`). Legacy goals — unnumbered or with a non-numeric prefix — are left as-is and
+  ignored by the next-number scan (they contribute nothing to the max).
 - **Commit `.wi/`.** It is documentation. Gitignore `research/` only if it gets large or holds scraped
   material — leave a one-line summary in the ADR/spec instead.
 - **Keep files lean.** Past ~150 lines a file is doing too much; split or summarize. Cheap handoff is the

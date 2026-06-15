@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 _ledger.py — shared helpers for the tokens.md token ledger.
 
@@ -18,6 +17,7 @@ from pathlib import Path
 # PENDING placeholder fails. Must match the wording in ship/SKILL.md and wi-directory.md.
 UNAVAILABLE = "Orchestrator: unavailable for this run"
 
+# [^.*] excludes the literal dot and asterisk, so the lazy capture stops before the closing '.**'
 _SUM_RE = re.compile(r"\*\*Subagents \(exact\):\s*([^.*]*?)\.\*\*")
 _ORCH_RE = re.compile(r"^## Orchestrator\b.*$", re.MULTILINE)
 
@@ -98,7 +98,9 @@ def orchestrator_resolved(text):
     if not m:
         return False
     body = text[m.end():]
-    return "PENDING" not in body and body.strip() != ""
+    # Match the precise '_PENDING' sentinel, not the bare word, so prose that merely
+    # mentions "pending" can't be misread as unresolved.
+    return "_PENDING" not in body and body.strip() != ""
 
 
 def replace_orchestrator_section(text, body):
@@ -106,6 +108,7 @@ def replace_orchestrator_section(text, body):
     m = _ORCH_RE.search(text)
     if not m:
         return text.rstrip() + "\n\n" + section
+    # '## Orchestrator' is the last section by template design, so replacing to EOF is intentional.
     return text[:m.start()] + section
 
 

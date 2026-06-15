@@ -22,8 +22,10 @@ keep-alive loop (`/goal` or Autopilot) if the user armed it.
   the best option given `brief.md` + `constitution.md`, record it, continue.
 - **State on disk.** Layout: `${CLAUDE_PLUGIN_ROOT}/skills/research/references/wi-directory.md`. Never
   re-derive what a file records.
-- **Delegate, summarize, discard.** Researchers run in parallel subagents and return short reports; log
-  each one's token count to `tokens.md` the moment its completion notification arrives.
+- **Delegate, summarize, discard.** Researchers run in parallel subagents and return short reports; append
+  each one's token count as a row to `tokens.md` the moment its completion notification arrives (the figure
+  exists only there — NOT retrievable later). ship finalizes the orchestrator total and a `check_tokens.py`
+  gate blocks the PR if the ledger was skipped.
 - **Borrow.** Detect installed skills and hand off:
   `${CLAUDE_PLUGIN_ROOT}/skills/research/references/integrations.md`.
 
@@ -31,7 +33,7 @@ keep-alive loop (`/goal` or Autopilot) if the user armed it.
 
 ### 0 - Engage & resume
 First act, always: append a Log line to `progress.md` — `research engine engaged (wi <version>)`, reading
-<version> from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (don't guess; if that file isn't reachable — e.g. a per-skill Copilot install — omit the version rather than inventing one) — so it's auditable on disk. Then re-enter the phase it names (research | plan | design-gate).
+<version> from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (don't guess; if that file isn't reachable — e.g. a per-skill Copilot install — omit the version rather than inventing one) — so it's auditable on disk. Then scaffold the token ledger (idempotent — no-op if it exists): `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/goals/<slug>/tokens.md`. Then re-enter the phase it names (research | plan | design-gate).
 
 ### 1 - Research -> pick the approach
 

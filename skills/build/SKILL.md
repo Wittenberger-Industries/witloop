@@ -57,9 +57,10 @@ run it as wide as the DAG allows. Repeat until every task is ticked:
 4. **As each report returns:** check its Verify result and **honor its `Self-Check` line** — tick
    `progress.md` and commit the task (`<type>: <task title>`) only when the runner reports `Self-Check:
    PASS`; a stub or an unmet Verify means the task is *not* done, no matter what the console printed. You
-   are the only committer, so commits stay serialized and clean. Append the runner's token count to the
-   goal's `tokens.md` (it's in the task-completion notification and is NOT retrievable later), then
-   recompute the ready set and dispatch the next wave without waiting for stragglers it doesn't depend on.
+   are the only committer, so commits stay serialized and clean. Append the runner's token count as a row to
+   the goal's `tokens.md` (it's in the task-completion notification and is NOT retrievable later; if the file
+   is somehow absent, `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/goals/<slug>/tokens.md`
+   first), then recompute the ready set and dispatch the next wave without waiting for stragglers it doesn't depend on.
    A runner that returns **`auth-gate`** (a `401` / `run <x> login` / missing `ENV` wall) is **not** a
    failure to retry: don't commit it, record the exact unblock steps in `progress.md`, and let the
    keep-alive loop pause cleanly — it resumes once the human clears the gate.

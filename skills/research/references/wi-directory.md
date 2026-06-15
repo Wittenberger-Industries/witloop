@@ -153,12 +153,14 @@ timestamp: <YYYY-MM-DD>
 
 ## Orchestrator
 
-_PENDING — ship replaces this section during the dossier tidy (BEFORE the dossier commit and the PR) with
-the output of `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py`, which parses the
-session transcript (the harness records per-turn `usage`: output, fresh input, cache write/read). That
-parsed figure is the **only** reliable orchestrator measure; if the parse fails, ship writes
-`Orchestrator: unavailable for this run` — never a substitute, estimate, or invented figure. A tokens.md
-still reading PENDING after ship is a defect._
+_PENDING — the ledger is scaffolded by `check_tokens.py --init` (research §0), rows appended live, and
+ship replaces this section during the dossier tidy (BEFORE the dossier commit and the PR) by running
+`python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write <this file>`, which parses the
+session transcript (per-turn `usage`: output, fresh input, cache write/read) and recomputes the Subagents
+sum. That parsed figure is the **only** reliable orchestrator measure; if the parse fails it writes
+`Orchestrator: unavailable for this run` — never a substitute, estimate, or invented figure. At close-out
+`check_tokens.py <this file>` gates `Phase = done`: a tokens.md still reading PENDING (or missing rows) is
+a defect that blocks the PR._
 ```
 
 ## `roadmap.md` template (optional, multi-goal efforts)

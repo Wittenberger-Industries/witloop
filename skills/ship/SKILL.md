@@ -142,15 +142,14 @@ Commit: `docs(<slug>): learnings` (or fold into the docs-sync commit).
      the `### Verification` block in `PR.md`). If something in them is still load-bearing, fold it in
      first. (Skip pruning if the constitution says to keep them.)
   3. *Finalize `tokens.md` — NOW, not at close-out.* The file must be complete **inside the dossier
-     commit**, or it never rides the PR. Run the bundled transcript parser — the model can't read its own
-     running total mid-turn, but the harness records per-turn `usage` in the session transcript:
-     `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py` (auto-detects the active session
-     transcript under `~/.claude/projects/`; pass the path if you know it). **Write its output into
-     `tokens.md`**, replacing the `## Orchestrator` placeholder — the parsed transcript is the only
-     reliable orchestrator measure. Then write the **Subagents (exact)** sum line from the ledger rows.
-     **If the script fails** (no transcript or no `usage`), write `Orchestrator: unavailable for this run`
-     in that section — never substitute, estimate, or fabricate. Printing the report to the console does
-     **not** count as done: the file is the deliverable; the console report at close-out is read *from* it.
+     commit**, or it never rides the PR. The ledger was scaffolded at research/build start and its
+     subagent rows appended live; finalize the orchestrator total with one command:
+     `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write .wi/goals/<slug>/tokens.md`
+     (auto-detects the active session transcript under `~/.claude/projects/`; add
+     `--transcript <path>` if you know it). It replaces the `## Orchestrator` section in place and
+     recomputes the **Subagents (exact)** sum from the ledger rows — no manual stdout-copy. On a parse
+     failure it writes `Orchestrator: unavailable for this run` (never a substitute, estimate, or
+     fabricated figure). The **file** is the deliverable, not the console output.
   4. *What remains is the fixed dossier:* `progress.md`, `brief.md`, `spec.md`, `tasks.md`,
      `pitfalls.md`, `tokens.md`, `PR.md` — seven small files, the durable record of the goal (`PR.md` is
      written in the next step, before this commit is pushed).
@@ -234,8 +233,11 @@ finished, no matter what the console already said:
 - [ ] PR is **open** and its URL is logged in `progress.md` (sole substitute: branch pushed + failure
       reason + the frontmatter-stripped `gh pr create …` recovery command (§7) recorded as a blocker)
 - [ ] `.wi/goals/<slug>/PR.md` exists and is committed on the branch
-- [ ] `tokens.md` has the subagent ledger rows **and** a finalized `## Orchestrator` section (parsed
-      figure or explicit `unavailable`) — verify by reading the **file**, not the console log
+- [ ] `tokens.md` passes the structural gate — run
+      `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py .wi/goals/<slug>/tokens.md`; a
+      **non-zero exit blocks `Phase = done`** (file missing / no subagent row / unfilled sum / `## Orchestrator`
+      still PENDING). An honest `Orchestrator: unavailable for this run` passes. This *replaces* reading the
+      file by eye — the exit code is the close-out condition the keep-alive loop waits on.
 - [ ] `.wi/learnings.md` index has this goal's line (and the detail file exists if one was warranted)
 - [ ] dossier = exactly the seven files; `research/` pruned; no strays anywhere in `.wi/`
 - [ ] worktree removed; merged branch deleted

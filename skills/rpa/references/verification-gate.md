@@ -49,7 +49,8 @@ off — **loops back to build**; ship never opens the PR on a run the checker sa
 
 - the build is the **expected paradigm** — XAML REFramework (or Coded only with an ADR), checked first.
 - restore + validate succeed; Workflow Analyzer has **zero error-level violations**.
-- the **token report `tokens.md` exists** and lists each delegated build unit's tokens.
+- the **token ledger `tokens.md` passes `check_tokens.py`** — present, with a row per delegated build unit,
+  the Subagents sum filled, and a resolved `## Orchestrator` section (real figure or honest `unavailable`).
 - every SDD acceptance criterion (§13) maps to something that actually passed.
 - every assumption is either confirmed (gate) or recorded for sign-off; no unaddressed `NEEDS DECISION`.
 - the **checker (result mode) verdict is PASS** — every SDD §13 criterion and locked decision delivered and wired.

@@ -82,10 +82,11 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
    generation to `uipath-rpa-workflows` per process/sub-workflow in **parallel waves** (state the paradigm in
    the prompt — the **approved paradigm**: XAML-only → pure drag-drop activities, **no Invoke Code and no `.cs`**;
    coded-allowed → `.cs` workflows ok; scaffold each unit as REFramework per the SDD, never Blank),
-   append each unit's tokens to `tokens.md`, and
+   append each unit's tokens to `tokens.md` (scaffold it first if absent:
+   `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/goals/<slug>/tokens.md`), and
    register any new reusable component back into `.wi/components.md`.
 7. **Verify & ship.** Gate = `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/verification-gate.md` (**paradigm =
-   XAML REFramework** + Workflow Analyzer + `uip` validate + `tokens.md` present + the **goal-level checker · result mode** over `sdd.md` §13). Then reuse the **ship**
+   XAML REFramework** + Workflow Analyzer + `uip` validate + `tokens.md` passes `check_tokens.py` + the **goal-level checker · result mode** over `sdd.md` §13). Then reuse the **ship**
    skill (`wi:ship`) for the docs-sync, PR (`PR.md` committed, then `gh pr create --body-file`), close-out
    checklist, **compound/learnings** (confirm + promote the candidate `.wi/learnings/<slug>.md` written at
    the gate; update its `.wi/learnings.md` index line), and the **token report (`tokens.md` — finalized

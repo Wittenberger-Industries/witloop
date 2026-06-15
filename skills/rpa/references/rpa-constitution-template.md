@@ -86,7 +86,7 @@ timestamp: <YYYY-MM-DD>
 ## Gate (definition of done)
 - Output matches the **gate-approved paradigm** — always REFramework XAML; `.cs` / `.codedworkflows` only if the user approved **coded-allowed**.
 - `uip` restore + validate succeed; **Workflow Analyzer: zero error-level violations**.   (confirm)
-- `tokens.md` (token report) written.
+- `tokens.md` (token ledger) passes `check_tokens.py` — rows + filled sum + resolved Orchestrator.
 - Every SDD acceptance criterion verified; every assumption confirmed or logged for sign-off.
 
 ## Out of scope by default

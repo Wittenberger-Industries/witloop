@@ -204,6 +204,10 @@ If none are installed, wi still runs the whole loop on its own.
 
 ## Roadmap
 
+- **Numbered goal directories** (v0.10.5) shipped — new goals get a global 4-digit ordinal prefix as part
+  of the slug (`0001-<name>`, mirroring `ADR-NNNN`), so `.wi/goals/` lists in implementation order — visible
+  in the directory, the branch name, and the PR. dev + rpa; existing goals untouched. Design and plan in
+  `docs/specs/` and `docs/plans/`.
 - **tokens.md guardrails** (v0.10.4) shipped — the per-goal token ledger can no longer be silently
   skipped: a deterministic scaffold (`check_tokens.py --init`), `token_report.py --write` finalizes the
   orchestrator total + Subagents sum in place, and a `check_tokens.py` close-out gate blocks the PR on a

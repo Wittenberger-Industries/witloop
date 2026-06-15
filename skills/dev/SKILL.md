@@ -31,7 +31,12 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
    pass (cheap; updates facts + consolidates learnings) before building on the map.
 2. **Open the goal folder — or resume the one already open.** Parse flags: `--auto` sets **Gate mode:
    auto-approve** in progress.md — tell the user the design gate will be auto-approved and recorded, not
-   asked. Derive a kebab-case `<slug>`, then **check before creating**:
+   asked. Derive a kebab-case name, then prefix the **next global 4-digit ordinal** so `<slug>` =
+   `NNNN-<name>` (e.g. `0001-stripe-webhooks`) — mirroring `ADR-NNNN`: the ordinal is global across
+   `.wi/goals/`, monotonic, assigned **once at creation, never renumbered** (next = highest existing
+   `.wi/goals/` ordinal + 1, else `0001`; legacy unnumbered goals are left as-is and ignored by the scan;
+   a resumed goal keeps its number; a roadmap row's name is numbered when its folder is first created).
+   Then **check before creating**:
    - Scan `.wi/goals/*/progress.md` for Phase ≠ `done`. One matches this idea (same/near slug, or a title
      that reads as the same feature)? Then this is a **resume, not a new goal**: re-read its progress.md,
      announce the phase and what's left (ticked tasks, recorded decisions), and re-enter that phase —
@@ -40,8 +45,9 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
    - Idea is new but other goals are in flight: say so in one line (slug + phase each). If their
      `tasks.md` files overlap this idea's likely surface, run sequentially — two goals editing the same
      module trades merge conflicts for wall-clock.
-   - Slug collides with a **done** goal: suffix the new one (`<slug>-2`); a finished dossier is history,
-     not a scratch folder.
+   - Slug collides with a **done** goal: the global ordinal already makes the new folder unique (it gets
+     the next number), so the kebab name may safely repeat across ordinals; only add a `-2` suffix to
+     disambiguate identical names when scanning. A finished dossier is history, not a scratch folder.
    - **Roadmap match:** if `.wi/roadmap.md` exists and this idea is one of its rows, use the row's slug,
      mark it `in-progress`, and carry the row's notes + sequencing rationale into brainstorm as seed
      context — the WHAT was part-captured when the roadmap was written, so brainstorm gets shorter, not

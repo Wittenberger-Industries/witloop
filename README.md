@@ -204,6 +204,11 @@ If none are installed, wi still runs the whole loop on its own.
 
 ## Roadmap
 
+- **Maestro as a build framework** (v1.0.0) shipped — `wi:rpa` now targets UiPath Maestro flows as a
+  first-class framework alongside REFramework: a `Framework: reframework | maestro` choice (above the build
+  paradigm) proposed at brainstorm and confirmed at the gate makes the architecture, SDD, build, and
+  verification framework-aware; the Maestro path builds/validates/evals via `uipath-maestro-flow`. Design
+  and plan in `docs/specs/` and `docs/plans/`.
 - **rpa tenant publish** (v0.11.0) shipped — `wi:rpa` can publish a verified, PR'd build to a connected
   Orchestrator tenant: the design gate approves `Publish: none | feed | deploy` (+ folder, prod-guarded),
   and ship delegates `pack`/`publish`/`deploy`/`activate` to `uipath-solution` — best-effort, hands-off-safe.

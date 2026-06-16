@@ -94,7 +94,7 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
 6. **Build.** Create the worktree, **reuse components from `.wi/components.md` before building new**, then
    build per the **`Framework`**: **REFramework** → `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/build-uipath.md`,
    delegating to `uipath-rpa-workflows`; **Maestro** → `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/build-maestro.md`,
-   delegating to `uipath-maestro-flow`. (REFramework:) delegate **low-code XAML REFramework**
+   delegating to `uipath-maestro-flow`. **On the REFramework path,** delegate **low-code XAML REFramework**
    generation to `uipath-rpa-workflows` per process/sub-workflow in **parallel waves** (state the paradigm in
    the prompt — the **approved paradigm**: XAML-only → pure drag-drop activities, **no Invoke Code and no `.cs`**;
    coded-allowed → `.cs` workflows ok; scaffold each unit as REFramework per the SDD, never Blank),

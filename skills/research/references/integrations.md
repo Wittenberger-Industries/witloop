@@ -68,7 +68,7 @@ generically from whatever `scan` recorded in `repo-map.md`.
 
 ## Sibling commands
 
-`wi:rpa` (planned) will be another command in this same `wi` plugin, following the same `.wi/` +
-brainstorm-then-autonomous shape for UiPath RPA workflows — leaning on UiPath skills the way wi leans
-on superpowers. Keep the cross-cutting conventions (the `.wi/` spec, the handoff, integration-detection)
-stable so the muscle memory transfers.
+`wi:rpa` is another command in this same `wi` plugin: it shipped at v0.7.0 and is a headline feature of
+1.0.0, following the same `.wi/` + brainstorm-then-autonomous shape for UiPath RPA workflows — leaning on
+UiPath skills the way wi leans on superpowers. The cross-cutting conventions (the `.wi/` spec, the handoff,
+integration-detection) stay stable across both, so the muscle memory transfers.

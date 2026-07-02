@@ -1,14 +1,14 @@
 ---
 type: Reference
 title: "Asking sharp clarifying questions"
-description: "The brainstorm phase gets **one round** of questions."
+description: "The brainstorm phase gets a handful of focused rounds — make each count."
 timestamp: 2026-06-07
 tags: [brainstorm, reference]
 ---
 
 # Asking sharp clarifying questions
 
-The brainstorm phase gets **one round** of questions. Make them count. The goal is to remove the
+The brainstorm phase gets a handful of **focused rounds** — make each count. The goal is to remove the
 ambiguity that would otherwise cause a wrong plan — not to interrogate the user.
 
 ## What to ask about (in priority order)

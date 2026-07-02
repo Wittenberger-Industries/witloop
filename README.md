@@ -198,6 +198,10 @@ If none are installed, wi still runs the whole loop on its own.
 - **Claude local-marketplace updates:** bump `version` in `.claude-plugin/plugin.json` (+ the marketplace
   entry), then `/plugin marketplace update wi` and `/reload-plugins` (or restart). Codex and Copilot
   re-read the repo through their own install/update flows.
+- **Agent naming:** the `wi-` prefix on `agents/` files is a deliberate cross-platform tag (PR #15); on
+  Claude the namespace renders as `wi:wi-<name>` (e.g. `wi:wi-code-checker`) — the stutter is accepted,
+  don't "fix" it back. The checker is intentionally `wi-code-checker` (not `wi-checker`); skills and docs
+  call it **the checker** for short.
 - **Rolling back the rpa parity layer (v0.10.1):** the rpa goal-level verification + Simplicity + Runtime
   State Inventory + worktree-safety wiring is **additive and behavior-only** — no data or migration impact.
   If `/wi:rpa` starts failing because of it, revert the whole layer: `git revert <the v0.10.1 rpa-parity

@@ -29,6 +29,10 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
    don't proceed without a repo map and constitution. If it exists but looks stale — `scanned` stamp older
    than ~2 weeks, or config/lock/CI files changed since it — run the scan skill's **`--refresh`** drift
    pass (cheap; updates facts + consolidates learnings) before building on the map.
+   **MoA first-run setup** (`${CLAUDE_PLUGIN_ROOT}/references/moa.md`): `.wi/moa.md` absent → interactive
+   asks once (preset smart / simple / custom, rows confirmable), `--auto` writes the **simple** preset and
+   logs the assumption; present → apply it silently, warning once if the session model is below the
+   configured orchestrator tier. Never re-ask an existing config.
 2. **Open the goal folder — or resume the one already open.** Parse flags: `--auto` sets **Gate mode:
    auto-approve** in progress.md — tell the user the design gate will be auto-approved and recorded, not
    asked. Derive a kebab-case name, then prefix the **next global 4-digit ordinal** so `<slug>` =

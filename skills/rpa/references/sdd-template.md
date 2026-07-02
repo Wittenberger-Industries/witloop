@@ -8,7 +8,7 @@ tags: [sdd, template, okf, rpa]
 
 # SDD template
 
-The Solution Design Document is the high-fidelity spec handed to `uipath-rpa-workflows` — the "robust
+The Solution Design Document is the high-fidelity spec handed to `uipath-rpa` — the "robust
 prompt" meant to one-shot the build. **One SDD per solution**, with §7 repeated per process. Pull from
 `tobe.md`, `.wi/inputs.md`, `.wi/components.md`, the rpa-constitution, and the assumptions. Reference,
 don't duplicate. Fill §1.3, §3.1 and §7.2–7.6 from `.wi/orchestrator.md` (the resource manifest elicited in

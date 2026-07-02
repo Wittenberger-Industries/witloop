@@ -43,7 +43,7 @@ exists only there and is NOT retrievable later. ship finalizes the Orchestrator 
 
 ## Orchestrator
 
-_PENDING — ship replaces this section during the dossier tidy (BEFORE the dossier commit and the PR) by running `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write <this file>`, which parses the session transcript. That parsed figure is the only reliable orchestrator measure; if the parse fails it writes `Orchestrator: unavailable for this run` — never a substitute, estimate, or invented figure. A tokens.md still reading PENDING after ship is a defect._
+_PENDING — ship replaces this section during the dossier tidy (BEFORE the dossier commit and the PR) by running `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write <this file>`, which parses the session transcript. That parsed figure is the only reliable orchestrator measure; if the parse fails it writes `Orchestrator: unavailable for this run` — never a substitute, estimate, or invented figure. A tokens.md still reading PENDING after ship is a defect._
 """
 
 

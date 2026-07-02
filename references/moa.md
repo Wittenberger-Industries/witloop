@@ -125,8 +125,9 @@ Not a per-tool-call interceptor (rejected as cost-prohibitive — see issue #12'
 
 1. Produce the diff (`git diff <base>...HEAD` for at-finish; the wave's commits for per-wave) to a temp
    file, plus context: `spec.md` (or `sdd.md` §13) and the relevant constitution rules.
-2. Run `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/moa_review.py --config .wi/moa.md
-   --diff <patch> --context <spec> --out .wi/goals/<slug>/moa-review.md`.
+2. Run `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/moa_review.py --config .wi/moa.md
+   --diff <patch> --context <spec> --out .wi/goals/<slug>/moa-review.md` (`python` assumed on PATH; where it
+   does not resolve, fall back to `py -3` on Windows or `python3` on Linux/macOS).
 3. Exit `0` = `## REVIEW PASSED`; `1` = `## ISSUES FOUND` — treat findings like any checker finding:
    BLOCKER → fix (loop back to build), WARNING/INFO → address or record. **Max 2 review→fix rounds**
    (the issue's revision cap); whatever remains after round 2 is surfaced, with severity, in `PR.md`'s

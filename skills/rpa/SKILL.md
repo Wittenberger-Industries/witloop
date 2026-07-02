@@ -16,7 +16,8 @@ description: >
 
 `wi:rpa` is the rigorous **front half** of an RPA build: it does the thinking (ingest → TO-BE → SDD) and
 hands a high-fidelity spec to UiPath's own skills for the build. wi owns the method, the gate, and the
-artifacts; **`uipath-rpa-workflows` owns the build** (XAML or coded) — borrow, don't reinvent.
+artifacts; **`uipath-rpa` owns the build** (XAML or coded — the delegated-skill slugs live in the table in
+`uipath-bootstrap.md`) — borrow, don't reinvent.
 
 Defaults (set in the rpa-constitution, overridable): **REFramework**, build paradigm **approved at the design
 gate (XAML-only default, or coded)**, build to an **open PR**, gate =
@@ -97,14 +98,15 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
    promotes the general ones to `.wi/rpa-constitution.md` / `.wi/glossary.md`.
 6. **Build.** Create the worktree, **reuse components from `.wi/components.md` before building new**, then
    build per the **`Framework`**: **REFramework** → `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/build-uipath.md`,
-   delegating to `uipath-rpa-workflows`; **Maestro** → `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/build-maestro.md`,
+   delegating to `uipath-rpa`; **Maestro** → `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/build-maestro.md`,
    delegating to `uipath-maestro-flow`. **On the REFramework path,** delegate **low-code XAML REFramework**
-   generation to `uipath-rpa-workflows` per process/sub-workflow in **parallel waves** (state the paradigm in
+   generation to `uipath-rpa` per process/sub-workflow in **parallel waves** (state the paradigm in
    the prompt — the **approved paradigm**: XAML-only → pure drag-drop activities, **no Invoke Code and no `.cs`**;
    coded-allowed → `.cs` workflows ok; scaffold each unit as REFramework per the SDD, never Blank),
    append each unit's tokens to `tokens.md` (scaffold it first if absent:
-   `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/goals/<slug>/tokens.md`), and
-   register any new reusable component back into `.wi/components.md`.
+   `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/goals/<slug>/tokens.md` —
+   `python` assumed on PATH; where it does not resolve, fall back to `py -3` on Windows or `python3` on
+   Linux/macOS), and register any new reusable component back into `.wi/components.md`.
 7. **Verify & ship.** Gate = `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/verification-gate.md`, **branched on
    `Framework`**: REFramework → approved paradigm + Workflow Analyzer + `uip` validate; Maestro →
    `uip maestro flow validate` (+ `eval` if eval sets exist). Both → `tokens.md` passes `check_tokens.py`

@@ -64,9 +64,11 @@ The feature is built and verified — make the docs match reality before the PR.
   service, update `.wi/architecture.md` (the mermaid graph + legend) to match. If it doesn't exist yet
   (e.g. a greenfield project's first feature), create it now from the new structure using scan's template.
   Then validate it for real before committing:
-  `python3 ${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py .wi/architecture.md` — the bundled
+  `python ${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py .wi/architecture.md` — the bundled
   checker catches reserved-word node IDs, unquoted labels, and unbalanced `subgraph`/`end` (and renders
-  via `mmdc` when available). Fix every error it reports.
+  via `mmdc` when available). Fix every error it reports. (`python` assumed on PATH; where it does not
+  resolve, fall back to `py -3` on Windows or `python3` on Linux/macOS — this holds for every script in
+  this SKILL.)
 - **Project overview & commands:** if organization, stack, or run steps changed, update `.wi/overview.md`;
   if the command list changed, update `.wi/repo-map.md`.
 - **Repo docs the change touched or staled:** READMEs, `docs/`, public-surface docstrings/examples that
@@ -152,7 +154,7 @@ Commit: `docs(<slug>): learnings` (or fold into the docs-sync commit).
   3. *Finalize `tokens.md` — NOW, not at close-out.* The file must be complete **inside the dossier
      commit**, or it never rides the PR. The ledger was scaffolded at research/build start and its
      subagent rows appended live; finalize the orchestrator total with one command:
-     `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write .wi/goals/<slug>/tokens.md`
+     `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write .wi/goals/<slug>/tokens.md`
      (auto-detects the active session transcript under `~/.claude/projects/`; add
      `--transcript <path>` if you know it). It replaces the `## Orchestrator` section in place and
      recomputes the **Subagents (exact)** sum from the ledger rows — no manual stdout-copy. On a parse
@@ -242,7 +244,7 @@ finished, no matter what the console already said:
       reason + the frontmatter-stripped `gh pr create …` recovery command (§7) recorded as a blocker)
 - [ ] `.wi/goals/<slug>/PR.md` exists and is committed on the branch
 - [ ] `tokens.md` passes the structural gate — run
-      `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py .wi/goals/<slug>/tokens.md`; a
+      `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py .wi/goals/<slug>/tokens.md`; a
       **non-zero exit blocks `Phase = done`** (file missing / no subagent row / unfilled sum / `## Orchestrator`
       still PENDING). An honest `Orchestrator: unavailable for this run` passes. This *replaces* reading the
       file by eye — the exit code is the close-out condition the keep-alive loop waits on.

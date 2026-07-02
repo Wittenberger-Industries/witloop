@@ -33,7 +33,7 @@ keep-alive loop (`/goal` or Autopilot) if the user armed it.
 
 ### 0 - Engage & resume
 First act, always: append a Log line to `progress.md` — `research engine engaged (wi <version>)`, reading
-<version> from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (don't guess; if that file isn't reachable — e.g. a per-skill Copilot install — omit the version rather than inventing one) — so it's auditable on disk. Then scaffold the token ledger (idempotent — no-op if it exists): `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/goals/<slug>/tokens.md`. Then re-enter the phase it names (research | plan | design-gate).
+<version> from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (don't guess; if that file isn't reachable — e.g. a per-skill Copilot install — omit the version rather than inventing one) — so it's auditable on disk. Then scaffold the token ledger (idempotent — no-op if it exists): `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/goals/<slug>/tokens.md` (`python` assumed on PATH; where it does not resolve, fall back to `py -3` on Windows or `python3` on Linux/macOS). Then re-enter the phase it names (research | plan | design-gate).
 
 ### 1 - Research -> pick the approach
 

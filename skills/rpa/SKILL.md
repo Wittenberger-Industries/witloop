@@ -37,7 +37,10 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
    (`NNNN-<name>` — the next global 4-digit ordinal, mirroring `ADR-NNNN`; see ingest.md §1); catalog the
    supporting files in the repo (API refs, CSV/mapping tables, sample data, screenshots) into
    `.wi/inputs.md`; detect reusable components into `.wi/components.md`; convert the PDD to `pdd.md` with
-   markitdown (skip if it's already Markdown).
+   markitdown (skip if it's already Markdown). Run the **MoA first-run setup** here too
+   (`${CLAUDE_PLUGIN_ROOT}/references/moa.md`): `.wi/moa.md` absent → one preset question (`--auto` →
+   simple preset, logged); present → apply, warn once on an orchestrator-tier mismatch. The config's
+   execution tier then rides every build delegation (agent `rpa-build`) and the ship-phase MoA review.
 3. **Brainstorm — refine the TO-BE (the one conversation).** Follow
    `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/brainstorm-protocol.md`: take the PDD's **existing ToBe as
    the baseline**, refine it (gaps, missing/redundant steps, branches, exceptions), clarify each open step

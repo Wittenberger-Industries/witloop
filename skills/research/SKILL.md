@@ -56,7 +56,8 @@ parallel, in the same turn. Each charter names: its single question **and mode**
 the researcher hits the web — see the agent), what is OUT of scope (the sibling charters, by name), and
 any standing ADR it must respect. Ship each researcher `brief.md` + the relevant constitution rules +
 `repo-map.md` + any relevant learning. One small question = one researcher; never fan out for the sake
-of it.
+of it. When `.wi/moa.md` exists, dispatch each researcher on its MoA model (override `wi-researcher` →
+`execution` role → inherit; `${CLAUDE_PLUGIN_ROOT}/references/moa.md`).
 
 **d · Reconcile -> decide.** Merge the reports into one recommended approach and adopt it. A report that
 returns empty, blows its budget, or wanders off-charter gets **one** narrower re-dispatch; after that,

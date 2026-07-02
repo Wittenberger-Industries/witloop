@@ -45,7 +45,10 @@ run it as wide as the DAG allows. Repeat until every task is ticked:
 2. **Dispatch the whole ready set at once** — one fresh `wi-task-runner` (see `agents/wi-task-runner.md`) per
    task, all in the same turn. Each gets exactly what it needs and nothing more: its task block, the
    relevant constitution rules, and the repo commands. Fresh agents keep context from rotting across a
-   long build; parallel dispatch keeps wall-clock short.
+   long build; parallel dispatch keeps wall-clock short. **Model per dispatch (MoA):** when `.wi/moa.md`
+   exists, resolve each runner's model as per-agent override → `execution` role → `inherit`
+   (`${CLAUDE_PLUGIN_ROOT}/references/moa.md`) and pass it on the dispatch; a model that errors as
+   unavailable → re-dispatch on `inherit` and note it in `progress.md`. No config → inherit, as always.
 3. **TDD per task** (per the constitution): failing test first, minimal implementation, green, refactor.
    **Frontend routing is operational, not just asserted:** when a task is tagged `[frontend]`, the dispatch
    MUST name the available design skill in that runner's charter — detect `frontend-design` (per
@@ -71,7 +74,9 @@ when the DAG is a chain, never the default: an idle DAG is wasted wall-clock.
 (`superpowers:dispatching-parallel-agents` codifies the dispatch pattern if installed.)
 
 Two scheduling refinements proven in dry runs: (a) **wave-end gate** — at each wave boundary run the full
-lint + test commands once, serially, before dispatching the next wave; (b) **sole-runner exception** —
+lint + test commands once, serially, before dispatching the next wave — and when `.wi/moa.md` sets
+`review_points: per-wave`, also run the **MoA review** over the wave's diff there
+(`${CLAUDE_PLUGIN_ROOT}/references/moa.md`, same bounded 2-round loop as at ship); (b) **sole-runner exception** —
 when exactly one task in a wave executes tests (the rest are docs/config), that runner keeps full TDD
 (watch-fail / watch-pass); only multi-test waves switch to authored-not-run + orchestrator serial Verify.
 

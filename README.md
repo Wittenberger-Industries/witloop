@@ -151,6 +151,10 @@ skill auto-triggers from natural language too.
 ## Setup & conventions
 
 - **No required env vars or MCP servers.** `/wi:scan` offers to install the optional skills wi delegates to.
+- **Tiered models (MoA, optional).** `.wi/moa.md` assigns models per role — orchestrator (informational),
+  execution, checker, and an independent cross-provider **reviewer** (e.g. GPT via `OPENAI_API_KEY`) that
+  code-reviews the finished goal. Smart/simple presets, set up once on the first wi run, every cell
+  overridable; see `references/moa.md`. Without the file, everything inherits the session model as before.
 - **Python-first** defaults (uv · pytest · ruff · mypy), stack-agnostic — `scan` records whatever the repo
   uses, and `constitution.md` is where you override.
 - Opening the PR uses `gh` if available; otherwise wi pushes the branch and leaves the PR command for you.

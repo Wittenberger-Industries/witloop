@@ -41,7 +41,14 @@ on **both** paths.
 3. **Workflow Analyzer** — run the analyzer; **all error-level rules must pass** (naming, unused
    variables, empty catches, hardcoded values, args direction, etc. per the project's ruleset). Warnings
    are reported, not necessarily blocking (the constitution sets the bar).
-4. **(Optional) Test cases** — if test workflows exist (or the constitution requires them), run them.
+4. **House-rules sweep (constitution)** — cheap, concrete checks on the generated `.xaml` against the
+   constitution + gate decisions; needs no Studio, so it runs even when the gate degrades. Each miss is a
+   finding that **loops back to build**:
+   - **Email approach** — units that send mail/notifications use **only the gate-confirmed approach**
+     (SDD / assumptions); grep for email activities/connectors of any *other* stack (a silent
+     SMTP→Outlook swap is a red gate). No confirmed approach on record → the send must be a mock tied to
+     an open dep, not an implicitly chosen framework.
+5. **(Optional) Test cases** — if test workflows exist (or the constitution requires them), run them.
 
 Capture each command + result — these become the PR's "Testing" section. If the `uip` CLI / Studio isn't
 available in the run environment, the gate degrades to: **artifacts complete + the SDD lists the Analyzer

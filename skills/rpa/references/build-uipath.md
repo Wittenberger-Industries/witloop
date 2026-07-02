@@ -48,6 +48,13 @@ DAG allows (independent processes and independent sub-workflows in parallel):
    by system/concern** (`Process/DocuWare/`, `Process/MasterData/`, `Process/IDoc/`, …), each holding that
    area's `.xaml`/`.cs` — not flat at the project root (the REFramework `Framework/` stages stay where they
    are). Dispatch independent units in parallel (one delegation each).
+
+   **House rules — restate each in every delegation prompt** (the generator won't infer them; the
+   verification gate's house-rules sweep checks each):
+   - **Email approach:** any unit that sends mail/notifications uses **only the gate-confirmed approach**
+     (recorded in the SDD / assumptions at the gate — IMAP/SMTP, desktop Outlook, Microsoft 365, Exchange,
+     or an IS connector). Name it in the prompt; the generator must not substitute another email tech, and
+     if none was confirmed the send is a **mock** (open dep), not a silently chosen framework.
 3. **Per-unit verify.** After each unit, the work isn't done until it at least validates (see the
    verification gate); a generated `Process.xaml` must reflect the SDD steps.
 4. **Commit small + record tokens.** One workflow/process per focused commit (`feat(<process>): ...`); tick

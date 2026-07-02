@@ -41,6 +41,11 @@ timestamp: <YYYY-MM-DD>
 - **Prefer Integration Service connectors / APIs over UI** where one exists — for maintainability
   (selectors break, APIs are stable). **UI automation is valid** when there's no API or the interaction is
   inherently UI; flag UI steps in the SDD as higher-maintenance.   (confirm)
+- **Email / notifications — no implicit default.** The project uses exactly the approach the PDD/docs
+  specify: **IMAP/SMTP, desktop Outlook activities, Microsoft 365, Exchange, or an Integration Service
+  connector**. Unspecified → an open dependency resolved at the design gate (never assumed); `--auto` mocks
+  the send rather than pick a framework. The build states the confirmed approach in every delegation and
+  the gate checks no other email tech crept in.   (confirm)
 - **Publish (default `none`):** after a green build + PR, wi can publish to a connected Orchestrator tenant
   — `none` (no push, default), `feed` (publish the package to the tenant feed), or `deploy` (`feed` +
   deploy/activate as a Process in a folder). The design gate confirms it each run; `--auto` uses this

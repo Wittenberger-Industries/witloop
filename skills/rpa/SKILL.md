@@ -40,7 +40,8 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
    markitdown (skip if it's already Markdown). Run the **MoA first-run setup** here too
    (`${CLAUDE_PLUGIN_ROOT}/references/moa.md`): `.wi/moa.md` absent → one preset question (`--auto` →
    simple preset, logged); present → apply, warn once on an orchestrator-tier mismatch. The config's
-   execution tier then rides every build delegation (agent `rpa-build`) and the ship-phase MoA review.
+   `wi-task-runner` tier then rides every build delegation (agent `rpa-build`) and wi-code-checker runs its
+   ship-phase cross-provider check per the same rules as `wi:ship`.
 3. **Brainstorm — refine the TO-BE (the one conversation).** Follow
    `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/brainstorm-protocol.md`: take the PDD's **existing ToBe as
    the baseline**, refine it (gaps, missing/redundant steps, branches, exceptions), clarify each open step

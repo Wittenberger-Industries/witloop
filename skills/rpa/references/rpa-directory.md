@@ -48,7 +48,13 @@ folder for the whole solution, with **one SDD** covering its 1..N processes.
   list in implementation order. Same convention as the dev flow (`wi-directory.md`).
 - **Project-level files persist & compound** across runs: `rpa-constitution.md`, `sdd-template.md` (if
   present), `inputs.md`, `components.md`, `orchestrator.md`, `glossary.md`, `learnings.md`, `learnings/`. Never pruned. Build + compound write
-  back (especially new reusable components → `components.md`).
+  back (especially new reusable components → `components.md`). This list is ship's stray-sweep whitelist
+  when progress.md says `Flow: rpa`.
+- **The run dossier** — what ship's tidy leaves under `goals/<run-slug>/` at `done` (the manifest ship
+  reads when progress.md says `Flow: rpa`): `progress.md`, `pdd.md`, `architecture.md`, `sdd.md`,
+  `process-inventory.md`, `assumptions.md`, `tasks.md`, `tokens.md`, `PR.md`, plus `processes/<p>/tobe.md`
+  per process. `verification.md` is ephemeral — pruned at close-out, its verdict folded into `PR.md`
+  (same rule as the dev flow's seven-file dossier).
 - **The SDD structure is overridable** (clients differ): an existing project `sdd.md`'s ToC wins; else
   `.wi/sdd-template.md`; else the bundled base ToC (see `references/sdd-template.md`).
 - **`architecture.md` is the whole-solution Runtime diagram** — dispatcher + every performer (2nd/3rd) +
@@ -156,6 +162,7 @@ timestamp: <YYYY-MM-DD>
 - **Created:** <YYYY-MM-DD>
 - **Phase:** ingest   <!-- bootstrap | ingest | brainstorm | plan | design-gate | build | ship | done -->
 - **Gate mode:** interactive   <!-- interactive | auto-approve (/wi:rpa --auto) -->
+- **Flow:** rpa   <!-- dev | rpa — ship keys its dossier manifest + sweep whitelist on it; a missing line means dev -->
 - **Framework:** reframework   <!-- reframework | maestro — proposed at brainstorm, confirmed at the design gate -->
 - **Build paradigm:** xaml-only   <!-- REFramework only: xaml-only (pure activities, NO Invoke Code) | coded-allowed (.cs) — user-approved at the design gate -->
 - **Publish:** none   <!-- none | feed (publish package to tenant feed) | deploy (feed + deploy/activate to a folder) — approved at the design gate; prod folder needs explicit approval -->

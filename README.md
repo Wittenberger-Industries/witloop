@@ -44,7 +44,7 @@ git clone https://github.com/Wittenberger-Industries/wi-plugin
 Persistence uses Autopilot instead of `/goal`: wi's hands-off handoff prints
 `copilot --autopilot --max-autopilot-continues <N> --no-ask-user --allow-all …`. ⚠️ That runs **fully
 unattended** (prompts suppressed, all tools/paths granted) — drop `--allow-all` to keep risky-action
-confirmations.
+confirmations. The exact handoff templates and the full warning live in `references/keep-alive.md`.
 
 ## Platform differences
 

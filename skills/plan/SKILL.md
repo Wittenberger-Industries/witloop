@@ -2,12 +2,9 @@
 type: Skill
 name: plan
 description: >
-  Turn a decided brief into an executable plan: a spec with testable acceptance criteria, a small ordered
-  task list (each task naming its files and its verification), a pitfalls list, and an ADR when a real
-  decision was made. Use this skill when the user says "/wi:plan", "plan this out", "write the spec",
-  "break this into tasks", or as the plan phase of the research skill (autonomous). Planning only writes inside .wi/ —
-  no project code is touched yet. If superpowers:writing-plans is
-  installed, use it and capture its output into .wi/ in WI's format.
+  Turn a decided brief into an executable plan. Use this skill when the user says "/wi:plan", "plan this
+  out", "write the spec", "break this into tasks", or as the plan phase of the research skill
+  (autonomous). Planning only writes inside .wi/ — no project code is touched yet.
 ---
 
 # plan — brief → spec, tasks, pitfalls, ADR

@@ -2,12 +2,10 @@
 type: Skill
 name: research
 description: >
-  The design half of a wi goal: research the approach, plan the work, then present architecture + design
-  at the design gate for the user's confirmation. Use this skill when dev hands off after brainstorming,
-  when the user types "/wi:research", "research the approach", "design this feature", or when resuming a
-  goal whose progress.md Phase is research, plan, or design-gate. It dispatches parallel researcher
-  agents, writes ADR/spec/tasks/pitfalls into .wi/, and on approval — or auto-approval via
-  "/wi:dev --auto" — hands off to implementation (the build and ship skills), with a keep-alive loop (Claude/Codex /goal, or Copilot Autopilot) as the recommended persistence wrapper.
+  The design half of a wi goal: decide the HOW and get it confirmed at the design gate. Use this skill
+  when dev hands off after brainstorming, when the user types "/wi:research", "research the approach",
+  "design this feature", or when resuming a goal whose progress.md Phase is research, plan, or
+  design-gate.
 ---
 
 # research — design it, prove it, get the nod
@@ -122,28 +120,10 @@ Only an explicit approve (or auto-approve) advances to goal.
 
 ### 4 - Hand off to implementation
 If persistence wasn't armed at handoff, print the ready-made keep-alive again (the user is present —
-they just approved) for the current platform:
-
-- **Claude Code / Codex CLI** (built-in `/goal`):
-
-  ```
-  /goal The <slug> PR is open and its branch passes <lint + test commands from repo-map.md>;
-  .wi/goals/<slug>/progress.md Phase is done. Constraints: only files named in tasks.md change;
-  never force-push; tests are never weakened to pass.
-  ```
-
-- **GitHub Copilot CLI** (Autopilot — condition in the prompt):
-
-  ```
-  copilot --autopilot --max-autopilot-continues <N> --no-ask-user --allow-all -p "Drive the <slug> goal to done:
-  build then ship until the <slug> PR is open, its branch passes <lint + test commands>, and
-  .wi/goals/<slug>/progress.md Phase is done. Only files named in tasks.md change; never force-push;
-  never weaken tests."
-  ```
-
-⚠️ `--no-ask-user --allow-all` runs Copilot fully unattended (prompts suppressed, all tools/paths granted)
-— bounded only by `--max-autopilot-continues <N>` and the in-prompt constraints. Use it in repos you trust;
-drop `--allow-all` if you want Copilot to still confirm risky actions.
+they just approved) for the current platform: Claude Code & Codex CLI arm their built-in `/goal` with the
+PR-open condition; Copilot CLI relaunches under Autopilot. The exact command templates — and the
+unattended-run warning that must accompany the Copilot one — live in
+`${CLAUDE_PLUGIN_ROOT}/references/keep-alive.md`; print them from there verbatim.
 
 Then proceed: **build** (`wi:build`) — worktree + parallel waves — then **ship** (`wi:ship`), which ends
 with the PR and the final report (token table included). The keep-alive loop (/goal or Autopilot) is the

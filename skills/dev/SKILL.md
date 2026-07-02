@@ -5,11 +5,8 @@ description: >
   The main entry point for building a feature with wi. Use this skill when the user types
   "/wi:dev <idea>", or says "build me <feature>", "I want a feature that <does X>", "add <capability> to
   this project", or otherwise asks to design-and-build something — including re-running an idea whose goal
-  is already in flight (dev detects it and resumes instead of duplicating). dev orchestrates the whole loop:
-  brainstorm (dialogue about WHAT) -> research skill (design: research -> plan -> design gate) -> build ->
-  ship -> PR. At handoff it arms a keep-alive loop (Claude Code & Codex CLI use their built-in /goal; Copilot CLI uses Autopilot) so the run
-  keeps going across turns until the PR condition is met. Supports "/wi:dev <idea> --auto" to
-  auto-approve the design gate for a fully hands-off run (the gate summary is still recorded).
+  is already in flight (dev detects it and resumes instead of duplicating). Supports "/wi:dev <idea>
+  --auto" to auto-approve the design gate for a fully hands-off run.
 ---
 
 # /wi:dev "<feature idea>" — brainstorm with me, then build it hands-off
@@ -72,27 +69,9 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
      are actually answered in `brief.md` — not blank, not self-answered. A hole → one more brainstorm
      round to fill it. (Both checks resolve inside the brainstorm stop — they are not a new gate.)
    Both green → recap the brief in 3-5 lines, then print the keep-alive handoff for the current platform:
-
-   - **Claude Code / Codex CLI** (both have a built-in `/goal`):
-
-     ```
-     /goal The <slug> PR is open and its branch passes <lint + test commands from repo-map.md>;
-     .wi/goals/<slug>/progress.md Phase is done. Constraints: only files named in tasks.md change;
-     never force-push; tests are never weakened to pass.
-     ```
-
-   - **GitHub Copilot CLI** (no `/goal` — use Autopilot, condition in the prompt):
-
-     ```
-     copilot --autopilot --max-autopilot-continues <N> --no-ask-user --allow-all -p "Drive the <slug> goal to done:
-     build then ship until the <slug> PR is open, its branch passes <lint + test commands>, and
-     .wi/goals/<slug>/progress.md Phase is done. Only files named in tasks.md change; never force-push;
-     never weaken tests."
-     ```
-
-   ⚠️ `--no-ask-user --allow-all` runs Copilot fully unattended (prompts suppressed, all tools/paths
-   granted) — bounded only by `--max-autopilot-continues <N>` and the in-prompt constraints. Use it in
-   repos you trust; drop `--allow-all` if you want Copilot to still confirm risky actions.
+   Claude Code & Codex CLI arm their built-in `/goal` with the PR-open condition; Copilot CLI relaunches
+   under Autopilot. The exact command templates — and the unattended-run warning that must accompany the
+   Copilot one — live in `${CLAUDE_PLUGIN_ROOT}/references/keep-alive.md`; print them from there verbatim.
 
    Armed, the run continues across turns until the condition holds (wi works without it, just less
    robustly through a stalled turn). The per-platform mechanism is in

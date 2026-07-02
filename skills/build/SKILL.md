@@ -2,12 +2,9 @@
 type: Skill
 name: build
 description: >
-  Implement an approved plan in an isolated git worktree, one task at a time, each driven by a fresh
-  subagent under TDD. Use this skill when the user says "/wi:build", "implement the plan", "start building",
-  "execute the tasks", or as the build phase after the design gate (runs autonomously). It creates a dedicated
-  worktree + branch, runs each task's failing-test-first cycle, commits per task, ticks progress.md, and
-  routes frontend tasks to a design skill. Soft-integrates superpowers' using-git-worktrees,
-  subagent-driven-development, and test-driven-development when installed.
+  Implement an approved plan in an isolated git worktree. Use this skill when the user says "/wi:build",
+  "implement the plan", "start building", "execute the tasks", or as the build phase after the design
+  gate (runs autonomously).
 ---
 
 # build — execute the plan, in isolation, task by task

@@ -2,14 +2,10 @@
 type: Skill
 name: rpa
 description: >
-  Turn a UiPath PDD into a built RPA solution. Use this skill when the user types "/wi:rpa", points at a
-  PDD/SDD/.docx, or says "build a UiPath workflow/automation from this PDD", "automate <process>", "follow
-  PDD.docx". It ingests the PDD (via markitdown), runs a deep TO-BE refinement brainstorm (filling the
-  gaps real PDDs leave), writes an SDD + architecture + assumptions, confirms them at the design gate,
-  then builds a REFramework or Maestro project via the UiPath skills (framework, then XAML-only or coded —
-  your choice at the design gate) to an open PR. One run handles a
-  multi-process PDD. Add "--auto" for a hands-off run. Reuses the wi spine (gate, worktrees, parallel
-  waves, ship, docs-sync, token report).
+  Turn a UiPath PDD into a built RPA solution — REFramework or Maestro. Use this skill when the user
+  types "/wi:rpa", points at a PDD/SDD/.docx, or says "build a UiPath workflow/automation from this PDD",
+  "build a Maestro flow from this PDD", "automate <process>", "follow PDD.docx". One run handles a
+  multi-process PDD. Add "--auto" for a hands-off run.
 ---
 
 # /wi:rpa "<pdd path | describe the process>" — PDD → SDD → built REFramework project

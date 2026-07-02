@@ -4,11 +4,7 @@ name: ship
 description: >
   Take a built goal through the verification gate and out as a clean, reviewed pull request. Use this
   skill when the user says "/wi:ship", "ship it", "open the PR", "wrap this up", "finish the branch", or as
-  the final phase of the loop (autonomous). It runs the repo's real test/lint/typecheck gate, self-reviews against the
-  spec's acceptance criteria and pitfalls, harvests learnings into the .wi/learnings.md index, finalizes
-  the tokens.md ledger before the dossier commit, writes the PR description to the goal's PR.md, opens the
-  PR autonomously, and closes out against a hard checklist. Soft-integrates superpowers' verification-before-completion,
-  requesting-code-review, and finishing-a-development-branch when installed.
+  the final phase of the loop (autonomous).
 ---
 
 # ship — verify, review, PR
@@ -149,11 +145,20 @@ Commit: `docs(<slug>): learnings` (or fold into the docs-sync commit).
   scratch — one-off sanity scripts, probe files, generated artifacts (e.g. a `_sanity_export.py` written
   to run an export check). Throwaway probes belong in a temp dir outside the repo, or get removed before
   the PR. A stray scratch file in the diff is a defect.
-- **Tidy the dossier** (do this BEFORE cutting the PR, so the PR carries a clean `.wi/`):
+- **Tidy the dossier** (do this BEFORE cutting the PR, so the PR carries a clean `.wi/`). Ship serves two
+  flows: first read the **`Flow:`** line from the goal's `progress.md` (`dev` | `rpa`; a **missing line
+  means `dev`** — goals created before the line existed are dev). It keys which directory reference
+  defines the sweep whitelist and the dossier manifest below: `dev` →
+  `${CLAUDE_PLUGIN_ROOT}/skills/research/references/wi-directory.md`, `rpa` →
+  `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/rpa-directory.md`. **RPA runs: see rpa/SKILL §7** for how
+  ship's dev-named artifacts (spec.md, pitfalls.md, brief.md) map to the RPA ones. Then:
   1. *Sweep strays:* every goal-specific file must live under `.wi/goals/<slug>/`. Anything this run left
      loose in `.wi/` or elsewhere (scratch notes, drafts, working files) moves into the slug folder or is
-     deleted if worthless. Project-level files stay where they are: `constitution.md`, `repo-map.md`,
-     `overview.md`, `architecture.md`, `glossary.md`, `roadmap.md`, `adr/`, `learnings.md`, `learnings/`.
+     deleted if worthless. Project-level files stay where they are — the whitelist is the flow's directory
+     reference's project-level list (dev: wi-directory.md's "Project-level memory" bullet; rpa:
+     rpa-directory.md's "Project-level files" bullet — the RPA registries `rpa-constitution.md`,
+     `sdd-template.md`, `inputs.md`, `components.md`, `orchestrator.md` are project files, never strays).
+     When in doubt the directory reference wins; never sweep a file it marks project-level.
   2. *Prune the ephemera:* delete `research/` working notes, **the cross-provider diff review's `moa-review.md`**,
      **and wi-code-checker's `verification.md`** —
      their value must already be distilled (research → the ADR and `spec.md`; the verification verdict →
@@ -168,16 +173,18 @@ Commit: `docs(<slug>): learnings` (or fold into the docs-sync commit).
      recomputes the **Subagents (exact)** sum from the ledger rows — no manual stdout-copy. On a parse
      failure it writes `Orchestrator: unavailable for this run` (never a substitute, estimate, or
      fabricated figure). The **file** is the deliverable, not the console output.
-  4. *What remains is the fixed dossier:* `progress.md`, `brief.md`, `spec.md`, `tasks.md`,
-     `pitfalls.md`, `tokens.md`, `PR.md` — seven small files, the durable record of the goal (`PR.md` is
-     written in the next step, before this commit is pushed).
+  4. *What remains is the fixed dossier for this flow* — take the manifest from the flow's directory
+     reference, not from memory: `dev` → wi-directory.md's seven-file dossier (progress, brief, spec,
+     tasks, pitfalls, tokens, PR); `rpa` → rpa-directory.md's run dossier (the SDD pack plus per-process
+     `tobe.md`). Either way it is the durable record of the goal (`PR.md` is written in the next step,
+     before this commit is pushed).
   5. Commit it: `chore(<slug>): tidy goal dossier`.
 
 ## 6 · PR description — write `.wi/goals/<slug>/PR.md`
 
 Write it from the goal's own artifacts — they were made for exactly this. The description is a **file,
 not console output**: save it as `.wi/goals/<slug>/PR.md` and commit it (`docs(<slug>): PR description`).
-It is part of the seven-file dossier and exists **whether or not** a PR can be opened this run — it is
+It is part of the dossier in both flows and exists **whether or not** a PR can be opened this run — it is
 what `gh pr create --body-file` consumes, and what a human uses if they must create the PR by hand. It
 opens with OKF frontmatter (`type: PR Description`); the PR **body** is everything *below* that
 frontmatter, so the frontmatter is stripped before feeding `gh` (§7) — it's dossier metadata, not PR text.
@@ -257,7 +264,10 @@ finished, no matter what the console already said:
       still PENDING). An honest `Orchestrator: unavailable for this run` passes. This *replaces* reading the
       file by eye — the exit code is the close-out condition the keep-alive loop waits on.
 - [ ] `.wi/learnings.md` index has this goal's line (and the detail file exists if one was warranted)
-- [ ] dossier = exactly the seven files; `research/` pruned; no strays anywhere in `.wi/`
+- [ ] dossier = exactly the flow's manifest (per progress.md `Flow:`, missing = dev — dev: the seven-file
+      dossier in wi-directory.md; rpa: the run dossier in rpa-directory.md; **RPA runs: see rpa/SKILL §7
+      mapping**); ephemera pruned (`research/`, `verification.md`, `moa-review.md`); no strays anywhere
+      in `.wi/`
 - [ ] worktree removed; merged branch deleted
 
 All green: set Phase = `done`, add a final Log line with the PR link, and if `roadmap.md` exists mark this

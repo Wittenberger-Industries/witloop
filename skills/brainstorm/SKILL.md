@@ -4,11 +4,9 @@ name: brainstorm
 description: >
   Run the interactive dialogue that pins down WHAT a feature should be, before any autonomous work. Use
   this skill when the user types "/wi:brainstorm", as the interactive phase of "/wi:dev", or when they say
-  "I have an idea", "help me think through what I want", or "let's scope a feature". It captures the
-  desired behavior, scope, and constraints into .wi/goals/<slug>/brief.md. This is the first of wi's two
-  conversations — the technical "how" is researched autonomously and then confirmed with the user once
-  at the design gate. If
-  obra/superpowers' brainstorming skill is installed, drive the dialogue with it and capture the brief here.
+  "I have an idea", "help me think through what I want", or "let's scope a feature". This is the first of
+  wi's two conversations — the technical "how" is designed autonomously and confirmed once at the design
+  gate.
 ---
 
 # brainstorm — pin down what the user wants

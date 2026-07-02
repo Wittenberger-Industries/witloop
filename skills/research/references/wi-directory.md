@@ -113,6 +113,7 @@ timestamp: <YYYY-MM-DD>
 - **Created:** <YYYY-MM-DD>
 - **Phase:** brainstorm        <!-- brainstorm | research | plan | design-gate | build | ship | done -->
 - **Gate mode:** interactive   <!-- interactive | auto-approve (set by /wi:dev --auto) -->
+- **Flow:** dev                <!-- dev | rpa — ship keys its dossier manifest + sweep whitelist on it; a missing line means dev -->
 - **Worktree:** <path or "-">
 - **Branch:** <branch or "-">
 

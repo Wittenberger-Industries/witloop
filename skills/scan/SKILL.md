@@ -4,16 +4,9 @@ name: scan
 description: >
   Understand a project folder and bootstrap wi in it. Use this skill when the user types "/wi:scan", opens
   a new project and says "scan the repo", "set up wi here", "document this codebase", "what is this
-  project", or at the very start of work in an unfamiliar folder. scan looks at what's already there and,
-  if code exists, writes documentation about it and a mermaid architecture diagram; detects whether the
-  project is frontend, backend, or
-  both; bootstraps the project constitution; and checks whether the plugins wi works best with
-  (obra/superpowers, frontend-design) are installed, offering to install the missing ones from their
-  official marketplaces. For an empty or stack-less folder it runs a short guided setup to define the
-  languages and tools. Also use it as "/wi:scan --refresh" (or "refresh the scan", "update the repo map",
-  "is the scan stale?") on an already-scanned project: a cheap drift check that re-verifies repo-map
-  facts, flags architecture divergence, and consolidates the learnings index — instead of re-documenting.
-  Python-first, stack-agnostic.
+  project", or at the very start of work in an unfamiliar folder — code-bearing, empty, or greenfield.
+  Also use it as "/wi:scan --refresh" (or "refresh the scan", "update the repo map", "is the scan
+  stale?") on an already-scanned project that has moved on without wi. Python-first, stack-agnostic.
 ---
 
 # /wi:scan — understand the project, then bootstrap wi

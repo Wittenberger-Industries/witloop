@@ -32,30 +32,33 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
    configured orchestrator tier. Never re-ask an existing config.
 2. **Open the goal folder — or resume the one already open.** Parse flags: `--auto` sets **Gate mode:
    auto-approve** in progress.md — tell the user the design gate will be auto-approved and recorded, not
-   asked. Derive a kebab-case name, then prefix the **next global 4-digit ordinal** so `<slug>` =
-   `NNNN-<name>` (e.g. `0001-stripe-webhooks`) — mirroring `ADR-NNNN`: the ordinal is global across
-   `.wi/goals/`, monotonic, assigned **once at creation, never renumbered** (next = highest existing
-   `.wi/goals/` ordinal + 1, else `0001`; legacy unnumbered goals are left as-is and ignored by the scan;
-   a resumed goal keeps its number; a roadmap row's name is numbered when its folder is first created).
-   Then **check before creating**:
-   - Scan `.wi/goals/*/progress.md` for Phase ≠ `done`. One matches this idea (same/near slug, or a title
-     that reads as the same feature)? Then this is a **resume, not a new goal**: re-read its progress.md,
-     announce the phase and what's left (ticked tasks, recorded decisions), and re-enter that phase —
-     research/build/ship all re-enter from progress.md (workflow.md). Never seed a second folder for the
-     same feature; never overwrite an existing dossier.
-   - Idea is new but other goals are in flight: say so in one line (slug + phase each). If their
-     `tasks.md` files overlap this idea's likely surface, run sequentially — two goals editing the same
-     module trades merge conflicts for wall-clock.
-   - Slug collides with a **done** goal: the global ordinal already makes the new folder unique (it gets
-     the next number), so the kebab name may safely repeat across ordinals; only add a `-2` suffix to
-     disambiguate identical names when scanning. A finished dossier is history, not a scratch folder.
-   - **Roadmap match:** if `.wi/roadmap.md` exists and this idea is one of its rows, use the row's slug,
-     mark it `in-progress`, and carry the row's notes + sequencing rationale into brainstorm as seed
-     context — the WHAT was part-captured when the roadmap was written, so brainstorm gets shorter, not
-     skipped. Check its **Depends on**: a dependency that is done-but-unmerged (PR still open) means this
-     goal would build against code `main` doesn't have — ask once (inside the brainstorm stop, like the
-     preflight): wait for the merge, **stack** this branch on the dependency's branch (record it in
-     progress.md; retarget the PR after the dep merges), or proceed off `main` deliberately.
+   asked. Then **check before creating** — the slug ordinal, then whether this idea is new, a resume, or a
+   collision:
+   - **Ordinal assignment:** Derive a kebab-case name, then prefix the **next global 4-digit ordinal** so
+     `<slug>` = `NNNN-<name>` (e.g. `0001-stripe-webhooks`) — mirroring `ADR-NNNN`: the ordinal is global
+     across `.wi/goals/`, monotonic, assigned **once at creation, never renumbered** (next = highest
+     existing `.wi/goals/` ordinal + 1, else `0001`; legacy unnumbered goals are left as-is and ignored by
+     the scan; a resumed goal keeps its number; a roadmap row's name is numbered when its folder is first
+     created).
+   - **Resume detection:** Scan `.wi/goals/*/progress.md` for Phase ≠ `done`. One matches this idea
+     (same/near slug, or a title that reads as the same feature)? Then this is a **resume, not a new goal**:
+     re-read its progress.md, announce the phase and what's left (ticked tasks, recorded decisions), and
+     re-enter that phase — research/build/ship all re-enter from progress.md (workflow.md). Never seed a
+     second folder for the same feature; never overwrite an existing dossier.
+   - **In-flight overlap:** Idea is new but other goals are in flight: say so in one line (slug + phase
+     each). If their `tasks.md` files overlap this idea's likely surface, run sequentially — two goals
+     editing the same module trades merge conflicts for wall-clock.
+   - **Done-slug collision:** Slug collides with a **done** goal: the global ordinal already makes the new
+     folder unique (it gets the next number), so the kebab name may safely repeat across ordinals; only add
+     a `-2` suffix to disambiguate identical names when scanning. A finished dossier is history, not a
+     scratch folder.
+   - **Roadmap match & dependency stacking:** if `.wi/roadmap.md` exists and this idea is one of its rows,
+     use the row's slug, mark it `in-progress`, and carry the row's notes + sequencing rationale into
+     brainstorm as seed context — the WHAT was part-captured when the roadmap was written, so brainstorm
+     gets shorter, not skipped. Check its **Depends on**: a dependency that is done-but-unmerged (PR still
+     open) means this goal would build against code `main` doesn't have — ask once (inside the brainstorm
+     stop, like the preflight): wait for the merge, **stack** this branch on the dependency's branch (record
+     it in progress.md; retarget the PR after the dep merges), or proceed off `main` deliberately.
    Only then create `.wi/goals/<slug>/` and seed `progress.md` (template in the research skill's
    `wi-directory.md`).
 3. **Brainstorm** (skill `wi:brainstorm`) — the dialogue about desired behavior, scope, constraints.

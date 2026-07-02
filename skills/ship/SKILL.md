@@ -234,17 +234,22 @@ repo, so the dossier stays clean), then open the PR from it:
 
 ```bash
 body=$(mktemp)
-awk 'NR==1&&$0=="---"{f=1;next} f&&$0=="---"{f=0;next} !f' .wi/goals/<slug>/PR.md > "$body"
+awk '{sub(/\r$/,"")} NR==1&&$0=="---"{f=1;next} f&&$0=="---"{f=0;next} !f' .wi/goals/<slug>/PR.md > "$body"
 gh pr create --title "<…>" --body-file "$body"   # add --draft if the run ended blocked or partial
 rm -f "$body"
 ```
+
+(The `mktemp` + `awk` pipeline assumes a POSIX shell — Git Bash on Windows, which Claude Code provides; it
+is not guaranteed under Copilot CLI. The leading `{sub(/\r$/,"")}` keeps the frontmatter strip CRLF-safe on
+a `core.autocrlf=true` checkout, where the `---` delimiters arrive as `---\r` and a bare line compare would
+miss them.)
 
 Log the PR URL in `progress.md`.
 
 **A pushed branch is not a shipped goal.** If `gh` is unavailable or `pr create` fails, the run is **not
 done**: record in `progress.md`'s Decisions/blockers the exact recovery command (frontmatter-stripped, as
 above) —
-`body=$(mktemp); awk 'NR==1&&$0=="---"{f=1;next} f&&$0=="---"{f=0;next} !f' .wi/goals/<slug>/PR.md > "$body"; gh pr create --title "<…>" --body-file "$body"`
+`body=$(mktemp); awk '{sub(/\r$/,"")} NR==1&&$0=="---"{f=1;next} f&&$0=="---"{f=0;next} !f' .wi/goals/<slug>/PR.md > "$body"; gh pr create --title "<…>" --body-file "$body"`
 — plus the failure reason, and tell the user in the final report that the PR still needs creating. Never silently stop at the push. **Never
 force-push.** If `superpowers:finishing-a-development-branch` is installed, use it for the close-out.
 

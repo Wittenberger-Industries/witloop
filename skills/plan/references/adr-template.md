@@ -70,6 +70,6 @@ now. Neutral — state the problem, not the answer.>
 
 | ID | Decision | Status | Date | Goal |
 |----|----------|--------|------|------|
-| [ADR-0001](ADR-0001-use-postgres.md) | Use Postgres for the event store | accepted | 2026-06-07 | event-store |
-| [ADR-0002](ADR-0002-tags-child-table.md) | Store tags in a task_tags child table | accepted | 2026-06-07 | task-tags |
+| [ADR-0001](ADR-0001-use-postgres.md) | Use Postgres for the event store | accepted | 2026-06-07 | 0001-event-store |
+| [ADR-0002](ADR-0002-tags-child-table.md) | Store tags in a task_tags child table | accepted | 2026-06-07 | 0002-task-tags |
 ```

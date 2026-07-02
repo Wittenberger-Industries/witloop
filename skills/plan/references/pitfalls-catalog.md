@@ -1,7 +1,7 @@
 ---
 type: Reference
 title: "Pitfalls catalog"
-description: "A foresight checklist."
+description: "A planning-time foresight checklist: pitfall categories (data, concurrency, API, auth, errors, performance, testing, frontend, ops, process) to skim so the few that apply land in the goal's pitfalls.md."
 timestamp: 2026-06-07
 tags: [plan, reference]
 ---

@@ -121,7 +121,7 @@ role's Claude tier:
 
 ### The cross-provider diff review (a layer beside wi-code-checker's result mode)
 
-Not a per-tool-call interceptor (rejected as cost-prohibitive — see issue #12's scope revision): it's an
+Not a per-tool-call interceptor (running every reviewer role cross-provider was rejected as cost-prohibitive; only this independent cross-provider layer at ship survived): it's an
 **independent third-party line-level review of the finished diff**, run by ship §2 conceptually beside its
 self-review — and, when `check_points: per-wave`, additionally at each build wave-end gate over that
 wave's diff. The point is **model diversity**: the checker itself is Claude-family (subagents can only run
@@ -136,7 +136,7 @@ it cannot verify things are actually wired, and it does not write `verification.
    does not resolve, fall back to `py -3` on Windows or `python3` on Linux/macOS).
 3. Exit `0` = `## REVIEW PASSED`; `1` = `## ISSUES FOUND` — treat findings like any checker finding:
    BLOCKER → fix (loop back to build), WARNING/INFO → address or record. Both layers share the **max 2
-   review→fix rounds** budget (the issue's revision cap); whatever remains after round 2 is surfaced, with
+   review→fix rounds** budget; whatever remains after round 2 is surfaced, with
    severity, in `PR.md`'s Verification section. `3` = no API key in `api_key_env` and `2` = config or API
    error govern only whether **this layer** runs — log `cross-provider layer skipped (<reason>)` and
    continue; wi-code-checker's result-mode dispatch is unconditional and runs regardless. The

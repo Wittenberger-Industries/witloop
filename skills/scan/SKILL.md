@@ -91,8 +91,9 @@ Anchor on the repo-map's `scanned <YYYY-MM-DD>` stamp and diff reality against t
    config ⇒ commands stand; don't re-run the suite to "check".
 2. **Stack & classification:** new language/framework in the lockfiles? frontend appeared in a
    backend-only repo? Update the facts and the frontend/backend line.
-3. **Structure vs `architecture.md`:** `git diff --stat <approx. scan date>..HEAD` at directory level —
-   modules/dirs added or removed that the diagram doesn't show? Update the mermaid (validate with
+3. **Structure vs `architecture.md`:** `git diff --stat $(git rev-list -1 --before="<scan date>" HEAD)..HEAD`
+   at directory level (or `git log --stat --since="<scan date>"`) — modules/dirs added or removed that the
+   diagram doesn't show? Update the mermaid (validate with
    `check_mermaid.py`, rules above) when the change is structural; leave it alone for churn inside
    existing nodes.
 4. **`overview.md`:** update only sections made wrong (organization, run steps, external services).

@@ -72,9 +72,9 @@ run it as wide as the DAG allows. Repeat until every task is ticked:
    is somehow absent, `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/goals/<slug>/tokens.md`
    first — `python` assumed on PATH; where it does not resolve, fall back to `py -3` on Windows or `python3`
    on Linux/macOS), then recompute the ready set and dispatch the next wave without waiting for stragglers it doesn't depend on.
-   A runner that returns **`auth-gate`** (a `401` / `run <x> login` / missing `ENV` wall) is **not** a
-   failure to retry: don't commit it, record the exact unblock steps in `progress.md`, and let the
-   keep-alive loop pause cleanly — it resumes once the human clears the gate.
+   A runner whose last line is **`## TASK AUTH-GATE`** (status `auth-gate` — a `401` / `run <x> login` /
+   missing `ENV` wall) is **not** a failure to retry: don't commit it, record the exact unblock steps in
+   `progress.md`, and let the keep-alive loop pause cleanly — it resumes once the human clears the gate.
 
 Escalations — two ready tasks that must touch the same file, or tests that can't run concurrently — are in
 the reference (per-task worktrees; serial verify as a last resort). Sequential execution is the fallback

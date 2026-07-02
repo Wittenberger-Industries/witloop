@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MoA cross-provider check — wi-code-checker's result-mode independent review (issue #12).
+"""MoA cross-provider check — wi-code-checker's result-mode independent review.
 
 Reads the goal project's `.wi/moa.md` (the MoA model-assignment config), and — when a second
 provider is configured — sends the diff + spec context to that model, possibly a different

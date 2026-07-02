@@ -1,7 +1,7 @@
 ---
 type: Reference
 title: "Phase contracts & resumability"
-description: "The loop is one interactive phase (**brainstorm**, run by `dev`) followed by an autonomous pipeline (**research -> plan -> build -> ship**, run by..."
+description: "How wi's phases fit together and resume: one interactive brainstorm, then the autonomous research -> plan -> build -> ship pipeline, the two deliberate gates, and re-entry driven by progress.md's Phase field."
 timestamp: 2026-06-09
 tags: [research, reference]
 ---

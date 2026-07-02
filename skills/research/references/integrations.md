@@ -1,7 +1,7 @@
 ---
 type: Reference
 title: "Integrations — borrow, don't reinvent"
-description: "wi is deliberately thin."
+description: "How wi detects installed skills and delegates to them — brainstorm, plan, build, ship, frontend design, debug — falling back to a light built-in version only when a preferred skill is absent."
 timestamp: 2026-06-12
 tags: [research, reference]
 ---

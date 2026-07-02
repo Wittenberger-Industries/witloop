@@ -1,7 +1,7 @@
 ---
 type: Reference
 title: "Asking sharp clarifying questions"
-description: "The brainstorm phase gets a handful of focused rounds — make each count."
+description: "How to ask sharp clarifying questions in brainstorm across a handful of focused rounds: what to probe (behavior, boundaries, constraints, the undecided fork), what to skip, and how to phrase each."
 timestamp: 2026-06-07
 tags: [brainstorm, reference]
 ---

@@ -1,7 +1,7 @@
 ---
 type: Agent
 name: wi-task-runner
-model: inherit            # X3: a dispatch may pin a cheaper tier for simple/parallel tasks; inherit is the portable default
+model: inherit            # a dispatch may pin a cheaper tier for simple/parallel tasks; inherit is the portable default
 color: green
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 description: |
@@ -117,7 +117,7 @@ Self-Check: <PASS | FAIL — files exist + Verify passed + no stubs>
 Deferred Issues: <fixes that hit the 3-attempt cap, or "none">
 Notes: <anything surprising, plan-amendment suggestions, deviations you fixed, or out-of-scope work spotted>
 
-## TASK COMPLETE        <!-- or: ## TASK BLOCKED — last line, so the orchestrator/keep-alive loop can detect the outcome -->
+## TASK COMPLETE        <!-- last line, so the orchestrator/keep-alive loop can detect the outcome; use exactly one, matching the status above: ## TASK COMPLETE (done) · ## TASK BLOCKED (blocked) · ## TASK AUTH-GATE (auth-gate) -->
 ```
 
 A tight, honest report is the whole point — the orchestrator acts on it without reading your transcript.

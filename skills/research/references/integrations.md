@@ -1,7 +1,7 @@
 ---
 type: Reference
 title: "Integrations — borrow, don't reinvent"
-description: "wi is deliberately thin."
+description: "How wi detects installed skills and delegates to them — brainstorm, plan, build, ship, frontend design, debug — falling back to a light built-in version only when a preferred skill is absent."
 timestamp: 2026-06-12
 tags: [research, reference]
 ---
@@ -57,7 +57,7 @@ Operationally: `build` passes the routing into each `[frontend]` task-runner's c
 the UI through the design skill and logs `frontend via frontend-design` (or `frontend via wi fallback
 (frontend-design absent)`) to `progress.md`, and ship's checker (result mode) flags any `[frontend]` UI
 that shipped blind while the skill was installed. Backend and glue tasks stay in the normal build loop; a
-single goal can mix both (tasks are tagged).
+single feature can mix both (tasks are tagged).
 
 ## Backend / Python
 
@@ -68,7 +68,7 @@ generically from whatever `scan` recorded in `repo-map.md`.
 
 ## Sibling commands
 
-`wi:rpa` (planned) will be another command in this same `wi` plugin, following the same `.wi/` +
-brainstorm-then-autonomous shape for UiPath RPA workflows — leaning on UiPath skills the way wi leans
-on superpowers. Keep the cross-cutting conventions (the `.wi/` spec, the handoff, integration-detection)
-stable so the muscle memory transfers.
+`wi:rpa` is another command in this same `wi` plugin: it shipped at v0.7.0 and is a headline feature of
+1.0.0, following the same `.wi/` + brainstorm-then-autonomous shape for UiPath RPA workflows — leaning on
+UiPath skills the way wi leans on superpowers. The cross-cutting conventions (the `.wi/` spec, the handoff,
+integration-detection) stay stable across both, so the muscle memory transfers.

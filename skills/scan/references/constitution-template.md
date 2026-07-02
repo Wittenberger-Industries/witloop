@@ -53,11 +53,11 @@ timestamp: <YYYY-MM-DD>
 
 ## Architecture & dependencies
 - Respect existing module boundaries and layering; don't reach across them for convenience.
-- Adding a dependency is a decision — clear the Simplicity ladder first, then justify it in the goal's spec.
+- Adding a dependency is a decision — clear the Simplicity ladder first, then justify it in the feature's spec.
 - Any hard-to-reverse decision (datastore, framework, public API shape, auth model) requires an ADR.
 
 ## Git & shipping
-- One goal → one branch/worktree → one focused PR. Small, reviewable commits.
+- One feature → one branch/worktree → one focused PR. Small, reviewable commits.
 - Conventional-ish commit subjects (`feat:`, `fix:`, `refactor:`, `test:`, `docs:`).   (confirm)
 - The ship gate (tests + lint + typecheck) must pass before opening a PR.
 
@@ -79,4 +79,4 @@ baseline beats no opinion:
 - New dependency = justify it; prefer stdlib / native / existing.
 - Build the least that works — skip speculative work (YAGNI), prefer deletion, mark deliberate shortcuts with their ceiling.
 - Hard-to-reverse decision = write an ADR.
-- One goal = one branch = one PR.
+- One feature = one branch = one PR.

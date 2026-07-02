@@ -1,26 +1,26 @@
 ---
 type: Template
 title: Spec — template
-description: Template for an OKF-conformant goal spec (.wi/goals/<slug>/spec.md).
+description: Template for an OKF-conformant feature spec (.wi/features/<slug>/spec.md).
 timestamp: 2026-06-14
 tags: [spec, template, okf, plan]
 ---
 
 # Spec — template
 
-Copy to `.wi/goals/<slug>/spec.md`. The spec answers *what* and *why* and *how we'll know it's done* —
+Copy to `.wi/features/<slug>/spec.md`. The spec answers *what* and *why* and *how we'll know it's done* —
 not *how to build it* (that's `tasks.md`). Keep it tight; every section earns its place.
 
 ```markdown
 ---
 type: Spec
-title: <goal title>
+title: <feature title>
 description: <what this delivers, one line>
-goal: <slug>
+feature: <slug>
 timestamp: <YYYY-MM-DD>
 ---
 
-# Spec: <goal title>
+# Spec: <feature title>
 
 ## Summary
 <2-4 sentences: what this delivers and why now. A reviewer should grok the change from this alone.>

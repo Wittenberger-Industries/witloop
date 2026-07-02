@@ -2,12 +2,9 @@
 type: Skill
 name: plan
 description: >
-  Turn a decided brief into an executable plan: a spec with testable acceptance criteria, a small ordered
-  task list (each task naming its files and its verification), a pitfalls list, and an ADR when a real
-  decision was made. Use this skill when the user says "/wi:plan", "plan this out", "write the spec",
-  "break this into tasks", or as the plan phase of the research skill (autonomous). Planning only writes inside .wi/ —
-  no project code is touched yet. If superpowers:writing-plans is
-  installed, use it and capture its output into .wi/ in WI's format.
+  Turn a decided brief into an executable plan. Use this skill when the user says "/wi:plan", "plan this
+  out", "write the spec", "break this into tasks", or as the plan phase of the research skill
+  (autonomous). Planning only writes inside .wi/ — no project code is touched yet.
 ---
 
 # plan — brief → spec, tasks, pitfalls, ADR
@@ -16,7 +13,7 @@ Produce the artifacts that make build mechanical and review easy. Good planning 
 so the build phase is mostly typing, and so a fresh subagent can pick up any single task and execute it
 without re-reading the whole world.
 
-Inputs: `.wi/goals/<slug>/brief.md`, the chosen approach in `research/`, `.wi/repo-map.md`, `.wi/constitution.md`.
+Inputs: `.wi/features/<slug>/brief.md`, the chosen approach in `research/`, `.wi/repo-map.md`, `.wi/constitution.md`.
 Outputs: `spec.md`, `tasks.md`, `pitfalls.md` (the approach ADR is usually written in the research phase).
 **No source edits — planning only writes inside `.wi/`. Build starts only after the design gate, where the user confirms the architecture + design.**
 
@@ -26,11 +23,11 @@ Outputs: `spec.md`, `tasks.md`, `pitfalls.md` (the approach ADR is usually writt
    The non-negotiable part is **acceptance criteria that are testable** — each one should map to a check
    build can actually run. If you can't state how you'd verify a criterion, it isn't done being specified.
 
-2. **Decide on an ADR (if research didn't already record it).** If the goal commits to anything hard to reverse — a datastore, a framework, an
+2. **Decide on an ADR (if research didn't already record it).** If the feature commits to anything hard to reverse — a datastore, a framework, an
    external service, a public API or schema shape, an auth model — record it as the next **ADR-NNNN** in the
    project-wide `.wi/adr/` log using `${CLAUDE_PLUGIN_ROOT}/skills/plan/references/adr-template.md`
    (global numbering; append the index.md row). Trivial
-   goals get no ADR — don't manufacture decisions.
+   features get no ADR — don't manufacture decisions.
 
 3. **List the pitfalls** → `pitfalls.md`. Walk the catalog in
    `${CLAUDE_PLUGIN_ROOT}/skills/plan/references/pitfalls-catalog.md` and keep only the ones that genuinely
@@ -59,22 +56,23 @@ Outputs: `spec.md`, `tasks.md`, `pitfalls.md` (the approach ADR is usually writt
    service), the structure docs (`.wi/architecture.md`, `.wi/overview.md`) go stale — ship's docs-sync
    updates them, but when the doc work is substantial give it its own `[docs]` task.
 
-5. **Mirror the task titles** into `progress.md`, set Phase = `design-gate`, and stop. The research skill now presents
-   the architecture (ADR) + design (spec) + wave overview to the user for confirmation — no code before
-   their explicit go.
+5. **Mirror the task titles** into `progress.md`, **leave Phase = `plan`**, and stop. plan does not own the
+   design-gate transition: the research skill flips Phase = `design-gate` only after its plan-mode checker
+   pass (research §2) has run over the finished plan. It then presents the architecture (ADR) + design
+   (spec) + wave overview to the user for confirmation — no code before their explicit go.
 
 ## `tasks.md` format
 
 ```markdown
 ---
 type: Task List
-title: Tasks — <goal title>
-description: Small ordered tasks (each with files + verify) and the build waves for this goal.
-goal: <slug>
+title: Tasks — <feature title>
+description: Small ordered tasks (each with files + verify) and the build waves for this feature.
+feature: <slug>
 timestamp: <YYYY-MM-DD>
 ---
 
-# Tasks: <goal title>
+# Tasks: <feature title>
 
 > Ordered. Each task is small enough for one focused sitting and ends green.
 
@@ -108,13 +106,13 @@ naming the *specific* way it could bite here and the task that prevents it.
 ```markdown
 ---
 type: Pitfalls
-title: Pitfalls — <goal title>
+title: Pitfalls — <feature title>
 description: The failure modes that genuinely apply to this change, each with its preventing task.
-goal: <slug>
+feature: <slug>
 timestamp: <YYYY-MM-DD>
 ---
 
-# Pitfalls: <goal title>
+# Pitfalls: <feature title>
 
 - **<pitfall>** — how it could bite *here*: <specific>. Prevented by: <task # / named check>.
 - **<pitfall>** — <specific>. Prevented by: <task #>.
@@ -125,5 +123,5 @@ timestamp: <YYYY-MM-DD>
 - If a task can't name its verification, split it until each piece can.
 - If two tasks always change the same file in lockstep, merge them; if two *parallel* tasks merely brush
   the same file, move the shared piece into its own prerequisite task — shared files serialize a wave.
-- 3-9 tasks is typical for a feature. Many more usually means the goal is too big — split it
-  (one goal = one feature = one PR).
+- 3-9 tasks is typical for a feature. Many more usually means the feature is too big — split it
+  (one feature = one PR).

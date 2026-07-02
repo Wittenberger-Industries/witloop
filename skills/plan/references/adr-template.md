@@ -13,7 +13,7 @@ contributors will wonder "why did they do it this way?": datastore, framework, e
 API/schema shape, auth model, concurrency model, a notable dependency. Trivial choices don't need one.
 
 Save as `.wi/adr/ADR-NNNN-short-title.md` — **one project-wide sequence** (ADR-0001, ADR-0002, ...), not
-per-goal: the next number is the highest existing in `.wi/adr/` + 1, zero-padded to four digits. ADRs are
+per-feature: the next number is the highest existing in `.wi/adr/` + 1, zero-padded to four digits. ADRs are
 immutable once accepted — to change a decision, write a new ADR that supersedes the old one.
 
 After writing an ADR, **append a row to `.wi/adr/index.md`** (create it from the template below if
@@ -24,7 +24,7 @@ absent) so the decision log stays browsable at a glance.
 type: ADR
 title: <short imperative title, e.g. "Use Postgres for the event store">
 description: <the decision in one line>
-goal: <slug>
+feature: <slug>
 status: proposed   # proposed | accepted | superseded by ADR-MMMM
 timestamp: <YYYY-MM-DD>
 ---
@@ -34,7 +34,7 @@ timestamp: <YYYY-MM-DD>
 - **Status:** proposed | accepted | superseded by ADR-MMMM
 - **Date:** <YYYY-MM-DD>
 - **Deciders:** <who signed off — or "wi research (autonomous)" + the gate outcome>
-- **Goal:** <slug>  (the wi goal that produced this decision)
+- **Feature:** <slug>  (the wi feature that produced this decision)
 
 ## Context
 <the forces at play: requirements, constraints, what in the repo or roadmap makes this decision necessary
@@ -68,8 +68,8 @@ now. Neutral — state the problem, not the answer.>
 ```markdown
 # Architecture decisions — <project>
 
-| ID | Decision | Status | Date | Goal |
-|----|----------|--------|------|------|
-| [ADR-0001](ADR-0001-use-postgres.md) | Use Postgres for the event store | accepted | 2026-06-07 | event-store |
-| [ADR-0002](ADR-0002-tags-child-table.md) | Store tags in a task_tags child table | accepted | 2026-06-07 | task-tags |
+| ID | Decision | Status | Date | Feature |
+|----|----------|--------|------|---------|
+| [ADR-0001](ADR-0001-use-postgres.md) | Use Postgres for the event store | accepted | 2026-06-07 | 0001-event-store |
+| [ADR-0002](ADR-0002-tags-child-table.md) | Store tags in a task_tags child table | accepted | 2026-06-07 | 0002-task-tags |
 ```

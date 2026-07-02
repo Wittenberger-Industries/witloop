@@ -10,8 +10,9 @@ tags: [rpa, reference]
 
 Used when **`Framework: reframework`** (the Maestro path is `build-maestro.md`).
 
-Build runs after the design gate. wi does **not** write XAML — it orchestrates `uipath-rpa-workflows`
-(the REFramework generator) with the SDD as the spec, in parallel waves, reusing components. Same
+Build runs after the design gate. wi does **not** write XAML — it orchestrates `uipath-rpa`
+(the REFramework generator — the delegated-skill slugs live in the table in `uipath-bootstrap.md`) with the
+SDD as the spec, in parallel waves, reusing components. Same
 discipline as `wi:build`: isolate in a worktree, delegate, summarize, commit small.
 
 Precondition: the design gate passed (SDD + assumptions confirmed, or `--auto`), recorded in
@@ -21,7 +22,9 @@ Precondition: the design gate passed (SDD + assumptions confirmed, or `--auto`),
 
 Create the worktree + branch (`wi/<run-slug>`) exactly as `wi:build` does
 (`${CLAUDE_PLUGIN_ROOT}/skills/build/references/worktrees-and-subagents.md`; use
-`superpowers:using-git-worktrees` if installed). Record path + branch.
+`superpowers:using-git-worktrees` if installed). Record path + branch. Same first step as `wi:build`: the
+run's feature folder is untracked on main, so move `.wi/features/<slug>/` into the worktree and commit it as the
+branch's first commit (`chore(<slug>): feature dossier`) — skip the move if it's already there (resume).
 
 ## 2. Execute the build DAG in waves (from `tasks.md`)
 
@@ -31,7 +34,7 @@ DAG allows (independent processes and independent sub-workflows in parallel):
 1. **Reuse first.** Before generating anything, check `.wi/components.md`. If a needed capability already
    exists (a shared workflow or Library), **invoke/reference it** — do not regenerate. Reuse is logged.
 2. **Delegate generation — low-code XAML REFramework, explicitly.** For each new workflow/process, hand
-   `uipath-rpa-workflows` the relevant SDD section + `tobe.md` + the input refs (`.wi/inputs.md`) + the
+   `uipath-rpa` the relevant SDD section + `tobe.md` + the input refs (`.wi/inputs.md`) + the
    constitution rules. **State the output paradigm in every delegation prompt** (the UiPath skill may default
    to coded otherwise): a **low-code XAML REFramework** project — `project.json` on the **REFramework
    template**, `Main.xaml` (state machine), `Framework/` (`InitAllSettings`, `GetTransactionData`, `Process`,
@@ -39,7 +42,7 @@ DAG allows (independent processes and independent sub-workflows in parallel):
    approved at the design gate** (`progress.md` → `Build paradigm:`): **XAML-only** → every step is a real
    drag-drop XAML **activity** — **no `.cs` / `.codedworkflows` AND no Invoke Code activity** (no procedural VB/C#
    code blocks, ever; **HARD rule, no middle ground**). Normal **VB expressions** in Assign / If / conditions /
-   BuildDataTable etc. are expected and fine — the ban is only the *Invoke Code activity*. State this explicitly to `uipath-rpa-workflows`. If a
+   BuildDataTable etc. are expected and fine — the ban is only the *Invoke Code activity*. State this explicitly to `uipath-rpa`. If a
    step genuinely can't be built from activities, that's the signal to pick the **coded** paradigm at the gate
    — never to smuggle code into an Invoke Code. **coded-allowed** → a REFramework project with coded `.cs`
    workflows is fine. Any `.cs` **or any Invoke Code** when the user approved **XAML-only** is **wrong and
@@ -71,8 +74,9 @@ DAG allows (independent processes and independent sub-workflows in parallel):
    `progress.md`. **Append each delegated unit's token count to `tokens.md`** the moment that subagent
    reports completion (the only point the count exists) — `tokens.md` is **mandatory**, not optional;
    initialize it on the first delegation if absent
-   (`python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/goals/<slug>/tokens.md`),
-   and ship finalizes it (`token_report.py --write`) under a `check_tokens.py` close-out gate.
+   (`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/features/<slug>/tokens.md` —
+   `python` assumed on PATH; where it does not resolve, fall back to `py -3` on Windows or `python3` on
+   Linux/macOS), and ship finalizes it (`token_report.py --write`) under a `check_tokens.py` close-out gate.
 5. **Register new components.** If the build created something reusable (a generic login, a notifier),
    add it to `.wi/components.md` so the next process inherits it.
 
@@ -95,6 +99,7 @@ destructive git.
 
 ## Notes
 
-- If `uipath-rpa-workflows` isn't installed, build can't proceed — stop with the complete SDD pack and say
-  so (the front-half artifacts are still a deliverable).
+- If the UiPath skill that owns `.xaml`/`.cs` authoring (`uipath-rpa` as of 2026-07 — see the
+  delegated-skills table in `uipath-bootstrap.md`) isn't installed, build can't proceed — stop with the
+  complete SDD pack and say so (the front-half artifacts are still a deliverable).
 - Keep `Main.xaml`/`Config.xlsx` edits serialized (shared files) even when sub-workflows parallelize.

@@ -10,7 +10,10 @@ tags: [wi, bootstrap, cross-platform, codex, copilot]
 
 This repository **is** the wi plugin: an opinionated, low-token, spec-driven dev loop. Its capabilities
 are delivered as skills under `skills/` (`scan`, `dev`, `research`, `plan`, `build`, `ship`, `brainstorm`,
-`rpa`) plus two subagent prompt templates under `agents/`.
+`rpa`) plus three subagent prompt templates under `agents/` (`wi-code-checker`, `wi-researcher`,
+`wi-task-runner`). The `wi-` prefix is a deliberate cross-platform tag (PR #15); on Claude these render
+as `wi:wi-<name>` — the stutter is accepted, and the checker stays `wi-code-checker` (skills call it
+*the checker*).
 
 ## If you are not Claude Code
 wi's skills use Claude Code tool names and the `${CLAUDE_PLUGIN_ROOT}` variable. Before following a skill,

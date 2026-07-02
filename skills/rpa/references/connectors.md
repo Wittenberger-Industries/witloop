@@ -1,7 +1,7 @@
 ---
 type: Reference
 title: "Connectors — curated reference"
-description: "A baseline map of common systems to their UiPath implementation, used to **inform** the per-step \"UI / API / connector?\" question during brainstorm..."
+description: "A baseline map of common systems to their UiPath implementation, used to inform the per-step UI / API / connector decision during brainstorm; defer to the installed uipath-platform skill for current specifics."
 timestamp: 2026-06-08
 tags: [rpa, reference]
 ---

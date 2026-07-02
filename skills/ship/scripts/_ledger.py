@@ -5,7 +5,7 @@ NOT an entrypoint. Imported by the two scripts the skills invoke:
   - check_tokens.py  (--init scaffold, default = verify gate)
   - token_report.py  (--write finalize: Orchestrator section + Subagents sum)
 
-tokens.md is a per-goal RUNTIME artifact in a user's .wi/, never in this plugin repo.
+tokens.md is a per-feature RUNTIME artifact in a user's .wi/, never in this plugin repo.
 This module owns the file format; the scripts are thin CLIs over it. Stdlib only.
 """
 import re
@@ -26,7 +26,7 @@ TEMPLATE = """\
 type: Token Ledger
 title: "__TITLE__"
 description: Exact per-subagent token usage + the orchestrator total (finalized by ship pre-PR).
-goal: __SLUG__
+feature: __SLUG__
 timestamp: __TIMESTAMP__
 ---
 
@@ -43,7 +43,7 @@ exists only there and is NOT retrievable later. ship finalizes the Orchestrator 
 
 ## Orchestrator
 
-_PENDING — ship replaces this section during the dossier tidy (BEFORE the dossier commit and the PR) by running `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write <this file>`, which parses the session transcript. That parsed figure is the only reliable orchestrator measure; if the parse fails it writes `Orchestrator: unavailable for this run` — never a substitute, estimate, or invented figure. A tokens.md still reading PENDING after ship is a defect._
+_PENDING — ship replaces this section during the dossier tidy (BEFORE the dossier commit and the PR) by running `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write <this file>`, which parses the session transcript. That parsed figure is the only reliable orchestrator measure; if the parse fails it writes `Orchestrator: unavailable for this run` — never a substitute, estimate, or invented figure. A tokens.md still reading PENDING after ship is a defect._
 """
 
 

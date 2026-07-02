@@ -21,7 +21,7 @@ deploy`) is a separate, **post-gate** ship action that runs only on an already-g
 This gate is **framework-aware**. The steps below are the **REFramework** gate. On the **Maestro** path
 (`Framework: maestro`) the gate is instead: `uip maestro flow validate` (mandatory) **+** `uip maestro flow
 eval` **when eval sets exist** (run-if-present, reported) — there is **no** Workflow Analyzer or
-approved-paradigm check (those are REFramework-specific). The goal-level **checker (result mode)** below runs
+approved-paradigm check (those are REFramework-specific). The feature-level **checker (result mode)** below runs
 on **both** paths.
 
 ## Run, in this order (per process/project) — REFramework
@@ -68,12 +68,12 @@ available in the run environment, the gate degrades to: **artifacts complete + t
 ruleset/criteria to pass**, and the actual Analyzer run is deferred to the user (say so explicitly — don't
 claim green you didn't verify).
 
-## Goal-level check (checker · result mode)
+## Feature-level check (checker · result mode)
 
 Beyond the tooling above, dispatch the **checker** (`${CLAUDE_PLUGIN_ROOT}/agents/wi-code-checker.md`) in `result`
 mode against **`sdd.md` §13** (acceptance criteria) + the locked decisions (the SDD's §1-§7, the
 `rpa-constitution`, any ADR) — it confirms each is **delivered and wired in the generated project**, not just
-present, refreshing `verification.md`. Goal/coverage-level, distinct from the Analyzer's line-level rules. A
+present, refreshing `verification.md`. Feature/coverage-level, distinct from the Analyzer's line-level rules. A
 result-mode **BLOCKER** — an unmet SDD criterion, or a decision silently reduced to a stub/mock not signed
 off — **loops back to build**; ship never opens the PR on a run the checker says isn't met.
 

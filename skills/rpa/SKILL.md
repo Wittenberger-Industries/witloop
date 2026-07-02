@@ -2,21 +2,18 @@
 type: Skill
 name: rpa
 description: >
-  Turn a UiPath PDD into a built RPA solution. Use this skill when the user types "/wi:rpa", points at a
-  PDD/SDD/.docx, or says "build a UiPath workflow/automation from this PDD", "automate <process>", "follow
-  PDD.docx". It ingests the PDD (via markitdown), runs a deep TO-BE refinement brainstorm (filling the
-  gaps real PDDs leave), writes an SDD + architecture + assumptions, confirms them at the design gate,
-  then builds a REFramework project via the UiPath skills (XAML-only or coded — your choice at the design
-  gate) to an open PR. One run handles a
-  multi-process PDD. Add "--auto" for a hands-off run. Reuses the wi spine (gate, worktrees, parallel
-  waves, ship, docs-sync, token report).
+  Turn a UiPath PDD into a built RPA solution — REFramework or Maestro. Use this skill when the user
+  types "/wi:rpa", points at a PDD/SDD/.docx, or says "build a UiPath workflow/automation from this PDD",
+  "build a Maestro flow from this PDD", "automate <process>", "follow PDD.docx". One run handles a
+  multi-process PDD. Add "--auto" for a hands-off run.
 ---
 
 # /wi:rpa "<pdd path | describe the process>" — PDD → SDD → built REFramework project
 
 `wi:rpa` is the rigorous **front half** of an RPA build: it does the thinking (ingest → TO-BE → SDD) and
 hands a high-fidelity spec to UiPath's own skills for the build. wi owns the method, the gate, and the
-artifacts; **`uipath-rpa-workflows` owns the build** (XAML or coded) — borrow, don't reinvent.
+artifacts; **`uipath-rpa` owns the build** (XAML or coded — the delegated-skill slugs live in the table in
+`uipath-bootstrap.md`) — borrow, don't reinvent.
 
 Defaults (set in the rpa-constitution, overridable): **REFramework**, build paradigm **approved at the design
 gate (XAML-only default, or coded)**, build to an **open PR**, gate =
@@ -33,7 +30,8 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
    it) are installed (offer to install if absent), and on an existing UiPath repo delegate structure discovery
    to UiPath's `uipath-project-discovery-agent`.
 2. **Register inputs & components, ingest the PDD.** Follow
-   `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/ingest.md`: derive the **numbered run-slug** first
+   `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/ingest.md`: a repo whose work units still live under the
+   pre-rename folder gets a one-time `git mv .wi/goals .wi/features` before anything else; then derive the **numbered run-slug**
    (`NNNN-<name>` — the next global 4-digit ordinal, mirroring `ADR-NNNN`; see ingest.md §1); catalog the
    supporting files in the repo (API refs, CSV/mapping tables, sample data, screenshots) into
    `.wi/inputs.md`; detect reusable components into `.wi/components.md`; convert the PDD to `pdd.md` with
@@ -72,7 +70,7 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
 5. **Design gate.** **Pre-gate check (checker · plan mode):** before rendering the gate, dispatch the
    **checker** (`${CLAUDE_PLUGIN_ROOT}/agents/wi-code-checker.md`) in `plan` mode over `sdd.md` (acceptance criteria
    §13 + locked decisions), `tasks.md`, `assumptions.md`, `orchestrator.md`, `rpa-constitution.md`, and any
-   Runtime State Inventory rows — it builds a goal-backward coverage matrix and returns BLOCKER/WARNING/INFO,
+   Runtime State Inventory rows — it builds a feature-backward coverage matrix and returns BLOCKER/WARNING/INFO,
    writing `verification.md`. A BLOCKER (an uncovered SDD criterion, a silently down-scoped decision, an
    unresolved open dep) loops back to plan, then the checker re-checks (**max 2 rounds**); whatever remains is
    carried into the gate summary with its severity.
@@ -97,18 +95,19 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
    promotes the general ones to `.wi/rpa-constitution.md` / `.wi/glossary.md`.
 6. **Build.** Create the worktree, **reuse components from `.wi/components.md` before building new**, then
    build per the **`Framework`**: **REFramework** → `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/build-uipath.md`,
-   delegating to `uipath-rpa-workflows`; **Maestro** → `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/build-maestro.md`,
+   delegating to `uipath-rpa`; **Maestro** → `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/build-maestro.md`,
    delegating to `uipath-maestro-flow`. **On the REFramework path,** delegate **low-code XAML REFramework**
-   generation to `uipath-rpa-workflows` per process/sub-workflow in **parallel waves** (state the paradigm in
+   generation to `uipath-rpa` per process/sub-workflow in **parallel waves** (state the paradigm in
    the prompt — the **approved paradigm**: XAML-only → pure drag-drop activities, **no Invoke Code and no `.cs`**;
    coded-allowed → `.cs` workflows ok; scaffold each unit as REFramework per the SDD, never Blank),
    append each unit's tokens to `tokens.md` (scaffold it first if absent:
-   `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/goals/<slug>/tokens.md`), and
-   register any new reusable component back into `.wi/components.md`.
+   `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/features/<slug>/tokens.md` —
+   `python` assumed on PATH; where it does not resolve, fall back to `py -3` on Windows or `python3` on
+   Linux/macOS), and register any new reusable component back into `.wi/components.md`.
 7. **Verify & ship.** Gate = `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/verification-gate.md`, **branched on
    `Framework`**: REFramework → approved paradigm + Workflow Analyzer + `uip` validate; Maestro →
    `uip maestro flow validate` (+ `eval` if eval sets exist). Both → `tokens.md` passes `check_tokens.py`
-   + the **goal-level checker · result mode** over `sdd.md` §13. Then reuse the **ship**
+   + the **feature-level checker · result mode** over `sdd.md` §13. Then reuse the **ship**
    skill (`wi:ship`) for the docs-sync, PR (`PR.md` committed, then `gh pr create --body-file`), close-out
    checklist, **compound/learnings** (confirm + promote the candidate `.wi/learnings/<slug>.md` written at
    the gate; update its `.wi/learnings.md` index line), and the **token report (`tokens.md` — finalized
@@ -124,9 +123,10 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
    report.
    **Ship is dev-shaped — map its artifacts to the RPA ones:** gate → the RPA verification gate above;
    `spec.md` (acceptance criteria, review) → **`sdd.md`** (acceptance + §7 process details); `pitfalls.md` →
-   the **`assumptions.md`** register; `brief.md` → **`pdd.md`**; `repo-map.md` → n/a. The dev "7-file dossier"
-   tidy becomes the **RPA dossier**: `progress.md`, `pdd.md`, `sdd.md`, `architecture.md`, `assumptions.md`,
-   `process-inventory.md`, `orchestrator.md`, per-process `tobe.md`, `tasks.md`, `tokens.md`, `PR.md`. One PR
+   the **`assumptions.md`** register; `brief.md` → **`pdd.md`**; `repo-map.md` → n/a. The dev dossier
+   tidy becomes the **RPA dossier** (rpa-directory.md's run manifest): `progress.md`, `pdd.md`, `sdd.md`,
+   `architecture.md`, `assumptions.md`, `process-inventory.md`, per-process `tobe.md`, `tasks.md`,
+   `tokens.md`, `PR.md` — `orchestrator.md` is project-level (updated in place, never swept). One PR
    per run by default (per-process PRs are an option for large solutions).
 
 ## What carries over from the wi spine

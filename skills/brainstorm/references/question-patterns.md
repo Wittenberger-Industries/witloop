@@ -1,14 +1,14 @@
 ---
 type: Reference
 title: "Asking sharp clarifying questions"
-description: "The brainstorm phase gets **one round** of questions."
+description: "How to ask sharp clarifying questions in brainstorm across a handful of focused rounds: what to probe (behavior, boundaries, constraints, the undecided fork), what to skip, and how to phrase each."
 timestamp: 2026-06-07
 tags: [brainstorm, reference]
 ---
 
 # Asking sharp clarifying questions
 
-The brainstorm phase gets **one round** of questions. Make them count. The goal is to remove the
+The brainstorm phase gets a handful of **focused rounds** — make each count. The aim is to remove the
 ambiguity that would otherwise cause a wrong plan — not to interrogate the user.
 
 ## What to ask about (in priority order)
@@ -24,7 +24,7 @@ ambiguity that would otherwise cause a wrong plan — not to interrogate the use
 
 - Anything `repo-map.md` or `constitution.md` already answers (stack, test framework, style). Read first.
 - Anything with an obvious sensible default — state the default instead and let the user override.
-- Five questions when two would do. If you're padding, you don't understand the goal yet.
+- Five questions when two would do. If you're padding, you don't understand the feature yet.
 
 ## Form
 

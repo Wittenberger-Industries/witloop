@@ -15,7 +15,8 @@ them and **offer** to install what's missing (never hard-fail silently — say w
 
 Microsoft's doc→Markdown converter. Used to turn a `.docx`/`.pdf`/`.pptx` PDD into `pdd.md`.
 
-- **Check:** `markitdown --version` (or `python3 -c "import markitdown"`).
+- **Check:** `markitdown --version` (or `python -c "import markitdown"` — `python` assumed on PATH; where
+  it does not resolve, fall back to `py -3` on Windows or `python3` on Linux/macOS).
 - **Install:** `pip install 'markitdown[docx,pdf,pptx]'` (or `[all]`). Python 3.10+. If `pip` isn't
   available, `uv pip install 'markitdown[docx,pdf,pptx]'` in a venv.
 - If the PDD is already Markdown, markitdown isn't strictly needed for that file — but install it anyway
@@ -26,18 +27,26 @@ Microsoft's doc→Markdown converter. Used to turn a `.docx`/`.pdf`/`.pptx` PDD 
 UiPath ships its skills as a **Claude Code plugin marketplace**. They generate the XAML, know the
 activity packages, and include a project-discovery agent.
 
-- **Check:** is the `uipath` plugin installed (skills like `uipath-rpa-workflows`, `uipath-platform`
-  available)? Look in the available skills list.
+wi delegates by **capability**, never by a hard-coded name — upstream can rename a slug, so resolve each
+capability through this table (the single source of truth the other rpa references point back to):
+
+| Capability wi delegates | UiPath skill (slug) | Verified as of |
+|---|---|---|
+| `.xaml`/`.cs` RPA workflow authoring — the REFramework build engine | `uipath-rpa` | 2026-07 |
+| `.flow` Maestro flow authoring | `uipath-maestro-flow` | 2026-07 |
+| Orchestrator / platform ops via the `uip` CLI (queues, assets, credentials, Integration Service connectors, validate/analyze) | `uipath-platform` | 2026-07 |
+| Project discovery — auto-document an existing UiPath project's structure/conventions | `uipath-project-discovery-agent` *(an agent, not a skill)* | 2026-07 |
+
+- **Check (by capability):** is the `uipath` plugin installed — i.e. are the table's skills present in the
+  available skills list? Match each **capability**, not the literal string: the build half needs the skill
+  that owns `.xaml`/`.cs` authoring (`uipath-rpa` as of 2026-07), so a future upstream rename degrades to a
+  table lookup instead of a false "not installed".
 - **Install (Claude Code):**
   ```
   /plugin marketplace add https://github.com/UiPath/skills
   /plugin install uipath@uipath-marketplace
   ```
   (Alternatively the UiPath CLI wizard: `npm i -g @uipath/cli` then `uip skills install`.)
-- The skills wi:rpa leans on: **`uipath-rpa-workflows`** (REFramework XAML generation — the build engine),
-  **`uipath-platform`** (Orchestrator: queues/assets/credentials, Integration Service connectors, the
-  `uip` CLI for validate/analyze), and the **`uipath-project-discovery-agent`** (auto-documents an
-  existing UiPath project's structure/conventions).
 
 If the UiPath skills are absent, wi:rpa can still do the front half (ingest → SDD → architecture +
 assumptions) and stop with a complete spec pack — but it cannot build the XAML. Tell the user that and

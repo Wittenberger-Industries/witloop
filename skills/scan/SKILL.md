@@ -4,16 +4,9 @@ name: scan
 description: >
   Understand a project folder and bootstrap wi in it. Use this skill when the user types "/wi:scan", opens
   a new project and says "scan the repo", "set up wi here", "document this codebase", "what is this
-  project", or at the very start of work in an unfamiliar folder. scan looks at what's already there and,
-  if code exists, writes documentation about it and a mermaid architecture diagram; detects whether the
-  project is frontend, backend, or
-  both; bootstraps the project constitution; and checks whether the plugins wi works best with
-  (obra/superpowers, frontend-design) are installed, offering to install the missing ones from their
-  official marketplaces. For an empty or stack-less folder it runs a short guided setup to define the
-  languages and tools. Also use it as "/wi:scan --refresh" (or "refresh the scan", "update the repo map",
-  "is the scan stale?") on an already-scanned project: a cheap drift check that re-verifies repo-map
-  facts, flags architecture divergence, and consolidates the learnings index — instead of re-documenting.
-  Python-first, stack-agnostic.
+  project", or at the very start of work in an unfamiliar folder — code-bearing, empty, or greenfield.
+  Also use it as "/wi:scan --refresh" (or "refresh the scan", "update the repo map", "is the scan
+  stale?") on an already-scanned project that has moved on without wi. Python-first, stack-agnostic.
 ---
 
 # /wi:scan — understand the project, then bootstrap wi
@@ -61,7 +54,7 @@ Plus a plugin check that may install the skills wi delegates to.
    uv · pytest · ruff · mypy · src layout; Node/TS → pnpm · vitest · eslint · prettier · tsc. Write the
    confirmed answers into `repo-map.md` (`Kind: greenfield`) and seed `constitution.md` from them; skip
    `overview.md` (nothing to document yet). Anything the user genuinely can't answer → `UNKNOWN — ask`;
-   don't invent it. A later scaffolding goal can fill the gaps — but the intent is now on record. Also drop a
+   don't invent it. A later scaffolding feature can fill the gaps — but the intent is now on record. Also drop a
    stack-appropriate `.gitignore` (caches, build artifacts) so the first build doesn't leak them.
 
 3. **Classify frontend / backend / both.** A UI framework in `package.json` or a `components/` tree ⇒
@@ -85,7 +78,7 @@ Plus a plugin check that may install the skills wi delegates to.
 Repos move on without wi — humans commit, dependencies change, modules appear. `--refresh` keeps the
 `.wi/` facts honest **without re-documenting**: verify what a later phase would actually trust, touch only
 what drifted. Precondition: `.wi/repo-map.md` exists (otherwise this IS a first scan — run the full
-procedure). `dev` runs this automatically at goal start when the scan looks stale.
+procedure). `dev` runs this automatically at feature start when the scan looks stale.
 
 ### A · Drift check (facts, not prose)
 
@@ -98,8 +91,9 @@ Anchor on the repo-map's `scanned <YYYY-MM-DD>` stamp and diff reality against t
    config ⇒ commands stand; don't re-run the suite to "check".
 2. **Stack & classification:** new language/framework in the lockfiles? frontend appeared in a
    backend-only repo? Update the facts and the frontend/backend line.
-3. **Structure vs `architecture.md`:** `git diff --stat <approx. scan date>..HEAD` at directory level —
-   modules/dirs added or removed that the diagram doesn't show? Update the mermaid (validate with
+3. **Structure vs `architecture.md`:** `git diff --stat $(git rev-list -1 --before="<scan date>" HEAD)..HEAD`
+   at directory level (or `git log --stat --since="<scan date>"`) — modules/dirs added or removed that the
+   diagram doesn't show? Update the mermaid (validate with
    `check_mermaid.py`, rules above) when the change is structural; leave it alone for churn inside
    existing nodes.
 4. **`overview.md`:** update only sections made wrong (organization, run steps, external services).
@@ -116,7 +110,7 @@ the index only stays useful if it stays lean:
 
 1. **Dedupe:** index lines (or detail files) describing the same gotcha → merge into one, keep the
    clearest hook, fix the links.
-2. **Promote:** a learning that has recurred across goals (or reads as a standing rule, not an incident)
+2. **Promote:** a learning that has recurred across features (or reads as a standing rule, not an incident)
    → fold the rule into its source of truth — `constitution.md` (confirm with the user — it's user-owned),
    `repo-map.md`, or `glossary.md` — then shrink the index line to a tombstone:
    `- <hook> → promoted to constitution (<date>)`. Delete the detail file once promoted.
@@ -266,8 +260,11 @@ Add a second diagram only if it genuinely adds clarity.
 **Validate the diagram for real before committing** — don't eyeball it:
 
 ```
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py .wi/architecture.md
+python ${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py .wi/architecture.md
 ```
+
+(`python` assumed on PATH; where it does not resolve, fall back to `py -3` on Windows or `python3` on
+Linux/macOS.)
 
 The bundled checker catches the actual failure modes (reserved-word node IDs, unquoted special-char
 labels, unbalanced `subgraph`/`end`, unclosed fence) and, when `mmdc` (mermaid-cli) is installed, also

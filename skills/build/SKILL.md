@@ -2,12 +2,9 @@
 type: Skill
 name: build
 description: >
-  Implement an approved plan in an isolated git worktree, one task at a time, each driven by a fresh
-  subagent under TDD. Use this skill when the user says "/wi:build", "implement the plan", "start building",
-  "execute the tasks", or as the build phase after the design gate (runs autonomously). It creates a dedicated
-  worktree + branch, runs each task's failing-test-first cycle, commits per task, ticks progress.md, and
-  routes frontend tasks to a design skill. Soft-integrates superpowers' using-git-worktrees,
-  subagent-driven-development, and test-driven-development when installed.
+  Implement an approved plan in an isolated git worktree. Use this skill when the user says "/wi:build",
+  "implement the plan", "start building", "execute the tasks", or as the build phase after the design
+  gate (runs autonomously).
 ---
 
 # build — execute the plan, in isolation, task by task
@@ -25,7 +22,7 @@ Inputs: `tasks.md`, `spec.md`, `constitution.md`, `repo-map.md`.
 
 ## 1 · Isolate (default: worktree + branch)
 
-Create a dedicated worktree and branch for the goal so the main checkout stays clean and independent goals
+Create a dedicated worktree and branch for the feature so the main checkout stays clean and independent features
 can run in parallel. Exact commands and the no-git / opt-out variants are in
 `${CLAUDE_PLUGIN_ROOT}/skills/build/references/worktrees-and-subagents.md`. **Delegation check:** if
 `superpowers:using-git-worktrees` is in your available skills you MUST use it (log `worktree via
@@ -33,6 +30,14 @@ superpowers` to progress.md); this reference is the fallback when absent. Record
 branch in `progress.md`.
 
 Branch name: `wi/<slug>`. Worktree path: a sibling dir, e.g. `../<repo>-wi-<slug>`.
+
+**First step, right after `git worktree add -b wi/<slug>`: bring the feature dossier over.** The feature folder
+is still **untracked** in the main checkout (no phase before build commits it), so the new worktree starts
+without it. Move `.wi/features/<slug>/` from the main checkout into the worktree's `.wi/features/<slug>/` and
+commit it there as the branch's **first commit** — `chore(<slug>): feature dossier`. Moving (not copying)
+leaves main's working tree clean: the files were untracked on main, so nothing is lost and nothing
+unmerged stays behind. Resume-safe: if the feature folder is already present in the worktree (build
+re-entered after an interruption), the move already happened — skip it.
 
 ## 2 · Execute in parallel waves (the default)
 
@@ -53,20 +58,23 @@ run it as wide as the DAG allows. Repeat until every task is ticked:
    **Frontend routing is operational, not just asserted:** when a task is tagged `[frontend]`, the dispatch
    MUST name the available design skill in that runner's charter — detect `frontend-design` (per
    `integrations.md`) and tell the runner to build/refine the UI *through it*, not blind. The runner enforces
-   this (`agents/wi-task-runner.md`) and logs `frontend via frontend-design` (or `frontend via wi fallback
-   (frontend-design absent)`) to `progress.md`; markup is authored by hand only when no design skill is
+   this (`agents/wi-task-runner.md`) and states `frontend via frontend-design` (or `frontend via wi fallback
+   (frontend-design absent)`) in its report — log that line to `progress.md` when the report returns (runners
+   never write `progress.md`); markup is authored by hand only when no design skill is
    installed. Still verify behavior. (A `[frontend]` task built blind while `frontend-design` was installed
    is a defect ship's checker flags.)
 4. **As each report returns:** check its Verify result and **honor its `Self-Check` line** — tick
    `progress.md` and commit the task (`<type>: <task title>`) only when the runner reports `Self-Check:
    PASS`; a stub or an unmet Verify means the task is *not* done, no matter what the console printed. You
-   are the only committer, so commits stay serialized and clean. Append the runner's token count as a row to
-   the goal's `tokens.md` (it's in the task-completion notification and is NOT retrievable later; if the file
-   is somehow absent, `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/goals/<slug>/tokens.md`
-   first), then recompute the ready set and dispatch the next wave without waiting for stragglers it doesn't depend on.
-   A runner that returns **`auth-gate`** (a `401` / `run <x> login` / missing `ENV` wall) is **not** a
-   failure to retry: don't commit it, record the exact unblock steps in `progress.md`, and let the
-   keep-alive loop pause cleanly — it resumes once the human clears the gate.
+   are the only committer and `progress.md`'s only writer during build, so commits and ticks stay
+   serialized and clean. Append the runner's token count as a row to
+   the feature's `tokens.md` (it's in the task-completion notification and is NOT retrievable later; if the file
+   is somehow absent, `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/features/<slug>/tokens.md`
+   first — `python` assumed on PATH; where it does not resolve, fall back to `py -3` on Windows or `python3`
+   on Linux/macOS), then recompute the ready set and dispatch the next wave without waiting for stragglers it doesn't depend on.
+   A runner whose last line is **`## TASK AUTH-GATE`** (status `auth-gate` — a `401` / `run <x> login` /
+   missing `ENV` wall) is **not** a failure to retry: don't commit it, record the exact unblock steps in
+   `progress.md`, and let the keep-alive loop pause cleanly — it resumes once the human clears the gate.
 
 Escalations — two ready tasks that must touch the same file, or tests that can't run concurrently — are in
 the reference (per-task worktrees; serial verify as a last resort). Sequential execution is the fallback
@@ -75,7 +83,8 @@ when the DAG is a chain, never the default: an idle DAG is wasted wall-clock.
 
 Two scheduling refinements proven in dry runs: (a) **wave-end gate** — at each wave boundary run the full
 lint + test commands once, serially, before dispatching the next wave — and when `.wi/moa.md` sets
-`check_points: per-wave`, also run **wi-code-checker's cross-provider check** over the wave's diff there
+`check_points: per-wave`, also run **the cross-provider diff review** — the layer on top of
+wi-code-checker, when configured — over the wave's diff there
 (`${CLAUDE_PLUGIN_ROOT}/references/moa.md`, same bounded 2-round loop as at ship); (b) **sole-runner exception** —
 when exactly one task in a wave executes tests (the rest are docs/config), that runner keeps full TDD
 (watch-fail / watch-pass); only multi-test waves switch to authored-not-run + orchestrator serial Verify.

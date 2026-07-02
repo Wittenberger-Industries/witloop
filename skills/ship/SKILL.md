@@ -2,22 +2,18 @@
 type: Skill
 name: ship
 description: >
-  Take a built goal through the verification gate and out as a clean, reviewed pull request. Use this
+  Take a built feature through the verification gate and out as a clean, reviewed pull request. Use this
   skill when the user says "/wi:ship", "ship it", "open the PR", "wrap this up", "finish the branch", or as
-  the final phase of the loop (autonomous). It runs the repo's real test/lint/typecheck gate, self-reviews against the
-  spec's acceptance criteria and pitfalls, harvests learnings into the .wi/learnings.md index, finalizes
-  the tokens.md ledger before the dossier commit, writes the PR description to the goal's PR.md, opens the
-  PR autonomously, and closes out against a hard checklist. Soft-integrates superpowers' verification-before-completion,
-  requesting-code-review, and finishing-a-development-branch when installed.
+  the final phase of the loop (autonomous).
 ---
 
 # ship — verify, review, PR
 
 The whole loop has been building toward a change that's safe to merge. Ship's job is to *prove* it and
 package it — never to rubber-stamp. Nothing here weakens to make the gate pass; if the gate is red, the
-goal isn't done.
+feature isn't done.
 
-Inputs: the goal branch/worktree, `spec.md` (acceptance criteria), `pitfalls.md`, `constitution.md`,
+Inputs: the feature branch/worktree, `spec.md` (acceptance criteria), `pitfalls.md`, `constitution.md`,
 `repo-map.md`.
 
 ## 1 · Verification gate (must be green)
@@ -40,19 +36,27 @@ Self-review the diff with fresh eyes, specifically against:
 the review through it (log `review via superpowers:requesting-code-review`); unaided self-review is the
 fallback only when it's absent.
 
-**Goal-level check (wi-code-checker · result mode).** Dispatch **wi-code-checker**
+**Feature-level check (wi-code-checker · result mode) — always runs.** Dispatch **wi-code-checker**
 (`agents/wi-code-checker.md`) in `result` mode against `spec.md`'s acceptance criteria + locked decisions
-(ADRs, constitution); it confirms each is delivered and **wired**, not just present, refreshing
-`verification.md`. If `.wi/moa.md`'s `## Cross-provider config` names a provider (≠ `none`) and its API
-key is present, this pass runs as an **independent cross-provider check** per
-`${CLAUDE_PLUGIN_ROOT}/references/moa.md`: full goal diff + `spec.md` through
-`skills/ship/scripts/moa_review.py` → `.wi/goals/<slug>/moa-review.md`. Otherwise (unconfigured, or exit 2
-config/API error, or exit 3 missing API key) it falls back to dispatching `wi-code-checker` on the
-`wi-code-checker` role's model — log `checker cross-provider via fallback (<reason>)` when that fallback
-fires. Findings are handled uniformly: BLOCKER — an unmet criterion, a decision silently reduced to a
-stub — sends the goal **back to build**, **max 2 review→fix rounds**; whatever remains goes with its
-severity into `PR.md`'s Verification. `moa-review.md` is ephemeral (pruned in §5). Ship never opens the PR
-on a goal wi-code-checker says isn't met.
+(ADRs, constitution); it confirms each is delivered and **wired**, not just present — it reads the actual
+repo — refreshing `verification.md`. This dispatch is unconditional (on the `wi-code-checker` role's model
+when `.wi/moa.md` exists, else inherit); no cross-provider configuration demotes or replaces it.
+
+**Cross-provider layer (only when configured).** If `.wi/moa.md`'s `## Cross-provider config` names a
+provider (≠ `none`) and its API key is present, **additionally** run an independent cross-provider
+**line-level diff review** — a second opinion from another model family, sitting conceptually beside this
+section's self-review — per `${CLAUDE_PLUGIN_ROOT}/references/moa.md`: full feature diff + `spec.md` through
+`skills/ship/scripts/moa_review.py` → `.wi/features/<slug>/moa-review.md`. The script only receives the
+diff + spec text — no Read/Grep/Bash against the repo — so it cannot verify anything is actually wired, and
+it never writes `verification.md`: the cross-provider path is a layer on top of checker, never a replacement.
+Unconfigured, exit 2 (config/API error), or exit 3 (missing API key) governs only whether this layer runs
+— log `cross-provider layer skipped (<reason>)` and continue; the checker dispatch above ran regardless.
+
+Findings from **both** layers feed the same loop: a BLOCKER — an unmet criterion, a decision silently
+reduced to a stub — sends the feature **back to build**, **max 2 review→fix rounds** shared across both;
+whatever remains goes with its severity into `PR.md`'s Verification. A BLOCKER from either layer blocks
+the PR. `moa-review.md` is ephemeral (pruned in §5). Ship never opens the PR
+on a feature wi-code-checker says isn't delivered.
 
 Address findings before proceeding; note anything deliberately deferred.
 
@@ -64,9 +68,11 @@ The feature is built and verified — make the docs match reality before the PR.
   service, update `.wi/architecture.md` (the mermaid graph + legend) to match. If it doesn't exist yet
   (e.g. a greenfield project's first feature), create it now from the new structure using scan's template.
   Then validate it for real before committing:
-  `python3 ${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py .wi/architecture.md` — the bundled
+  `python ${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py .wi/architecture.md` — the bundled
   checker catches reserved-word node IDs, unquoted labels, and unbalanced `subgraph`/`end` (and renders
-  via `mmdc` when available). Fix every error it reports.
+  via `mmdc` when available). Fix every error it reports. (`python` assumed on PATH; where it does not
+  resolve, fall back to `py -3` on Windows or `python3` on Linux/macOS — this holds for every script in
+  this SKILL.)
 - **Project overview & commands:** if organization, stack, or run steps changed, update `.wi/overview.md`;
   if the command list changed, update `.wi/repo-map.md`.
 - **Repo docs the change touched or staled:** READMEs, `docs/`, public-surface docstrings/examples that
@@ -79,7 +85,7 @@ are cheap to keep now and expensive to reconstruct later.
 ## 4 · Compound — capture what's worth remembering
 
 Harvest the **non-obvious** knowledge from this run while context is fresh — this is the one thing that
-compounds wi across goals. Do it **now, before the PR**, so the learnings ride the branch and reach the
+compounds wi across features. Do it **now, before the PR**, so the learnings ride the branch and reach the
 team through review. The bar is strict: only things that would have *saved real time if known up front*:
 - a constraint or dependency that wasn't in any doc and bit the run;
 - an approach that looked right but failed, and why;
@@ -93,44 +99,44 @@ Two tiers, one index:
    ```markdown
    ---
    type: Learning
-   title: <goal title> — learnings
-   description: <one-line hook — the gotcha/pattern worth recalling next goal>
-   goal: <slug>
+   title: <feature title> — learnings
+   description: <one-line hook — the gotcha/pattern worth recalling next feature>
+   feature: <slug>
    timestamp: <YYYY-MM-DD>
    tags: [<area>, ...]
    ---
-   # <goal title> — learnings
+   # <feature title> — learnings
    ## What didn't work
    ## Non-obvious decisions
    ## Gotchas / patterns to reuse
    ```
 
-2. **The index `.wi/learnings.md`** (create lazily) is updated **every goal** — it is how later phases
+2. **The index `.wi/learnings.md`** (create lazily) is updated **every feature** — it is how later phases
    recall learnings without opening every file. One line per learning, hook included:
 
    ```markdown
    ---
    type: Learnings Index
    title: Learnings index — <project>
-   description: One line + hook per goal; phases read this, then open a detail file only when its hook fits.
+   description: One line + hook per feature; phases read this, then open a detail file only when its hook fits.
    timestamp: <YYYY-MM-DD>
    ---
 
    # Learnings index
 
-   - [<goal title>](learnings/<slug>.md) — <one-line hook: the gotcha/pattern in ~10 words>
+   - [<feature title>](learnings/<slug>.md) — <one-line hook: the gotcha/pattern in ~10 words>
    - <slug> (<YYYY-MM-DD>) — nothing above the bar
    ```
 
-   A goal with no substantial learnings gets the one-liner directly in the index and **no** detail file.
+   A feature with no substantial learnings gets the one-liner directly in the index and **no** detail file.
 
 **Feed it back.** If a learning contradicts or extends a project file, update the source of truth, not
 just the note: a confirmed new rule → `constitution.md`; a corrected stack fact → `repo-map.md`; a
-resolved term → `.wi/glossary.md`. That is how the next goal starts smarter.
+resolved term → `.wi/glossary.md`. That is how the next feature starts smarter.
 
 Commit: `docs(<slug>): learnings` (or fold into the docs-sync commit).
 
-## 5 · Tidy the history & the goal dossier
+## 5 · Tidy the history & the feature dossier
 
 - Ensure each commit is coherent (`<type>: <subject>`). Squash only if the project prefers a single commit
   per PR (check the constitution).
@@ -139,12 +145,21 @@ Commit: `docs(<slug>): learnings` (or fold into the docs-sync commit).
   scratch — one-off sanity scripts, probe files, generated artifacts (e.g. a `_sanity_export.py` written
   to run an export check). Throwaway probes belong in a temp dir outside the repo, or get removed before
   the PR. A stray scratch file in the diff is a defect.
-- **Tidy the dossier** (do this BEFORE cutting the PR, so the PR carries a clean `.wi/`):
-  1. *Sweep strays:* every goal-specific file must live under `.wi/goals/<slug>/`. Anything this run left
+- **Tidy the dossier** (do this BEFORE cutting the PR, so the PR carries a clean `.wi/`). Ship serves two
+  flows: first read the **`Flow:`** line from the feature's `progress.md` (`dev` | `rpa`; a **missing line
+  means `dev`** — features created before the line existed are dev). It keys which directory reference
+  defines the sweep whitelist and the dossier manifest below: `dev` →
+  `${CLAUDE_PLUGIN_ROOT}/skills/research/references/wi-directory.md`, `rpa` →
+  `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/rpa-directory.md`. **RPA runs: see rpa/SKILL §7** for how
+  ship's dev-named artifacts (spec.md, pitfalls.md, brief.md) map to the RPA ones. Then:
+  1. *Sweep strays:* every feature-specific file must live under `.wi/features/<slug>/`. Anything this run left
      loose in `.wi/` or elsewhere (scratch notes, drafts, working files) moves into the slug folder or is
-     deleted if worthless. Project-level files stay where they are: `constitution.md`, `repo-map.md`,
-     `overview.md`, `architecture.md`, `glossary.md`, `roadmap.md`, `adr/`, `learnings.md`, `learnings/`.
-  2. *Prune the ephemera:* delete `research/` working notes, **the cross-provider check's `moa-review.md`**,
+     deleted if worthless. Project-level files stay where they are — the whitelist is the flow's directory
+     reference's project-level list (dev: wi-directory.md's "Project-level memory" bullet; rpa:
+     rpa-directory.md's "Project-level files" bullet — the RPA registries `rpa-constitution.md`,
+     `sdd-template.md`, `inputs.md`, `components.md`, `orchestrator.md` are project files, never strays).
+     When in doubt the directory reference wins; never sweep a file it marks project-level.
+  2. *Prune the ephemera:* delete `research/` working notes, **the cross-provider diff review's `moa-review.md`**,
      **and wi-code-checker's `verification.md`** —
      their value must already be distilled (research → the ADR and `spec.md`; the verification verdict →
      the `### Verification` block in `PR.md`). If something in them is still load-bearing, fold it in
@@ -152,22 +167,24 @@ Commit: `docs(<slug>): learnings` (or fold into the docs-sync commit).
   3. *Finalize `tokens.md` — NOW, not at close-out.* The file must be complete **inside the dossier
      commit**, or it never rides the PR. The ledger was scaffolded at research/build start and its
      subagent rows appended live; finalize the orchestrator total with one command:
-     `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write .wi/goals/<slug>/tokens.md`
+     `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write .wi/features/<slug>/tokens.md`
      (auto-detects the active session transcript under `~/.claude/projects/`; add
      `--transcript <path>` if you know it). It replaces the `## Orchestrator` section in place and
      recomputes the **Subagents (exact)** sum from the ledger rows — no manual stdout-copy. On a parse
      failure it writes `Orchestrator: unavailable for this run` (never a substitute, estimate, or
      fabricated figure). The **file** is the deliverable, not the console output.
-  4. *What remains is the fixed dossier:* `progress.md`, `brief.md`, `spec.md`, `tasks.md`,
-     `pitfalls.md`, `tokens.md`, `PR.md` — seven small files, the durable record of the goal (`PR.md` is
-     written in the next step, before this commit is pushed).
-  5. Commit it: `chore(<slug>): tidy goal dossier`.
+  4. *What remains is the fixed dossier for this flow* — take the manifest from the flow's directory
+     reference, not from memory: `dev` → wi-directory.md's seven-file dossier (progress, brief, spec,
+     tasks, pitfalls, tokens, PR); `rpa` → rpa-directory.md's run dossier (the SDD pack plus per-process
+     `tobe.md`). Either way it is the durable record of the feature (`PR.md` is written in the next step,
+     before this commit is pushed).
+  5. Commit it: `chore(<slug>): tidy feature dossier`.
 
-## 6 · PR description — write `.wi/goals/<slug>/PR.md`
+## 6 · PR description — write `.wi/features/<slug>/PR.md`
 
-Write it from the goal's own artifacts — they were made for exactly this. The description is a **file,
-not console output**: save it as `.wi/goals/<slug>/PR.md` and commit it (`docs(<slug>): PR description`).
-It is part of the seven-file dossier and exists **whether or not** a PR can be opened this run — it is
+Write it from the feature's own artifacts — they were made for exactly this. The description is a **file,
+not console output**: save it as `.wi/features/<slug>/PR.md` and commit it (`docs(<slug>): PR description`).
+It is part of the dossier in both flows and exists **whether or not** a PR can be opened this run — it is
 what `gh pr create --body-file` consumes, and what a human uses if they must create the PR by hand. It
 opens with OKF frontmatter (`type: PR Description`); the PR **body** is everything *below* that
 frontmatter, so the frontmatter is stripped before feeding `gh` (§7) — it's dossier metadata, not PR text.
@@ -176,13 +193,13 @@ Template:
 ```markdown
 ---
 type: PR Description
-title: <goal title>
+title: <feature title>
 description: <2-4 word summary of the change>
-goal: <slug>
+feature: <slug>
 timestamp: <YYYY-MM-DD>
 ---
 
-## <type>: <goal title>
+## <type>: <feature title>
 
 ### Summary
 <2-4 sentences: what changed and why. Pulled from spec.md Summary.>
@@ -217,17 +234,22 @@ repo, so the dossier stays clean), then open the PR from it:
 
 ```bash
 body=$(mktemp)
-awk 'NR==1&&$0=="---"{f=1;next} f&&$0=="---"{f=0;next} !f' .wi/goals/<slug>/PR.md > "$body"
+awk '{sub(/\r$/,"")} NR==1&&$0=="---"{f=1;next} f&&$0=="---"{f=0;next} !f' .wi/features/<slug>/PR.md > "$body"
 gh pr create --title "<…>" --body-file "$body"   # add --draft if the run ended blocked or partial
 rm -f "$body"
 ```
 
+(The `mktemp` + `awk` pipeline assumes a POSIX shell — Git Bash on Windows, which Claude Code provides; it
+is not guaranteed under Copilot CLI. The leading `{sub(/\r$/,"")}` keeps the frontmatter strip CRLF-safe on
+a `core.autocrlf=true` checkout, where the `---` delimiters arrive as `---\r` and a bare line compare would
+miss them.)
+
 Log the PR URL in `progress.md`.
 
-**A pushed branch is not a shipped goal.** If `gh` is unavailable or `pr create` fails, the run is **not
+**A pushed branch is not a shipped feature.** If `gh` is unavailable or `pr create` fails, the run is **not
 done**: record in `progress.md`'s Decisions/blockers the exact recovery command (frontmatter-stripped, as
 above) —
-`body=$(mktemp); awk 'NR==1&&$0=="---"{f=1;next} f&&$0=="---"{f=0;next} !f' .wi/goals/<slug>/PR.md > "$body"; gh pr create --title "<…>" --body-file "$body"`
+`body=$(mktemp); awk '{sub(/\r$/,"")} NR==1&&$0=="---"{f=1;next} f&&$0=="---"{f=0;next} !f' .wi/features/<slug>/PR.md > "$body"; gh pr create --title "<…>" --body-file "$body"`
 — plus the failure reason, and tell the user in the final report that the PR still needs creating. Never silently stop at the push. **Never
 force-push.** If `superpowers:finishing-a-development-branch` is installed, use it for the close-out.
 
@@ -240,18 +262,21 @@ finished, no matter what the console already said:
 
 - [ ] PR is **open** and its URL is logged in `progress.md` (sole substitute: branch pushed + failure
       reason + the frontmatter-stripped `gh pr create …` recovery command (§7) recorded as a blocker)
-- [ ] `.wi/goals/<slug>/PR.md` exists and is committed on the branch
+- [ ] `.wi/features/<slug>/PR.md` exists and is committed on the branch
 - [ ] `tokens.md` passes the structural gate — run
-      `python3 ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py .wi/goals/<slug>/tokens.md`; a
+      `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py .wi/features/<slug>/tokens.md`; a
       **non-zero exit blocks `Phase = done`** (file missing / no subagent row / unfilled sum / `## Orchestrator`
       still PENDING). An honest `Orchestrator: unavailable for this run` passes. This *replaces* reading the
       file by eye — the exit code is the close-out condition the keep-alive loop waits on.
-- [ ] `.wi/learnings.md` index has this goal's line (and the detail file exists if one was warranted)
-- [ ] dossier = exactly the seven files; `research/` pruned; no strays anywhere in `.wi/`
+- [ ] `.wi/learnings.md` index has this feature's line (and the detail file exists if one was warranted)
+- [ ] dossier = exactly the flow's manifest (per progress.md `Flow:`, missing = dev — dev: the seven-file
+      dossier in wi-directory.md; rpa: the run dossier in rpa-directory.md; **RPA runs: see rpa/SKILL §7
+      mapping**); ephemera pruned (`research/`, `verification.md`, `moa-review.md`); no strays anywhere
+      in `.wi/`
 - [ ] worktree removed; merged branch deleted
 
 All green: set Phase = `done`, add a final Log line with the PR link, and if `roadmap.md` exists mark this
-goal done and surface the next one.
+feature done and surface the next one.
 
 Then deliver the **final run report** in the console: the approach (cite ADR-NNNN), what was built, the
 gate results, the PR URL, and the **token table read from the finalized `tokens.md`** — the file was
@@ -265,4 +290,4 @@ condition holds and the loop clears.
 ## Offer
 
 If the change is the kind that recurs (a release, a periodic check), mention that wi's loop can be
-re-run per goal — and that the user can keep `.wi/roadmap.md` as the running backlog.
+re-run per feature — and that the user can keep `.wi/roadmap.md` as the running backlog.

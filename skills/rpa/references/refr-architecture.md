@@ -1,7 +1,7 @@
 ---
 type: Reference
 title: "REFramework architecture & the solution runtime diagram"
-description: "The house default is the **Robotic Enterprise Framework** (REFramework): a state-machine template with queue-based transaction processing and built..."
+description: "The REFramework runtime architecture for the reframework path: a queue-based state-machine template, and the two architecture artifacts (solution runtime diagram and per-process flow) mapped to the SDD."
 timestamp: 2026-06-08
 tags: [rpa, reference]
 ---

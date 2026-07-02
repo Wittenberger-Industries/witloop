@@ -1,3 +1,11 @@
+---
+type: Implementation Plan
+title: "MoA role redesign implementation plan"
+description: Task-by-task plan to rename .wi/moa.md's roles to wi's real dispatch targets (wi-code-checker, wi-researcher, wi-task-runner) and fold the cross-provider reviewer into wi-code-checker's own result-mode path.
+timestamp: 2026-07-02
+tags: [moa, models, plan]
+---
+
 # MoA role redesign Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.

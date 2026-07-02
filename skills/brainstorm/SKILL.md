@@ -12,8 +12,8 @@ description: >
 # brainstorm — pin down what the user wants
 
 This is the **first** of two conversations in the wi loop (the second is the design gate). Capture *what* the feature should be — behavior,
-boundaries, constraints — clearly enough that the autonomous engine (`goal`) can take it from there without
-coming back to ask. You decide the WHAT; the research skill decides the HOW, and `goal` implements it.
+boundaries, constraints — clearly enough that the autonomous phases (research → build → ship) can take it from there without
+coming back to ask. You decide the WHAT; the research skill decides the HOW, and the build phase implements it.
 
 **This is a real conversation with the USER — not a monologue.** Put the open questions to the user and WAIT
 for answers; asking yourself a question and answering it (`… → my answer`), then replaying one bulk brief for
@@ -23,7 +23,7 @@ focused rounds, but the answers come from the user.
 ## Step 0 — delegation check (mandatory, FIRST action)
 
 Look for `superpowers:brainstorming` in your available skills. **If present, you MUST invoke it** to run
-the dialogue — wi's job is then only to capture the outcome into `.wi/goals/<slug>/brief.md` in the
+the dialogue — wi's job is then only to capture the outcome into `.wi/features/<slug>/brief.md` in the
 format below. Log the mode to `progress.md` either way: `brainstorm via superpowers:brainstorming` or
 `brainstorm via wi fallback (superpowers absent)`. Running the fallback while superpowers is installed
 is a defect, not a preference — wi exists to orchestrate the best installed tool, and the delegation log
@@ -45,7 +45,7 @@ research* — don't invent it.
 ## Glossary & term-sharpening (both paths)
 
 Whether superpowers ran the dialogue or wi did, sharpen the language and persist it — vague terms are how
-specs drift. Maintain project-level `.wi/glossary.md` (shared across goals; create it lazily):
+specs drift. Maintain project-level `.wi/glossary.md` (shared across features; create it lazily):
 - **Sharpen fuzzy/overloaded words.** When the user says something like "service" or "page", propose a
   precise canonical name and confirm: "by 'service' do you mean a route, a catalog entry, or a component?"
 - **Cross-check against code.** Grep the repo for the term; if the code already uses it differently,
@@ -78,14 +78,14 @@ list the rest as aliases. A shared vocabulary makes every future brief and spec 
    - the user-visible behavior / the features they want — concrete examples beat abstractions;
    - boundaries / non-goals — what's explicitly out;
    - hard constraints — deadline, performance, compatibility, must-reuse-X;
-   - any approach *preferences* they hold — capture as non-binding preferences, since `goal` decides.
+   - any approach *preferences* they hold — capture as non-binding preferences, since the research phase decides.
    Use AskUserQuestion for the sharp forks (patterns:
    `${CLAUDE_PLUGIN_ROOT}/skills/brainstorm/references/question-patterns.md`). Ask in focused rounds; stop
    when the WHAT is clear, not when you run out of questions.
 3. **Reflect and confirm.** Play the brief back. The user is about to step away — make sure it captures
    their intent; the next check-in is the design gate (architecture + design), and after that nothing
    until the PR.
-4. **Write `brief.md`** and let `dev` handle the handoff to `goal`.
+4. **Write `brief.md`** and let `dev` handle the handoff to the autonomous loop.
 
 Don't do the technical research or choose the approach here — that's the research skill's job. Light
 context-gathering to ask good questions is fine; deep approach research is not.
@@ -96,8 +96,8 @@ context-gathering to ask good questions is fine; deep approach research is not.
 ---
 type: Brief
 title: <feature title>
-description: What the user wants from this goal, in plain terms (the WHAT, not the HOW).
-goal: <slug>
+description: What the user wants from this feature, in plain terms (the WHAT, not the HOW).
+feature: <slug>
 timestamp: <YYYY-MM-DD>
 ---
 
@@ -118,10 +118,10 @@ timestamp: <YYYY-MM-DD>
 - <deadline, performance, compatibility, must-reuse, regulatory, ...>
 
 ## Approach preferences (optional, non-binding)
-- <any leanings the user voiced; goal weighs these but decides the approach itself>
+- <any leanings the user voiced; the research phase weighs these but decides the approach itself>
 
 ## Open questions for research
-- <things the user couldn't answer that goal's research should resolve>
+- <things the user couldn't answer that the research phase should resolve>
 ```
 
 Keep it under ~120 lines. A good brief is small and clear about intent; the cleverness comes later, on its

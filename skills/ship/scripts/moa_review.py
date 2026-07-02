@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """MoA cross-provider check — wi-code-checker's result-mode independent review.
 
-Reads the goal project's `.wi/moa.md` (the MoA model-assignment config), and — when a second
+Reads the target project's `.wi/moa.md` (the MoA model-assignment config), and — when a second
 provider is configured — sends the diff + spec context to that model, possibly a different
 provider/architecture than the session (e.g. GPT via OPENAI_API_KEY), as wi-code-checker's
 result-mode check. Writes the findings to a file. Stdlib only; no third-party deps.
@@ -40,7 +40,7 @@ REVIEW_SYSTEM_PROMPT = (
     "against the provided spec/context with repo-level impact in mind: correctness, "
     "necessity (redundant or wasteful changes), alignment with the stated intent, "
     "and regressions it could cause elsewhere in the repo. Return markdown findings, "
-    "each with a severity — BLOCKER (would break the goal or the repo), WARNING "
+    "each with a severity — BLOCKER (would break the feature or the repo), WARNING "
     "(real risk needing a decision), or INFO. Cite file:line or hunk for every "
     "finding. End your reply with exactly one verdict marker on its own last line: "
     "`## REVIEW PASSED` if there are no BLOCKERs, else `## ISSUES FOUND`."

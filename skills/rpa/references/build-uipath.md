@@ -23,8 +23,8 @@ Precondition: the design gate passed (SDD + assumptions confirmed, or `--auto`),
 Create the worktree + branch (`wi/<run-slug>`) exactly as `wi:build` does
 (`${CLAUDE_PLUGIN_ROOT}/skills/build/references/worktrees-and-subagents.md`; use
 `superpowers:using-git-worktrees` if installed). Record path + branch. Same first step as `wi:build`: the
-run's goal folder is untracked on main, so move `.wi/goals/<slug>/` into the worktree and commit it as the
-branch's first commit (`chore(<slug>): goal dossier`) — skip the move if it's already there (resume).
+run's feature folder is untracked on main, so move `.wi/features/<slug>/` into the worktree and commit it as the
+branch's first commit (`chore(<slug>): feature dossier`) — skip the move if it's already there (resume).
 
 ## 2. Execute the build DAG in waves (from `tasks.md`)
 
@@ -74,7 +74,7 @@ DAG allows (independent processes and independent sub-workflows in parallel):
    `progress.md`. **Append each delegated unit's token count to `tokens.md`** the moment that subagent
    reports completion (the only point the count exists) — `tokens.md` is **mandatory**, not optional;
    initialize it on the first delegation if absent
-   (`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/goals/<slug>/tokens.md` —
+   (`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/features/<slug>/tokens.md` —
    `python` assumed on PATH; where it does not resolve, fall back to `py -3` on Windows or `python3` on
    Linux/macOS), and ship finalizes it (`token_report.py --write`) under a `check_tokens.py` close-out gate.
 5. **Register new components.** If the build created something reusable (a generic login, a notifier),

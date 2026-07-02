@@ -5,7 +5,7 @@ model: inherit            # a dispatch may pin a cheaper tier for simple/paralle
 color: green
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 description: |
-  Use this agent to implement exactly one task from a wi plan, under TDD, in the goal's
+  Use this agent to implement exactly one task from a wi plan, under TDD, in the feature's
   worktree. The build phase dispatches a fresh task-runner per task so context stays clean across a long
   build.
 

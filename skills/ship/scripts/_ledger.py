@@ -5,7 +5,7 @@ NOT an entrypoint. Imported by the two scripts the skills invoke:
   - check_tokens.py  (--init scaffold, default = verify gate)
   - token_report.py  (--write finalize: Orchestrator section + Subagents sum)
 
-tokens.md is a per-goal RUNTIME artifact in a user's .wi/, never in this plugin repo.
+tokens.md is a per-feature RUNTIME artifact in a user's .wi/, never in this plugin repo.
 This module owns the file format; the scripts are thin CLIs over it. Stdlib only.
 """
 import re
@@ -26,7 +26,7 @@ TEMPLATE = """\
 type: Token Ledger
 title: "__TITLE__"
 description: Exact per-subagent token usage + the orchestrator total (finalized by ship pre-PR).
-goal: __SLUG__
+feature: __SLUG__
 timestamp: __TIMESTAMP__
 ---
 

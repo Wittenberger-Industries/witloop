@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 token_report.py — sum the main-thread (orchestrator) token usage from a Claude Code
-session transcript (JSONL), and optionally write it into a goal's tokens.md.
+session transcript (JSONL), and optionally write it into a feature's tokens.md.
 
   token_report.py [TRANSCRIPT.jsonl]      # print the orchestrator report (auto-detects transcript)
   token_report.py --write TOKENS_MD [--transcript T.jsonl]

@@ -244,7 +244,7 @@ call, not a default.** (`--auto` records each for after-the-fact review and says
 type: TO-BE
 title: TO-BE — <process name>
 description: <the refined target process, one line>
-goal: <run-slug>
+feature: <run-slug>
 timestamp: <YYYY-MM-DD>
 ---
 

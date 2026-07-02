@@ -1,7 +1,7 @@
 ---
 type: Template
 title: SDD template
-description: Base ToC + precedence rules for an OKF-conformant Solution Design Document (.wi/goals/<run>/sdd.md).
+description: Base ToC + precedence rules for an OKF-conformant Solution Design Document (.wi/features/<run>/sdd.md).
 timestamp: 2026-06-14
 tags: [sdd, template, okf, rpa]
 ---
@@ -37,14 +37,14 @@ do not apply. §7.1.3 stays the per-process flow diagram for both.
 
 ## Base ToC (UiPath enterprise standard)
 
-Copy to `.wi/goals/<run>/sdd.md` (or the client's structure):
+Copy to `.wi/features/<run>/sdd.md` (or the client's structure):
 
 ```markdown
 ---
 type: SDD
 title: Solution Design Document — <solution / project name>
 description: <the solution this SDD specifies, one line>
-goal: <run-slug>
+feature: <run-slug>
 timestamp: <YYYY-MM-DD>
 ---
 

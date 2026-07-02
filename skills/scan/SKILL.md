@@ -54,7 +54,7 @@ Plus a plugin check that may install the skills wi delegates to.
    uv · pytest · ruff · mypy · src layout; Node/TS → pnpm · vitest · eslint · prettier · tsc. Write the
    confirmed answers into `repo-map.md` (`Kind: greenfield`) and seed `constitution.md` from them; skip
    `overview.md` (nothing to document yet). Anything the user genuinely can't answer → `UNKNOWN — ask`;
-   don't invent it. A later scaffolding goal can fill the gaps — but the intent is now on record. Also drop a
+   don't invent it. A later scaffolding feature can fill the gaps — but the intent is now on record. Also drop a
    stack-appropriate `.gitignore` (caches, build artifacts) so the first build doesn't leak them.
 
 3. **Classify frontend / backend / both.** A UI framework in `package.json` or a `components/` tree ⇒
@@ -78,7 +78,7 @@ Plus a plugin check that may install the skills wi delegates to.
 Repos move on without wi — humans commit, dependencies change, modules appear. `--refresh` keeps the
 `.wi/` facts honest **without re-documenting**: verify what a later phase would actually trust, touch only
 what drifted. Precondition: `.wi/repo-map.md` exists (otherwise this IS a first scan — run the full
-procedure). `dev` runs this automatically at goal start when the scan looks stale.
+procedure). `dev` runs this automatically at feature start when the scan looks stale.
 
 ### A · Drift check (facts, not prose)
 
@@ -110,7 +110,7 @@ the index only stays useful if it stays lean:
 
 1. **Dedupe:** index lines (or detail files) describing the same gotcha → merge into one, keep the
    clearest hook, fix the links.
-2. **Promote:** a learning that has recurred across goals (or reads as a standing rule, not an incident)
+2. **Promote:** a learning that has recurred across features (or reads as a standing rule, not an incident)
    → fold the rule into its source of truth — `constitution.md` (confirm with the user — it's user-owned),
    `repo-map.md`, or `glossary.md` — then shrink the index line to a tombstone:
    `- <hook> → promoted to constitution (<date>)`. Delete the detail file once promoted.

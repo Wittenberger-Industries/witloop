@@ -13,7 +13,7 @@ import _ledger  # noqa: E402
 
 
 def _scaffold_text():
-    return _ledger.make_template("my-goal", timestamp="2026-06-15")
+    return _ledger.make_template("my-feature", timestamp="2026-06-15")
 
 
 def _with_row_and_sum(text, tokens=100):
@@ -32,7 +32,7 @@ class LedgerHelperTests(unittest.TestCase):
     def test_template_has_required_markers(self):
         t = _scaffold_text()
         self.assertIn("type: Token Ledger", t)
-        self.assertIn("goal: my-goal", t)
+        self.assertIn("feature: my-feature", t)
         self.assertIn("timestamp: 2026-06-15", t)
         self.assertIn("**Subagents (exact): <sum>.**", t)
         self.assertIn("## Orchestrator", t)
@@ -110,7 +110,7 @@ def run(*args):
     return subprocess.run([sys.executable, *map(str, args)], capture_output=True, text=True)
 
 
-def init_ledger(d, slug="my-goal"):
+def init_ledger(d, slug="my-feature"):
     p = Path(d) / slug / "tokens.md"
     run(CHECK, "--init", p)
     return p
@@ -119,12 +119,12 @@ def init_ledger(d, slug="my-goal"):
 class CheckTokensCliTests(unittest.TestCase):
     def test_init_creates_when_absent(self):
         with tempfile.TemporaryDirectory() as d:
-            p = Path(d) / "my-goal" / "tokens.md"
+            p = Path(d) / "my-feature" / "tokens.md"
             r = run(CHECK, "--init", p)
             self.assertEqual(r.returncode, 0, r.stderr)
             text = p.read_text(encoding="utf-8")
             self.assertIn("type: Token Ledger", text)
-            self.assertIn("goal: my-goal", text)
+            self.assertIn("feature: my-feature", text)
             self.assertIn("## Orchestrator", text)
             self.assertIn("PENDING", text)
             self.assertIn("<sum>", text)

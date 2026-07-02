@@ -21,16 +21,16 @@ never arm a condition no checker can verify (dev's preflight guards this).
 
   ```
   /goal The <slug> PR is open and its branch passes <lint + test commands from repo-map.md>;
-  .wi/goals/<slug>/progress.md Phase is done. Constraints: only files named in tasks.md change;
+  .wi/features/<slug>/progress.md Phase is done. Constraints: only files named in tasks.md change;
   never force-push; tests are never weakened to pass.
   ```
 
 - **GitHub Copilot CLI** (no `/goal` — use Autopilot, condition in the prompt):
 
   ```
-  copilot --autopilot --max-autopilot-continues <N> --no-ask-user --allow-all -p "Drive the <slug> goal to done:
+  copilot --autopilot --max-autopilot-continues <N> --no-ask-user --allow-all -p "Drive the <slug> feature to done:
   build then ship until the <slug> PR is open, its branch passes <lint + test commands>, and
-  .wi/goals/<slug>/progress.md Phase is done. Only files named in tasks.md change; never force-push;
+  .wi/features/<slug>/progress.md Phase is done. Only files named in tasks.md change; never force-push;
   never weaken tests."
   ```
 

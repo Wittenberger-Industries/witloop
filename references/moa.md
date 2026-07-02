@@ -108,7 +108,7 @@ assignment.
 
 ## wi-code-checker's two modes
 
-`wi-code-checker` (`agents/wi-code-checker.md`) always runs **twice per goal** — plan mode before the
+`wi-code-checker` (`agents/wi-code-checker.md`) always runs **twice per feature** — plan mode before the
 design gate, result mode before shipping — and both are Agent-tool dispatches at the `wi-code-checker`
 role's Claude tier:
 
@@ -132,7 +132,7 @@ it cannot verify things are actually wired, and it does not write `verification.
 1. Produce the diff (`git diff <base>...HEAD` for at-finish; the wave's commits for per-wave) to a temp
    file, plus context: `spec.md` (or `sdd.md` §13) and the relevant constitution rules.
 2. Run `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/moa_review.py --config .wi/moa.md
-   --diff <patch> --context <spec> --out .wi/goals/<slug>/moa-review.md` (`python` assumed on PATH; where it
+   --diff <patch> --context <spec> --out .wi/features/<slug>/moa-review.md` (`python` assumed on PATH; where it
    does not resolve, fall back to `py -3` on Windows or `python3` on Linux/macOS).
 3. Exit `0` = `## REVIEW PASSED`; `1` = `## ISSUES FOUND` — treat findings like any checker finding:
    BLOCKER → fix (loop back to build), WARNING/INFO → address or record. Both layers share the **max 2

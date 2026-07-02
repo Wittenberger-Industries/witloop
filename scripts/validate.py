@@ -26,8 +26,10 @@ Checks (from the repo root, detected automatically):
   7. Mechanical lints, scoped to skills/ · agents/ · references/ · .claude-plugin/ (never docs/ or tests/,
      which legitimately archive the very strings banned in shipped text): every SKILL.md `description`
      stays under the 1024-char agent-skills cap; skill + reference descriptions don't trail off mid-thought
-     (a truncated/lazy `...` or `..`); and two dead strings are banned — the retired `uipath-rpa-workflows`
-     slug, and `python3` launching a bundled `${CLAUDE_PLUGIN_ROOT}` script (the broken Windows Store stub;
+     (a truncated/lazy `...` or `..`); and three dead strings are banned — the retired `uipath-rpa-workflows`
+     slug, the pre-rename work-unit dir `.wi/goals` (the unit is a feature; the dir is `.wi/features` —
+     only the dev/rpa one-time `git mv .wi/goals .wi/features` migration line may name the old path),
+     and `python3` launching a bundled `${CLAUDE_PLUGIN_ROOT}` script (the broken Windows Store stub;
      prose `python3`/`py -3` fallback notes are not flagged, only actual invocations).
 
 Exit 0 if all pass; non-zero otherwise. Stdlib only (PyYAML optional).
@@ -265,8 +267,11 @@ for f in desc_files:
     if desc is not None and desc.rstrip().endswith(("..", "…")):
         errors.append(f"{f.relative_to(ROOT)}: description ends mid-thought (trailing '..'/'…') — write a real one-line summary")
 
-# 7c. Dead strings: a retired external slug, and python3-launched bundled scripts (broken on Windows).
+# 7c. Dead strings: a retired external slug, the pre-rename `.wi/goals` dir, and python3-launched
+#     bundled scripts (broken on Windows).
 DEAD_SLUG = re.compile(r"uipath-rpa-workflows")
+DEAD_GOALS_DIR = re.compile(r"\.wi/goals")  # goal->feature rename (M1): the work-unit dir is .wi/features
+MIGRATION_CMD = "git mv .wi/goals .wi/features"  # the one sanctioned mention (dev/rpa legacy migration)
 PY3_INVOKE = re.compile(r"python3[ \t]+\$\{CLAUDE_PLUGIN_ROOT\}")  # an invocation — bare prose `python3` won't match
 lint_scope = (
     sorted(ROOT.glob("skills/**/*.md"))
@@ -281,6 +286,8 @@ for f in lint_scope:
     rel = f.relative_to(ROOT)
     if DEAD_SLUG.search(txt):
         errors.append(f"{rel}: dead skill slug 'uipath-rpa-workflows' (the UiPath authoring skill is 'uipath-rpa')")
+    if any(DEAD_GOALS_DIR.search(ln) and MIGRATION_CMD not in ln for ln in txt.splitlines()):
+        errors.append(f"{rel}: dead path '.wi/goals' — the work unit is a feature; use '.wi/features' (goal->feature rename)")
     if PY3_INVOKE.search(txt):
         errors.append(f"{rel}: 'python3 ${{CLAUDE_PLUGIN_ROOT}}' invocation — use 'python' (python3 is the broken Store stub on Windows)")
 

@@ -22,7 +22,7 @@ Inputs: `tasks.md`, `spec.md`, `constitution.md`, `repo-map.md`.
 
 ## 1 · Isolate (default: worktree + branch)
 
-Create a dedicated worktree and branch for the goal so the main checkout stays clean and independent goals
+Create a dedicated worktree and branch for the feature so the main checkout stays clean and independent features
 can run in parallel. Exact commands and the no-git / opt-out variants are in
 `${CLAUDE_PLUGIN_ROOT}/skills/build/references/worktrees-and-subagents.md`. **Delegation check:** if
 `superpowers:using-git-worktrees` is in your available skills you MUST use it (log `worktree via
@@ -31,12 +31,12 @@ branch in `progress.md`.
 
 Branch name: `wi/<slug>`. Worktree path: a sibling dir, e.g. `../<repo>-wi-<slug>`.
 
-**First step, right after `git worktree add -b wi/<slug>`: bring the goal dossier over.** The goal folder
+**First step, right after `git worktree add -b wi/<slug>`: bring the feature dossier over.** The feature folder
 is still **untracked** in the main checkout (no phase before build commits it), so the new worktree starts
-without it. Move `.wi/goals/<slug>/` from the main checkout into the worktree's `.wi/goals/<slug>/` and
-commit it there as the branch's **first commit** — `chore(<slug>): goal dossier`. Moving (not copying)
+without it. Move `.wi/features/<slug>/` from the main checkout into the worktree's `.wi/features/<slug>/` and
+commit it there as the branch's **first commit** — `chore(<slug>): feature dossier`. Moving (not copying)
 leaves main's working tree clean: the files were untracked on main, so nothing is lost and nothing
-unmerged stays behind. Resume-safe: if the goal folder is already present in the worktree (build
+unmerged stays behind. Resume-safe: if the feature folder is already present in the worktree (build
 re-entered after an interruption), the move already happened — skip it.
 
 ## 2 · Execute in parallel waves (the default)
@@ -68,8 +68,8 @@ run it as wide as the DAG allows. Repeat until every task is ticked:
    PASS`; a stub or an unmet Verify means the task is *not* done, no matter what the console printed. You
    are the only committer and `progress.md`'s only writer during build, so commits and ticks stay
    serialized and clean. Append the runner's token count as a row to
-   the goal's `tokens.md` (it's in the task-completion notification and is NOT retrievable later; if the file
-   is somehow absent, `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/goals/<slug>/tokens.md`
+   the feature's `tokens.md` (it's in the task-completion notification and is NOT retrievable later; if the file
+   is somehow absent, `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/features/<slug>/tokens.md`
    first — `python` assumed on PATH; where it does not resolve, fall back to `py -3` on Windows or `python3`
    on Linux/macOS), then recompute the ready set and dispatch the next wave without waiting for stragglers it doesn't depend on.
    A runner whose last line is **`## TASK AUTH-GATE`** (status `auth-gate` — a `401` / `run <x> login` /

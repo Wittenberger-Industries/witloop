@@ -1,7 +1,7 @@
 ---
 type: Reference
 title: "Pitfalls catalog"
-description: "A planning-time foresight checklist: pitfall categories (data, concurrency, API, auth, errors, performance, testing, frontend, ops, process) to skim so the few that apply land in the goal's pitfalls.md."
+description: "A planning-time foresight checklist: pitfall categories (data, concurrency, API, auth, errors, performance, testing, frontend, ops, process) to skim so the few that apply land in the feature's pitfalls.md."
 timestamp: 2026-06-07
 tags: [plan, reference]
 ---
@@ -9,7 +9,7 @@ tags: [plan, reference]
 # Pitfalls catalog
 
 A foresight checklist. During planning, skim these categories and pull the few that genuinely apply to the
-current goal into `.wi/goals/<slug>/pitfalls.md` — each with the *specific* way it could bite here and the
+current feature into `.wi/features/<slug>/pitfalls.md` — each with the *specific* way it could bite here and the
 task that prevents it. The aim is cheap foresight, not a generic risk essay. Skip whole categories that
 don't apply.
 
@@ -71,5 +71,5 @@ don't apply.
 
 ## Process
 - Scope creep mid-build (plan and code diverge silently).
-- Touching files outside the goal's stated scope.
+- Touching files outside the feature's stated scope.
 - Committing generated files, large blobs, or secrets.

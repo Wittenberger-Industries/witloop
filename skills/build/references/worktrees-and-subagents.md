@@ -13,13 +13,13 @@ The mechanics behind the build phase's two levers: isolation (worktrees) and del
 ## Git worktrees
 
 A worktree is a second working directory backed by the same repo, checked out to its own branch. It lets
-a goal's changes live entirely apart from the main checkout — nothing half-built leaks into the user's
-working tree, and two goals can build at once.
+a feature's changes live entirely apart from the main checkout — nothing half-built leaks into the user's
+working tree, and two features can build at once.
 
 ### Create (default at build start)
 
 ```bash
-# from the repo root; <slug> is the goal slug
+# from the repo root; <slug> is the feature slug
 git worktree add -b wi/<slug> ../<repo>-wi-<slug>
 ```
 
@@ -30,12 +30,12 @@ Then work happens in `../<repo>-wi-<slug>` on branch `wi/<slug>`. Record both in
 - **Branch:** wi/<slug>
 ```
 
-The goal folder does **not** arrive with the checkout: through brainstorm/research/plan it lives
+The feature folder does **not** arrive with the checkout: through brainstorm/research/plan it lives
 **untracked** in the main checkout, and `git worktree add` checks out HEAD — untracked files don't follow.
-So build's first act after creating the worktree is to **move** `.wi/goals/<slug>/` from the main checkout
-into the worktree and commit it as the branch's first commit (`chore(<slug>): goal dossier`). The move
+So build's first act after creating the worktree is to **move** `.wi/features/<slug>/` from the main checkout
+into the worktree and commit it as the branch's first commit (`chore(<slug>): feature dossier`). The move
 leaves main's working tree clean (the files were untracked there); from then on the worktree's copy is
-canonical, and main's copy catches up when the branch merges. Resume-safe: if the goal folder already
+canonical, and main's copy catches up when the branch merges. Resume-safe: if the feature folder already
 exists in the worktree, the move already happened — skip it.
 
 ### Finish / clean up (done by the ship phase)
@@ -53,7 +53,7 @@ Never `git worktree remove --force` a tree with uncommitted work without telling
   repo exists, or a clear changelog). Note "Worktree: -" in progress.md.
 - **User opted for "branch, no worktree":** `git switch -c wi/<slug>` in the current checkout instead of
   adding a worktree. Everything else is identical.
-- **Existing worktree for this goal (resume):** reuse it; don't create a second.
+- **Existing worktree for this feature (resume):** reuse it; don't create a second.
 - **Restricted filesystems** (network/Windows mounts that forbid rmdir): put the worktree on a local
   path instead — `git worktree add` accepts any absolute path. Symptoms to expect otherwise: pytest
   tmpdir crashes and `git worktree remove` failing. scan's verify-the-commands step is the early warning.
@@ -119,7 +119,7 @@ files, commits land serially. `superpowers:dispatching-parallel-agents` codifies
 
 The escalation ladder when parallel work would collide:
 
-1. **Disjoint files, shared goal worktree** (default) — cheapest: no extra environment setup, full speed
+1. **Disjoint files, shared feature worktree** (default) — cheapest: no extra environment setup, full speed
    for almost every wave.
 2. **Per-task ephemeral worktree** — when two ready tasks genuinely must touch the same file, or a task's
    tests interfere with siblings (fixed port, shared db file, global fixture):

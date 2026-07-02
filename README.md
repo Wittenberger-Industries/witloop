@@ -91,11 +91,11 @@ robustly through a stalled turn.
 ├── architecture.md      # mermaid architecture diagram (scan; kept current by ship)
 ├── glossary.md          # project domain terms (brainstorm): canonical names + aliases
 ├── adr/                 # project-wide decision log: ADR-0001, ADR-0002, ... (+ index.md)
-├── learnings.md         # learnings index: one line + hook per goal — phases read this, not the dir
-├── learnings/           # substantial per-goal learnings in their own .mds — compounds across goals
-├── roadmap.md           # optional: ordered goals for a larger effort
-└── goals/<slug>/
-    ├── progress.md      # the goal's state machine (source of truth)
+├── learnings.md         # learnings index: one line + hook per feature — phases read this, not the dir
+├── learnings/           # substantial per-feature learnings in their own .mds — compounds across features
+├── roadmap.md           # optional: ordered features for a larger effort
+└── features/<slug>/
+    ├── progress.md      # the feature's state machine (source of truth)
     ├── brief.md         # brainstorm output: what you want
     ├── research/        # researcher notes + the chosen approach
     ├── spec.md          # plan: what/why + testable acceptance criteria
@@ -123,9 +123,10 @@ title / description / timestamp), so each phase — and `validate.py` — can pa
 | `ship` | post-gate | gate -> review -> docs-sync -> learnings -> tokens -> PR.md -> open PR -> checklist |
 
 Agents: **task-runner** (executes one build task in isolation), **researcher** (picks the approach in the
-autonomous phase), and **checker** (read-only goal-backward verification — the **check** steps above). The
+autonomous phase), and **checker** (read-only verification working backward from the feature's acceptance
+criteria — the **check** steps above). The
 GSD-derived hardening that ships with these: the researcher tags every claim `[VERIFIED]` / `[CITED]` /
-`[ASSUMED]` and runs a **Runtime State Inventory** on rename/migration goals (the runtime state a `grep`
+`[ASSUMED]` and runs a **Runtime State Inventory** on rename/migration features (the runtime state a `grep`
 can't see); the task-runner follows a typed deviation taxonomy (auto-fix small bugs, STOP-and-ask on
 architectural changes), self-checks before claiming done, and respects worktree git-safety rules. Every
 skill auto-triggers from natural language too.
@@ -153,7 +154,7 @@ skill auto-triggers from natural language too.
 - **No required env vars or MCP servers.** `/wi:scan` offers to install the optional skills wi delegates to.
 - **Tiered models (MoA, optional).** `.wi/moa.md` assigns models per role — orchestrator (informational),
   execution, checker, and an independent cross-provider **reviewer** (e.g. GPT via `OPENAI_API_KEY`) that
-  code-reviews the finished goal. Smart/simple presets, set up once on the first wi run, every cell
+  code-reviews the finished feature. Smart/simple presets, set up once on the first wi run, every cell
   overridable; see `references/moa.md`. Without the file, everything inherits the session model as before.
 - **Python-first** defaults (uv · pytest · ruff · mypy), stack-agnostic — `scan` records whatever the repo
   uses, and `constitution.md` is where you override.
@@ -182,7 +183,7 @@ If none are installed, wi still runs the whole loop on its own.
    light fallbacks so it still works standalone.
 5. **An opinionated baseline beats no opinion.** Sensible defaults (Python-first), overridable per project
    in `constitution.md`.
-6. **Compounds across goals.** Each goal reads the project's memory (constitution, glossary, learnings) and
+6. **Compounds across features.** Each feature reads the project's memory (constitution, glossary, learnings) and
    writes back what it learned, so the next one starts smarter.
 7. **Build the least that works.** A Simplicity discipline threads through the loop — YAGNI, prefer the
    stdlib or an existing dep over a new one, deletion over addition. The checker flags over-build, and the
@@ -202,7 +203,7 @@ If none are installed, wi still runs the whole loop on its own.
   Claude the namespace renders as `wi:wi-<name>` (e.g. `wi:wi-code-checker`) — the stutter is accepted,
   don't "fix" it back. The checker is intentionally `wi-code-checker` (not `wi-checker`); skills and docs
   call it **the checker** for short.
-- **Rolling back the rpa parity layer (v0.10.1):** the rpa goal-level verification + Simplicity + Runtime
+- **Rolling back the rpa parity layer (v0.10.1):** the rpa feature-level verification + Simplicity + Runtime
   State Inventory + worktree-safety wiring is **additive and behavior-only** — no data or migration impact.
   If `/wi:rpa` starts failing because of it, revert the whole layer: `git revert <the v0.10.1 rpa-parity
   squash-merge commit>` (find it via `git log --oneline --grep "rpa flow to parity"`). It touches exactly
@@ -221,16 +222,16 @@ If none are installed, wi still runs the whole loop on its own.
   Orchestrator tenant: the design gate approves `Publish: none | feed | deploy` (+ folder, prod-guarded),
   and ship delegates `pack`/`publish`/`deploy`/`activate` to `uipath-solution` — best-effort, hands-off-safe.
   Next: Maestro flow as a build paradigm. Design and plan in `docs/specs/` and `docs/plans/`.
-- **Numbered goal directories** (v0.10.5) shipped — new goals get a global 4-digit ordinal prefix as part
-  of the slug (`0001-<name>`, mirroring `ADR-NNNN`), so `.wi/goals/` lists in implementation order — visible
-  in the directory, the branch name, and the PR. dev + rpa; existing goals untouched. Design and plan in
+- **Numbered feature directories** (v0.10.5) shipped — new features get a global 4-digit ordinal prefix as part
+  of the slug (`0001-<name>`, mirroring `ADR-NNNN`), so `.wi/features/` lists in implementation order — visible
+  in the directory, the branch name, and the PR. dev + rpa; existing features untouched. Design and plan in
   `docs/specs/` and `docs/plans/`.
-- **tokens.md guardrails** (v0.10.4) shipped — the per-goal token ledger can no longer be silently
+- **tokens.md guardrails** (v0.10.4) shipped — the per-feature token ledger can no longer be silently
   skipped: a deterministic scaffold (`check_tokens.py --init`), `token_report.py --write` finalizes the
   orchestrator total + Subagents sum in place, and a `check_tokens.py` close-out gate blocks the PR on a
   genuine skip (an honest `unavailable` still ships). Dev + rpa flows; design and plan in `docs/specs/`
   and `docs/plans/`.
-- **Agent verification layer** (v0.9.2-v0.10.0) shipped — a read-only **checker** (goal-backward
+- **Agent verification layer** (v0.9.2-v0.10.0) shipped — a read-only **checker** (feature-backward
   verification, plan + result modes), researcher provenance + a **Runtime State Inventory**, a task-runner
   deviation taxonomy + self-check, and a **Simplicity** discipline across the loop; distilled from
   GSD-core's agent patterns and recorded in `docs/specs/2026-06-14-agent-upgrades-from-gsd.md`.

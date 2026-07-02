@@ -2,9 +2,9 @@
 type: Skill
 name: research
 description: >
-  The design half of a wi goal: decide the HOW and get it confirmed at the design gate. Use this skill
+  The design half of a wi feature: decide the HOW and get it confirmed at the design gate. Use this skill
   when dev hands off after brainstorming, when the user types "/wi:research", "research the approach",
-  "design this feature", or when resuming a goal whose progress.md Phase is research, plan, or
+  "design this feature", or when resuming a feature whose progress.md Phase is research, plan, or
   design-gate.
 ---
 
@@ -31,9 +31,9 @@ keep-alive loop (`/goal` or Autopilot) if the user armed it.
 
 ### 0 - Engage & resume
 First act, always: append a Log line to `progress.md` — `research engine engaged (wi <version>)`, reading
-<version> from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (don't guess; if that file isn't reachable — e.g. a per-skill Copilot install — omit the version rather than inventing one) — so it's auditable on disk. Then scaffold the token ledger (idempotent — no-op if it exists): `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/goals/<slug>/tokens.md` (`python` assumed on PATH; where it does not resolve, fall back to `py -3` on Windows or `python3` on Linux/macOS). Then re-enter the phase it names (research | plan | design-gate). **Design-gate re-entry
+<version> from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (don't guess; if that file isn't reachable — e.g. a per-skill Copilot install — omit the version rather than inventing one) — so it's auditable on disk. Then scaffold the token ledger (idempotent — no-op if it exists): `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/features/<slug>/tokens.md` (`python` assumed on PATH; where it does not resolve, fall back to `py -3` on Windows or `python3` on Linux/macOS). Then re-enter the phase it names (research | plan | design-gate). **Design-gate re-entry
 guard:** resuming at `design-gate` requires a fresh plan-mode `verification.md` (`type: Verification`) in
-the goal folder; if it is missing or predates the current `spec.md`/`tasks.md`, run the §2 pre-gate checker
+the feature folder; if it is missing or predates the current `spec.md`/`tasks.md`, run the §2 pre-gate checker
 pass first, then present the gate.
 
 ### 1 - Research -> pick the approach
@@ -46,7 +46,7 @@ hook is relevant — past runs' gotchas are the cheapest research there is.
 
 **b · Decompose into load-bearing unknowns.** From `brief.md`, list the questions whose answer would
 change the design: the integration seam, a library/technique choice, the data shape, a migration/compat
-risk. Most goals have 1-3; **cap at 4**; anything settled in (a) drops off the list. Tag each question
+risk. Most features have 1-3; **cap at 4**; anything settled in (a) drops off the list. Tag each question
 with its mode — **`[repo-question]`** (the repo should answer it: prior art, existing seam, conventions)
 or **`[tech-choice]`** (new capability / greenfield / the existing pattern looks legacy — the researcher
 must survey the current state of the art + best practices on the web, not answer from priors). Write them
@@ -74,7 +74,7 @@ ordered tasks with files + verify, plus the Waves section), `pitfalls.md`.
 
 **Pre-gate check (checker · plan mode).** Before the gate, dispatch the **checker** (`agents/wi-code-checker.md`)
 in `plan` mode over `spec.md` + `tasks.md` + `pitfalls.md` + `constitution.md` + the relevant ADRs (and any
-**Runtime State Inventory** rows). It builds a goal-backward coverage matrix and returns
+**Runtime State Inventory** rows). It builds a feature-backward coverage matrix and returns
 BLOCKER/WARNING/INFO findings, writing `verification.md`. Feed them back: a BLOCKER — an unmapped
 acceptance criterion, a silently down-scoped decision — loops to plan to fix, then the checker re-checks
 (**max 2 rounds**). Whatever remains is **carried into the gate summary** with its severity, so the user
@@ -88,7 +88,7 @@ the `.wi/` files; they are the appendix, not the message. Use exactly this shape
 inlined from the ADR/spec/tasks you just wrote):
 
 ```
-## Design gate: <goal title>
+## Design gate: <feature title>
 
 **Approach (ADR-NNNN):** <the decision, one line>
 **Why:** <2-3 lines — the decisive reasons>
@@ -107,7 +107,7 @@ inlined from the ADR/spec/tasks you just wrote):
 **Touches:** <n> files — <key paths>
 **Checker (plan mode):** <PASS — or N findings; list any unresolved BLOCKER/WARNING the user must weigh>
 
-Full detail: .wi/goals/<slug>/ (spec.md, tasks.md, pitfalls.md, verification.md) and .wi/adr/ADR-NNNN-*.md
+Full detail: .wi/features/<slug>/ (spec.md, tasks.md, pitfalls.md, verification.md) and .wi/adr/ADR-NNNN-*.md
 ```
 
 Then check **Gate mode** in `progress.md`:
@@ -116,7 +116,7 @@ Then check **Gate mode** in `progress.md`:
 - **auto-approve** (`/wi:dev --auto`): skip the question; write the same rendered summary into
   `progress.md` and log "design gate auto-approved (--auto)" — the user reads it after the fact.
 
-Only an explicit approve (or auto-approve) advances to goal.
+Only an explicit approve (or auto-approve) advances to implementation.
 
 ### 4 - Hand off to implementation
 If persistence wasn't armed at handoff, print the ready-made keep-alive again (the user is present —

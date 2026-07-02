@@ -9,7 +9,7 @@ tags: [rpa, wi-directory, okf, conventions]
 # The `.wi/` layout for RPA
 
 `wi:rpa` reuses the `.wi/` model — same [OKF](/docs/specs/2026-06-14-okf-knowledge-format.md) frontmatter
-profile — with an extra tier: **project → run (a PDD/solution) → process**. One `/wi:rpa` run is one goal
+profile — with an extra tier: **project → run (a PDD/solution) → process**. One `/wi:rpa` run is one feature
 folder for the whole solution, with **one SDD** covering its 1..N processes.
 
 ```
@@ -22,7 +22,7 @@ folder for the whole solution, with **one SDD** covering its 1..N processes.
 ├── glossary.md              # project: domain terms
 ├── learnings.md             # project: learnings INDEX — one line + hook per run; read this, not the dir
 ├── learnings/               # project: substantial learnings, each its own .md (indexed above)
-└── goals/
+└── features/
     └── 0001-<run-slug>/     # one /wi:rpa run = one PDD -> solution; NNNN- global ordinal (creation order)
         ├── progress.md      # state machine for the run (single source of truth)
         ├── pdd.md           # the ingested PDD (faithful to source .docx)
@@ -44,13 +44,13 @@ folder for the whole solution, with **one SDD** covering its 1..N processes.
 - **Framework references:** REFramework uses `refr-architecture.md` + `build-uipath.md`; Maestro uses
   `maestro-architecture.md` + `build-maestro.md`; the gate (`verification-gate.md`) branches on `Framework:`.
 - **Run-slugs are numbered** — `NNNN-<name>` (a global 4-digit ordinal assigned at creation, mirroring
-  `ADR-NNNN`; next = highest existing `.wi/goals/` ordinal + 1, else `0001`, never renumbered), so runs
+  `ADR-NNNN`; next = highest existing `.wi/features/` ordinal + 1, else `0001`, never renumbered), so runs
   list in implementation order. Same convention as the dev flow (`wi-directory.md`).
 - **Project-level files persist & compound** across runs: `rpa-constitution.md`, `sdd-template.md` (if
   present), `inputs.md`, `components.md`, `orchestrator.md`, `glossary.md`, `learnings.md`, `learnings/`. Never pruned. Build + compound write
   back (especially new reusable components → `components.md`). This list is ship's stray-sweep whitelist
   when progress.md says `Flow: rpa`.
-- **The run dossier** — what ship's tidy leaves under `goals/<run-slug>/` at `done` (the manifest ship
+- **The run dossier** — what ship's tidy leaves under `features/<run-slug>/` at `done` (the manifest ship
   reads when progress.md says `Flow: rpa`): `progress.md`, `pdd.md`, `architecture.md`, `sdd.md`,
   `process-inventory.md`, `assumptions.md`, `tasks.md`, `tokens.md`, `PR.md`, plus `processes/<p>/tobe.md`
   per process. `verification.md` is ephemeral — pruned at close-out, its verdict folded into `PR.md`
@@ -96,7 +96,7 @@ prose — open each with its OKF frontmatter, then the body:
 type: PDD
 title: <solution / process name> — PDD
 description: The ingested Process Definition Document, faithful to the source.
-goal: <run-slug>
+feature: <run-slug>
 timestamp: <YYYY-MM-DD>
 ---
 ```
@@ -106,7 +106,7 @@ timestamp: <YYYY-MM-DD>
 type: Architecture
 title: Runtime diagram — <solution name>
 description: Whole-solution runtime diagram — dispatcher, every performer, queues, systems, Orchestrator.
-goal: <run-slug>
+feature: <run-slug>
 timestamp: <YYYY-MM-DD>
 ---
 ```
@@ -116,7 +116,7 @@ timestamp: <YYYY-MM-DD>
 type: Process Inventory
 title: Process inventory — <solution name>
 description: The N processes in this solution and their dependencies.
-goal: <run-slug>
+feature: <run-slug>
 timestamp: <YYYY-MM-DD>
 ---
 ```
@@ -126,7 +126,7 @@ timestamp: <YYYY-MM-DD>
 type: Assumption Register
 title: Assumptions — <solution name>
 description: Gap/assumption register (per-process) plus the PDD->SDD traceability.
-goal: <run-slug>
+feature: <run-slug>
 timestamp: <YYYY-MM-DD>
 ---
 ```
@@ -136,7 +136,7 @@ timestamp: <YYYY-MM-DD>
 type: TO-BE
 title: <process name> — TO-BE
 description: The refined TO-BE flow for this process (feeds SDD §7.1.3).
-goal: <run-slug>
+feature: <run-slug>
 timestamp: <YYYY-MM-DD>
 ---
 ```
@@ -150,7 +150,7 @@ timestamp: <YYYY-MM-DD>
 type: RPA Run Progress
 title: <PDD / solution name>
 description: <what this solution automates, one line>
-goal: <run-slug>
+feature: <run-slug>
 status: ingest   # bootstrap | ingest | brainstorm | plan | design-gate | build | ship | done
 timestamp: <YYYY-MM-DD>
 ---

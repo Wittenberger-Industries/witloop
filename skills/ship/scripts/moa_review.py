@@ -116,7 +116,7 @@ def model_for(agent, cfg):
     if agent in cfg.get("overrides", {}):
         return cfg["overrides"][agent]
     roles = cfg.get("roles", {})
-    if agent == "checker":
+    if agent in ("wi-code-checker", "checker"):
         return roles.get("checker", "inherit")
     return roles.get("execution", "inherit")
 

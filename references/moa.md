@@ -11,8 +11,8 @@ tags: [moa, models, reference]
 Orchestration (planning, routing, synthesis) wants the best model; delegated execution is usually
 simpler and runs fine on cheaper tiers. wi's MoA support splits the two, plus an optional **independent
 reviewer** — ideally a *different provider/architecture* (different training, different blind spots) —
-that code-reviews the finished work. Scope: **wi-dispatched agents only** (researcher, task-runner,
-checker, RPA build delegations); wi never re-models other plugins' or the user's own agents.
+that code-reviews the finished work. Scope: **wi-dispatched agents only** (wi-researcher, wi-task-runner,
+wi-code-checker, RPA build delegations); wi never re-models other plugins' or the user's own agents.
 
 **The orchestrator model is informational.** A plugin cannot set the session model — the user picks it
 with `/model`. wi records the intended tier and, at run start, **warns once** if the session model is
@@ -54,7 +54,7 @@ timestamp: <YYYY-MM-DD>
 ## Per-agent overrides
 | Agent | Model |
 |-------|-------|
-| <researcher \| task-runner \| checker \| rpa-build> | <tier> |
+| <wi-researcher \| wi-task-runner \| wi-code-checker \| rpa-build> | <tier> |
 ```
 
 Claude tiers are the Agent-dispatch tokens `fable | opus | sonnet | haiku`, plus `inherit` (= the session
@@ -83,7 +83,7 @@ the file exists, skip setup entirely — just apply it.
 ## Dispatch rule (build, research, ship, rpa)
 
 At every wi Agent dispatch, resolve the model as **per-agent override → role → `inherit`** (the
-`checker` agent reads the `checker` role; everything else reads `execution`) and pass it as the
+`wi-code-checker` agent reads the `checker` role; everything else reads `execution`) and pass it as the
 dispatch's model parameter. No `.wi/moa.md` → everything inherits, exactly wi's pre-MoA behavior.
 **Fallback:** a configured model that errors as unavailable at dispatch time → re-dispatch with
 `inherit` and note it in `progress.md`; never stall a run on a model assignment.

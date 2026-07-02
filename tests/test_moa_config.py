@@ -39,7 +39,7 @@ timestamp: 2026-07-02
 ## Per-agent overrides
 | Agent | Model |
 |-------|-------|
-| researcher | haiku |
+| wi-researcher | haiku |
 """
 
 SIMPLE_CONFIG = """---
@@ -82,7 +82,7 @@ class ParseConfigTest(unittest.TestCase):
 
     def test_overrides_parsed(self):
         cfg = moa_review.parse_moa_config(FULL_CONFIG)
-        self.assertEqual(cfg["overrides"]["researcher"], "haiku")
+        self.assertEqual(cfg["overrides"]["wi-researcher"], "haiku")
 
     def test_reviewer_none_means_disabled(self):
         cfg = moa_review.parse_moa_config(SIMPLE_CONFIG)
@@ -104,18 +104,22 @@ class ParseConfigTest(unittest.TestCase):
 class ModelForTest(unittest.TestCase):
     def test_override_beats_role(self):
         cfg = moa_review.parse_moa_config(FULL_CONFIG)
-        self.assertEqual(moa_review.model_for("researcher", cfg), "haiku")
+        self.assertEqual(moa_review.model_for("wi-researcher", cfg), "haiku")
 
     def test_falls_back_to_execution_role(self):
         cfg = moa_review.parse_moa_config(FULL_CONFIG)
-        self.assertEqual(moa_review.model_for("task-runner", cfg), "sonnet")
+        self.assertEqual(moa_review.model_for("wi-task-runner", cfg), "sonnet")
 
     def test_checker_uses_checker_role(self):
+        cfg = moa_review.parse_moa_config(FULL_CONFIG)
+        self.assertEqual(moa_review.model_for("wi-code-checker", cfg), "inherit")
+
+    def test_bare_checker_key_still_maps_to_checker_role(self):
         cfg = moa_review.parse_moa_config(FULL_CONFIG)
         self.assertEqual(moa_review.model_for("checker", cfg), "inherit")
 
     def test_no_config_inherits(self):
-        self.assertEqual(moa_review.model_for("task-runner", None), "inherit")
+        self.assertEqual(moa_review.model_for("wi-task-runner", None), "inherit")
 
 
 if __name__ == "__main__":

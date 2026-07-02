@@ -40,21 +40,19 @@ Self-review the diff with fresh eyes, specifically against:
 the review through it (log `review via superpowers:requesting-code-review`); unaided self-review is the
 fallback only when it's absent.
 
-**MoA review (independent, cross-provider).** If `.wi/moa.md` names a reviewer (role ≠ `none`), run the
-independent review per `${CLAUDE_PLUGIN_ROOT}/references/moa.md`: full goal diff + `spec.md` through
-`skills/ship/scripts/moa_review.py` → `.wi/goals/<slug>/moa-review.md`. Findings are handled like checker
-findings — BLOCKER loops back to build, **max 2 review→fix rounds**, whatever remains goes with its
-severity into `PR.md`'s Verification. Exit 3 (no API key) or 2 (config/API error) → **fall back** to a
-checker-tier Claude agent with the same review charter and log `moa review via fallback (<reason>)`. This
-is a layer on top of the reviews above, never a replacement; `moa-review.md` is ephemeral (pruned in §5).
-
-**Goal-level check (checker · result mode).** Dispatch the **checker** (`agents/wi-code-checker.md`) in `result`
-mode — on the `checker` role's model when `.wi/moa.md` exists —
-against `spec.md`'s acceptance criteria + locked decisions (ADRs, constitution); it confirms each is
-delivered and **wired**, not just present, refreshing `verification.md`. This is goal/coverage-level,
-distinct from the line-level review above. A result-mode **BLOCKER** — an unmet criterion, or a decision
-silently reduced to a stub — sends the goal **back to build**; ship never opens the PR on a goal the
-checker says isn't met.
+**Goal-level check (wi-code-checker · result mode).** Dispatch **wi-code-checker**
+(`agents/wi-code-checker.md`) in `result` mode against `spec.md`'s acceptance criteria + locked decisions
+(ADRs, constitution); it confirms each is delivered and **wired**, not just present, refreshing
+`verification.md`. If `.wi/moa.md`'s `## Cross-provider config` names a provider (≠ `none`) and its API
+key is present, this pass runs as an **independent cross-provider check** per
+`${CLAUDE_PLUGIN_ROOT}/references/moa.md`: full goal diff + `spec.md` through
+`skills/ship/scripts/moa_review.py` → `.wi/goals/<slug>/moa-review.md`. Otherwise (unconfigured, or exit 2
+config/API error, or exit 3 missing API key) it falls back to dispatching `wi-code-checker` on the
+`wi-code-checker` role's model — log `checker cross-provider via fallback (<reason>)` when that fallback
+fires. Findings are handled uniformly: BLOCKER — an unmet criterion, a decision silently reduced to a
+stub — sends the goal **back to build**, **max 2 review→fix rounds**; whatever remains goes with its
+severity into `PR.md`'s Verification. `moa-review.md` is ephemeral (pruned in §5). Ship never opens the PR
+on a goal wi-code-checker says isn't met.
 
 Address findings before proceeding; note anything deliberately deferred.
 
@@ -146,8 +144,8 @@ Commit: `docs(<slug>): learnings` (or fold into the docs-sync commit).
      loose in `.wi/` or elsewhere (scratch notes, drafts, working files) moves into the slug folder or is
      deleted if worthless. Project-level files stay where they are: `constitution.md`, `repo-map.md`,
      `overview.md`, `architecture.md`, `glossary.md`, `roadmap.md`, `adr/`, `learnings.md`, `learnings/`.
-  2. *Prune the ephemera:* delete `research/` working notes, **the MoA reviewer's `moa-review.md`**,
-     **and the checker's `verification.md`** —
+  2. *Prune the ephemera:* delete `research/` working notes, **the cross-provider check's `moa-review.md`**,
+     **and wi-code-checker's `verification.md`** —
      their value must already be distilled (research → the ADR and `spec.md`; the verification verdict →
      the `### Verification` block in `PR.md`). If something in them is still load-bearing, fold it in
      first. (Skip pruning if the constitution says to keep them.)

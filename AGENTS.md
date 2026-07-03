@@ -22,8 +22,10 @@ read the mapping for your platform and apply it as you go:
 - **Codex CLI:** `references/codex-tools.md`
 - **GitHub Copilot CLI:** `references/copilot-tools.md`
 
-Key rule: **`${CLAUDE_PLUGIN_ROOT}` is this repo's root** (the directory holding `skills/`, `agents/`,
-`.claude-plugin/`). Resolve every `${CLAUDE_PLUGIN_ROOT}` path against it.
+Key rule: **`${CLAUDE_PLUGIN_ROOT}` is the wi plugin root** — the directory holding `skills/`, `agents/`,
+`.claude-plugin/` — whether that's an installed plugin dir (e.g. Copilot's
+`~/.copilot/installed-plugins/…`) or a clone of this repo. Resolve every `${CLAUDE_PLUGIN_ROOT}` path
+against it.
 
 ## Invoking wi
 - Start a feature: the `dev` skill (`/wi:dev` on Claude, `/dev` or `$dev` elsewhere, or describe the

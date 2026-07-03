@@ -12,9 +12,17 @@ wi's skills are written with Claude Code names. On Copilot CLI, use these equiva
 
 ## ${CLAUDE_PLUGIN_ROOT}
 Copilot has no plugin-root variable. `${CLAUDE_PLUGIN_ROOT}` means the **wi plugin root** — the directory
-holding `skills/`, `agents/`, and `.claude-plugin/` (i.e. the cloned wi repo). Install wi **whole** (clone +
-`/skills add <repo>/skills`) so that root exists, then resolve every `${CLAUDE_PLUGIN_ROOT}` path against it.
-This is why per-skill `gh skill install` is discouraged: cross-skill refs such as `ship` reading
+holding `skills/`, `agents/`, and `.claude-plugin/`. Where that root lives depends on how wi was installed:
+
+- **Preferred — plugin install:** `copilot plugin install Wittenberger-Industries/wi-plugin` (Copilot CLI
+  reads `.claude-plugin/plugin.json` and defaults to `skills/` + `agents/`). The whole repo lands under
+  `~/.copilot/installed-plugins/…` — that installed directory is the wi root. Update with
+  `copilot plugin update wi`.
+- **Fallback — clone:** `git clone` + `/skills add <repo>/skills` (older CLI versions). The clone is the
+  wi root.
+
+Either way, install wi **whole** and resolve every `${CLAUDE_PLUGIN_ROOT}` path against that root. This is
+why per-skill `gh skill install` is discouraged: cross-skill refs such as `ship` reading
 `${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py`, and the plugin-version read from
 `.claude-plugin/plugin.json`, need the shared root.
 

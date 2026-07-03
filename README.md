@@ -34,8 +34,16 @@ On Claude the commands are `/wi:scan`, `/wi:dev`, …; on Codex/Copilot the skil
 add the repo via Codex's plugin flow (`/plugins`) and enable `wi`. Native `/goal` and `CLAUDE_PLUGIN_ROOT`
 compatibility work out of the box.
 
-**GitHub Copilot CLI** — clone the repo and register the whole skills dir (recommended — wi's skills are
-interdependent, so install them together, not one at a time):
+**GitHub Copilot CLI** — install wi as a plugin (Copilot CLI reads this repo's
+`.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` directly, and `skills/` + `agents/` are
+its default component paths):
+```
+copilot plugin install Wittenberger-Industries/wi-plugin
+```
+or, mirroring the Claude flow: `copilot plugin marketplace add Wittenberger-Industries/wi-plugin` then
+`/plugin install wi@wi`. Update later with `copilot plugin update wi`. The plugin installs whole, so wi's
+interdependent skills share one root. On CLI versions without plugin support, fall back to clone +
+register the whole skills dir (together, not one at a time):
 ```
 git clone https://github.com/Wittenberger-Industries/wi-plugin
 # then, in Copilot CLI:
@@ -52,10 +60,10 @@ wi is one source across three harnesses; only the autonomy spine differs:
 
 | | Claude Code | Codex CLI | Copilot CLI |
 |---|---|---|---|
-| Skills | plugin (`.claude-plugin/`) | `.codex-plugin/` (+ reads `.claude-plugin/marketplace.json`) | whole-repo `/skills add` |
+| Skills | plugin (`.claude-plugin/`) | `.codex-plugin/` (+ reads `.claude-plugin/marketplace.json`) | `plugin install` (reads `.claude-plugin/`); fallback whole-repo `/skills add` |
 | Keep-alive | built-in `/goal` | native `/goal` | Autopilot flags |
 | Command namespace | `/wi:dev` | `$dev` / `/skills` | `/dev` |
-| `${CLAUDE_PLUGIN_ROOT}` | native | compat var | the cloned repo root |
+| `${CLAUDE_PLUGIN_ROOT}` | native | compat var | the installed plugin root (or the clone) |
 | Subagents | Agent/Task | `spawn_agent` | `task` / `/fleet` |
 
 Tool-name mappings live in `references/codex-tools.md` and `references/copilot-tools.md`; the
@@ -239,7 +247,8 @@ If none are installed, wi still runs the whole loop on its own.
   skills/agents — "same version, different bytes" makes support and repro guesswork.
 - **Claude local-marketplace updates:** bump `version` in `.claude-plugin/plugin.json` (+ the marketplace
   entry and `.codex-plugin/plugin.json`), then `/plugin marketplace update wi` and `/reload-plugins` (or
-  restart). Codex and Copilot re-read the repo through their own install/update flows.
+  restart). Codex re-reads the repo through its own install/update flow; on Copilot, `copilot plugin
+  update wi` pulls the new version (clone-based installs re-pull with `git pull`).
 - **Agent naming:** the `wi-` prefix on `agents/` files is a deliberate cross-platform tag (PR #15); on
   Claude the namespace renders as `wi:wi-<name>` (e.g. `wi:wi-code-checker`) — the stutter is accepted,
   don't "fix" it back. The checker is intentionally `wi-code-checker` (not `wi-checker`); skills and docs

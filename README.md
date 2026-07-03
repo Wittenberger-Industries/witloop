@@ -70,6 +70,40 @@ cross-platform bootstrap is `AGENTS.md`.
 /wi:rpa "PDD.docx"     -> ingest(markitdown) -> refine TO-BE (you) -> SDD -> check -> DESIGN GATE (you) -> REFramework/Maestro build -> check -> PR
 ```
 
+The same machine, two domains — the flows differ until the design gate, then share the spine:
+
+```mermaid
+flowchart TD
+  subgraph devlane["/wi:dev — software feature"]
+    idea["feature idea"] --> brainstorm["brainstorm (YOU) — behavior, scope, constraints -> brief.md"]
+    brainstorm --> planp["research — parallel wi-researchers pick the approach (+ ADR), then plan: spec.md, tasks.md, pitfalls.md"]
+  end
+
+  subgraph rpalane["/wi:rpa — UiPath solution"]
+    pddin["PDD (.docx)"] --> ingest["ingest — markitdown -> pdd.md; register inputs + reusable components"]
+    ingest --> tobe["refine the TO-BE (YOU) — gaps, exceptions, framework proposal"]
+    tobe --> sddplan["plan — sdd.md (acceptance criteria §10), architecture, assumptions, tasks DAG"]
+  end
+
+  scan["/wi:scan — once per project: repo-map, constitution, architecture"] -.-> brainstorm
+
+  planp --> precheck["checker · plan mode — feature-backward coverage matrix"]
+  sddplan --> precheck
+  precheck --> gate{"DESIGN GATE (YOU) — approve / amend / stop (--auto: auto-approved + recorded)"}
+  gate -->|approve| isolate["isolate — git worktree + feature branch; the dossier is the branch's first commit"]
+  isolate --> build["build in parallel waves — dev: wi-task-runner subagents (TDD); rpa: uipath-rpa or uipath-maestro-flow"]
+  build --> verify["verification gate + checker · result mode (+ cross-provider diff review when configured)"]
+  verify -->|"red — back to build (max 2 rounds)"| build
+  verify -->|green| ship["ship — docs-sync, learnings, PR.md, dossier tidy"]
+  ship --> pr["open the PR (gh) — close-out checklist -> done"]
+  pr -.->|"rpa, if gate-approved"| publish["publish to the tenant — feed / deploy via uipath-solution"]
+```
+
+**(YOU)** marks the only two conversations in either flow — everything else runs autonomously, the
+post-gate stretch under the keep-alive loop (`/goal` or Autopilot) until ship's close-out checklist
+passes. At the rpa gate the user also locks the **framework** (REFramework | Maestro), the **build
+paradigm** (XAML-only | coded `.cs`), and the **publish** decision (none | feed | deploy).
+
 The **check** steps are wi's read-only **checker** agent. In *plan mode* (before the gate) it builds a
 coverage matrix — every acceptance criterion, locked decision, glossary term, and pitfall mapped to a
 covering task — and flags silent scope-reduction or over-build as BLOCKER / WARNING / INFO for the gate to

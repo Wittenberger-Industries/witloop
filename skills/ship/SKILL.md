@@ -196,7 +196,7 @@ findings with severity. Distilled from verification.md; the dossier tidy (§6) t
 - **Tidy the dossier** (do this BEFORE cutting the PR, so the PR carries a clean `.wi/`). Ship serves two
   flows: first read the **`Flow:`** line from the feature's `progress.md` (`dev` | `rpa`; a **missing line
   means `dev`** — features created before the line existed are dev). It keys which directory reference
-  defines the sweep whitelist and the dossier manifest below: `dev` →
+  defines the sweep whitelist, the ephemera list, and the dossier manifest below: `dev` →
   `${CLAUDE_PLUGIN_ROOT}/skills/research/references/wi-directory.md`, `rpa` →
   `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/rpa-directory.md`. **RPA runs: see rpa/SKILL §7** for how
   ship's dev-named artifacts (spec.md, pitfalls.md, brief.md) map to the RPA ones. Then:
@@ -207,11 +207,11 @@ findings with severity. Distilled from verification.md; the dossier tidy (§6) t
      rpa-directory.md's "Project-level files" bullet — the RPA registries `rpa-constitution.md`,
      `sdd-template.md`, `inputs.md`, `components.md`, `orchestrator.md` are project files, never strays).
      When in doubt the directory reference wins; never sweep a file it marks project-level.
-  2. *Prune the ephemera:* delete `research/` working notes, **the cross-provider diff review's `moa-review.md`**,
-     **and wi-code-checker's `verification.md`** —
-     their value must already be distilled (research → the ADR and `spec.md`; the verification verdict →
-     the `### Verification` block in `PR.md`). If something in them is still load-bearing, fold it in
-     first. (Skip pruning if the constitution says to keep them.)
+  2. *Prune the ephemera* — the flow's directory reference names them (dev: wi-directory.md's ephemera
+     bullet; rpa: rpa-directory.md's run-dossier bullet); prune exactly that list, nothing more. Their
+     value must already be distilled — §5 folded the checker/diff-review verdicts into `PR.md`'s
+     Verification; research notes live on in the ADR and `spec.md`. If something is still load-bearing,
+     fold it in first. (Skip pruning if the constitution says to keep them.)
   3. *Finalize `tokens.md` — NOW, not at close-out.* The file must be complete **inside the dossier
      commit**, or it never rides the PR. The ledger was scaffolded at research/build start and its
      subagent rows appended live; finalize the orchestrator total with one command:
@@ -275,7 +275,7 @@ console already said:
 - [ ] `.wi/learnings.md` index has this feature's line (and the detail file exists if one was warranted)
 - [ ] dossier = exactly the flow's manifest (per progress.md `Flow:`, missing = dev — dev: the seven-file
       dossier in wi-directory.md; rpa: the run dossier in rpa-directory.md; **RPA runs: see rpa/SKILL §7
-      mapping**); ephemera pruned (`research/`, `verification.md`, `moa-review.md`); no strays anywhere
+      mapping**); ephemera pruned (the flow's directory reference names them); no strays anywhere
       in `.wi/`
 - [ ] worktree removed; local branch deleted only if fully merged (`git branch -d` refuses otherwise) —
       the remote branch / open PR never deleted

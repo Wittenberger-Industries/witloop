@@ -115,7 +115,9 @@ subagent's full transcript into your context — the report is enough.
 build runs in waves: every task whose dependencies are met and whose `Files` are disjoint from the other
 ready tasks is dispatched concurrently, in the same turn. Reports are reconciled as they return; the
 orchestrator is the only committer, so parallel edits in one worktree stay safe — runners touch disjoint
-files, commits land serially. `superpowers:dispatching-parallel-agents` codifies the pattern if installed.
+files, commits land serially. The git landmines that bind runners sharing a worktree (the no-stash /
+no-clean / no-reset list) are pinned once in `agents/wi-task-runner.md`, echoed by the prompt skeleton
+above. `superpowers:dispatching-parallel-agents` codifies the pattern if installed.
 
 The escalation ladder when parallel work would collide:
 

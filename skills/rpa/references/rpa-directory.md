@@ -61,8 +61,9 @@ folder for the whole solution, with **one SDD** covering its 1..N processes.
 - **The run dossier** — what ship's tidy leaves under `features/<run-slug>/` at `done` (the manifest ship
   reads when progress.md says `Flow: rpa`): `progress.md`, `pdd.md`, `architecture.md`, `sdd.md`,
   `process-inventory.md`, `assumptions.md`, `tasks.md`, `tokens.md`, `PR.md`, plus `processes/<p>/tobe.md`
-  per process. `verification.md` and `moa-review.md` are ephemeral — their verdicts fold into `PR.md`
-  (ship §5), then ship's dossier tidy prunes them (same rule as the dev flow).
+  per process. `verification.md` and `moa-review.md` are ephemeral — ship's prune list for the rpa flow
+  (no `research/` exists here): their verdicts fold into `PR.md` (ship §5), then ship's dossier tidy
+  prunes them (same rule as the dev flow).
 - **The SDD structure is overridable** (clients differ): an existing project `sdd.md`'s ToC wins; else
   `.wi/sdd-template.md`; else the bundled base ToC (see `references/sdd-template.md`).
 - **`architecture.md` is the whole-solution Runtime diagram** — dispatcher + every performer (2nd/3rd) +

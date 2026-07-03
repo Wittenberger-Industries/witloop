@@ -67,7 +67,8 @@ reasoned about. Keep every file small and current; these are working artifacts, 
   the ADR and spec; the checker's `verification.md` feeds the design gate (plan mode) and the ship review
   (result mode); `moa-review.md` is the cross-provider diff review's output (ship, only when configured).
   Their verdicts + any waived findings fold into `PR.md` (ship §5), then the dossier tidy (§6) prunes all
-  three before the PR (unless the constitution says keep them). After `done`, a feature folder holds
+  three before the PR (unless the constitution says keep them). This bullet is ship's prune list for the
+  dev flow — the tidy prunes exactly what it names. After `done`, a feature folder holds
   exactly the seven-file dossier: progress, brief, spec, tasks, pitfalls, tokens, PR.
 - **Project-level memory persists & compounds.** `constitution.md`, `repo-map.md`, `overview.md`,
   `architecture.md`, `glossary.md`, `adr/`, `roadmap.md`, `moa.md`, `learnings.md`, and `learnings/` belong to the

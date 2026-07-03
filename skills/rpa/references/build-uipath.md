@@ -20,11 +20,12 @@ Precondition: the design gate passed (SDD + assumptions confirmed, or `--auto`),
 
 ## 1. Isolate
 
-Create the worktree + branch (`wi/<run-slug>`) exactly as `wi:build` does
-(`${CLAUDE_PLUGIN_ROOT}/skills/build/references/worktrees-and-subagents.md`; use
-`superpowers:using-git-worktrees` if installed). Record path + branch. Same first step as `wi:build`: the
-run's feature folder is untracked on main, so move `.wi/features/<slug>/` into the worktree and commit it as the
-branch's first commit (`chore(<slug>): feature dossier`) — skip the move if it's already there (resume).
+The worktree + branch (`wi/<run-slug>`) and the dossier's first commit
+(`chore(<run-slug>): feature dossier`) are created at rpa §6 — framework-neutral, exactly as
+`wi:build` does it (`${CLAUDE_PLUGIN_ROOT}/skills/build/references/worktrees-and-subagents.md`; use
+`superpowers:using-git-worktrees` if installed). Record path + branch in `progress.md`. Before wave
+1, verify `.wi/features/<run-slug>/` is present in-tree and committed; if it isn't (an out-of-order
+resume), do the move now.
 
 ## 2. Execute the build DAG in waves (from `tasks.md`)
 
@@ -74,7 +75,7 @@ DAG allows (independent processes and independent sub-workflows in parallel):
    `progress.md`. **Append each delegated unit's token count to `tokens.md`** the moment that subagent
    reports completion (the only point the count exists) — `tokens.md` is **mandatory**, not optional;
    initialize it on the first delegation if absent
-   (`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/features/<slug>/tokens.md` —
+   (`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/features/<run-slug>/tokens.md` —
    `python` assumed on PATH; where it does not resolve, fall back to `py -3` on Windows or `python3` on
    Linux/macOS), and ship finalizes it (`token_report.py --write`) under a `check_tokens.py` close-out gate.
 5. **Register new components.** If the build created something reusable (a generic login, a notifier),
@@ -90,12 +91,10 @@ APIs). Names come from the SDD §7 resource manifest. Never hardcode secrets —
 Stay within the confirmed SDD; new scope becomes a logged task/assumption, not a silent addition. Never
 commit secrets or local robot artifacts; respect `.gitignore` for `.local`, `*.user`, etc.
 
-**Shared-worktree git landmines** (the parallel build waves share one worktree, same as `wi:build`): **no
-`git stash`** (the stash stack is shared across worktrees via `refs/stash` — a `pop` can apply a sibling
-wave's WIP), **no `git clean`** (it deletes another wave's generated `.xaml`/`.cs` it sees as untracked), and
-**no `reset --hard` / `checkout` of shared or protected branches**. Need to park WIP? Commit it to a
-throwaway branch you own. The orchestrator commits per unit (step 2.4); a delegated build never runs
-destructive git.
+**Shared-worktree git landmines** — the parallel build waves share one worktree, same as `wi:build`, and
+the same landmines bind every wave: the canonical list (no-stash / no-clean / no-reset, and how to park
+WIP safely) lives in `agents/wi-task-runner.md`'s shared-worktree rules — one statement, both flows. The
+orchestrator commits per unit (step 2.4); a delegated build never runs destructive git.
 
 ## Notes
 

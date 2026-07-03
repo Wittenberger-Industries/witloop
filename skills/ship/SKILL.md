@@ -55,8 +55,8 @@ Unconfigured, exit 2 (config/API error), or exit 3 (missing API key) governs onl
 Findings from **both** layers feed the same loop: a BLOCKER — an unmet criterion, a decision silently
 reduced to a stub — sends the feature **back to build**, **max 2 review→fix rounds** shared across both;
 whatever remains goes with its severity into `PR.md`'s Verification. A BLOCKER from either layer blocks
-the PR. `moa-review.md` is ephemeral (pruned in §5). Ship never opens the PR
-on a feature wi-code-checker says isn't delivered.
+the PR. `moa-review.md` is ephemeral (pruned in §6, after §5 distills it into `PR.md`). Ship never opens
+the PR on a feature wi-code-checker says isn't delivered.
 
 Address findings before proceeding; note anything deliberately deferred.
 
@@ -67,6 +67,8 @@ The feature is built and verified — make the docs match reality before the PR.
 - **Architecture diagram:** if the change added or removed a module, dependency, layer, or external
   service, update `.wi/architecture.md` (the mermaid graph + legend) to match. If it doesn't exist yet
   (e.g. a greenfield project's first feature), create it now from the new structure using scan's template.
+  (Scan's docs are committed where written — `wi-directory.md`'s project-level rule — so a scanned repo's
+  worktree already carries them; absence really does mean greenfield.)
   Then validate it for real before committing:
   `python ${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py .wi/architecture.md` — the bundled
   checker catches reserved-word node IDs, unquoted labels, and unbalanced `subgraph`/`end` (and renders
@@ -136,51 +138,7 @@ resolved term → `.wi/glossary.md`. That is how the next feature starts smarter
 
 Commit: `docs(<slug>): learnings` (or fold into the docs-sync commit).
 
-## 5 · Tidy the history & the feature dossier
-
-- Ensure each commit is coherent (`<type>: <subject>`). Squash only if the project prefers a single commit
-  per PR (check the constitution).
-- Confirm no generated files, large blobs, or secrets slipped in.
-- **Repo tree clean:** `git status` must show only the changes you mean to ship. Delete any verification
-  scratch — one-off sanity scripts, probe files, generated artifacts (e.g. a `_sanity_export.py` written
-  to run an export check). Throwaway probes belong in a temp dir outside the repo, or get removed before
-  the PR. A stray scratch file in the diff is a defect.
-- **Tidy the dossier** (do this BEFORE cutting the PR, so the PR carries a clean `.wi/`). Ship serves two
-  flows: first read the **`Flow:`** line from the feature's `progress.md` (`dev` | `rpa`; a **missing line
-  means `dev`** — features created before the line existed are dev). It keys which directory reference
-  defines the sweep whitelist and the dossier manifest below: `dev` →
-  `${CLAUDE_PLUGIN_ROOT}/skills/research/references/wi-directory.md`, `rpa` →
-  `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/rpa-directory.md`. **RPA runs: see rpa/SKILL §7** for how
-  ship's dev-named artifacts (spec.md, pitfalls.md, brief.md) map to the RPA ones. Then:
-  1. *Sweep strays:* every feature-specific file must live under `.wi/features/<slug>/`. Anything this run left
-     loose in `.wi/` or elsewhere (scratch notes, drafts, working files) moves into the slug folder or is
-     deleted if worthless. Project-level files stay where they are — the whitelist is the flow's directory
-     reference's project-level list (dev: wi-directory.md's "Project-level memory" bullet; rpa:
-     rpa-directory.md's "Project-level files" bullet — the RPA registries `rpa-constitution.md`,
-     `sdd-template.md`, `inputs.md`, `components.md`, `orchestrator.md` are project files, never strays).
-     When in doubt the directory reference wins; never sweep a file it marks project-level.
-  2. *Prune the ephemera:* delete `research/` working notes, **the cross-provider diff review's `moa-review.md`**,
-     **and wi-code-checker's `verification.md`** —
-     their value must already be distilled (research → the ADR and `spec.md`; the verification verdict →
-     the `### Verification` block in `PR.md`). If something in them is still load-bearing, fold it in
-     first. (Skip pruning if the constitution says to keep them.)
-  3. *Finalize `tokens.md` — NOW, not at close-out.* The file must be complete **inside the dossier
-     commit**, or it never rides the PR. The ledger was scaffolded at research/build start and its
-     subagent rows appended live; finalize the orchestrator total with one command:
-     `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write .wi/features/<slug>/tokens.md`
-     (auto-detects the active session transcript under `~/.claude/projects/`; add
-     `--transcript <path>` if you know it). It replaces the `## Orchestrator` section in place and
-     recomputes the **Subagents (exact)** sum from the ledger rows — no manual stdout-copy. On a parse
-     failure it writes `Orchestrator: unavailable for this run` (never a substitute, estimate, or
-     fabricated figure). The **file** is the deliverable, not the console output.
-  4. *What remains is the fixed dossier for this flow* — take the manifest from the flow's directory
-     reference, not from memory: `dev` → wi-directory.md's seven-file dossier (progress, brief, spec,
-     tasks, pitfalls, tokens, PR); `rpa` → rpa-directory.md's run dossier (the SDD pack plus per-process
-     `tobe.md`). Either way it is the durable record of the feature (`PR.md` is written in the next step,
-     before this commit is pushed).
-  5. Commit it: `chore(<slug>): tidy feature dossier`.
-
-## 6 · PR description — write `.wi/features/<slug>/PR.md`
+## 5 · PR description — write `.wi/features/<slug>/PR.md`
 
 Write it from the feature's own artifacts — they were made for exactly this. The description is a **file,
 not console output**: save it as `.wi/features/<slug>/PR.md` and commit it (`docs(<slug>): PR description`).
@@ -217,7 +175,7 @@ timestamp: <YYYY-MM-DD>
 
 ### Verification
 <checker result-mode verdict: every acceptance criterion + locked decision delivered and wired; any waived
-findings with severity. Distilled from verification.md, which is pruned at close-out.>
+findings with severity. Distilled from verification.md; the dossier tidy (§6) then prunes it.>
 
 ### Risk & rollout
 <feature flag? migration order? back-out plan. From spec.md Rollout.>
@@ -225,6 +183,50 @@ findings with severity. Distilled from verification.md, which is pruned at close
 ### Decisions
 <link any ADRs: .wi/adr/ADR-NNNN-*.md>
 ```
+
+## 6 · Tidy the history & the feature dossier
+
+- Ensure each commit is coherent (`<type>: <subject>`). Squash only if the project prefers a single commit
+  per PR (check the constitution).
+- Confirm no generated files, large blobs, or secrets slipped in.
+- **Repo tree clean:** `git status` must show only the changes you mean to ship. Delete any verification
+  scratch — one-off sanity scripts, probe files, generated artifacts (e.g. a `_sanity_export.py` written
+  to run an export check). Throwaway probes belong in a temp dir outside the repo, or get removed before
+  the PR. A stray scratch file in the diff is a defect.
+- **Tidy the dossier** (do this BEFORE cutting the PR, so the PR carries a clean `.wi/`). Ship serves two
+  flows: first read the **`Flow:`** line from the feature's `progress.md` (`dev` | `rpa`; a **missing line
+  means `dev`** — features created before the line existed are dev). It keys which directory reference
+  defines the sweep whitelist, the ephemera list, and the dossier manifest below: `dev` →
+  `${CLAUDE_PLUGIN_ROOT}/skills/research/references/wi-directory.md`, `rpa` →
+  `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/rpa-directory.md`. **RPA runs: see rpa/SKILL §7** for how
+  ship's dev-named artifacts (spec.md, pitfalls.md, brief.md) map to the RPA ones. Then:
+  1. *Sweep strays:* every feature-specific file must live under `.wi/features/<slug>/`. Anything this run left
+     loose in `.wi/` or elsewhere (scratch notes, drafts, working files) moves into the slug folder or is
+     deleted if worthless. Project-level files stay where they are — the whitelist is the flow's directory
+     reference's project-level list (dev: wi-directory.md's "Project-level memory" bullet; rpa:
+     rpa-directory.md's "Project-level files" bullet — the RPA registries `rpa-constitution.md`,
+     `sdd-template.md`, `inputs.md`, `components.md`, `orchestrator.md` are project files, never strays).
+     When in doubt the directory reference wins; never sweep a file it marks project-level.
+  2. *Prune the ephemera* — the flow's directory reference names them (dev: wi-directory.md's ephemera
+     bullet; rpa: rpa-directory.md's run-dossier bullet); prune exactly that list, nothing more. Their
+     value must already be distilled — §5 folded the checker/diff-review verdicts into `PR.md`'s
+     Verification; research notes live on in the ADR and `spec.md`. If something is still load-bearing,
+     fold it in first. (Skip pruning if the constitution says to keep them.)
+  3. *Finalize `tokens.md` — NOW, not at close-out.* The file must be complete **inside the dossier
+     commit**, or it never rides the PR. The ledger was scaffolded at research/build start and its
+     subagent rows appended live; finalize the orchestrator total with one command:
+     `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write .wi/features/<slug>/tokens.md`
+     (auto-detects the active session transcript under `~/.claude/projects/`; add
+     `--transcript <path>` if you know it). It replaces the `## Orchestrator` section in place and
+     recomputes the **Subagents (exact)** sum from the ledger rows — no manual stdout-copy. On a parse
+     failure it writes `Orchestrator: unavailable for this run` (never a substitute, estimate, or
+     fabricated figure). The **file** is the deliverable, not the console output.
+  4. *What remains is the fixed dossier for this flow* — take the manifest from the flow's directory
+     reference, not from memory: `dev` → wi-directory.md's seven-file dossier (progress, brief, spec,
+     tasks, pitfalls, tokens, PR); `rpa` → rpa-directory.md's run dossier (the SDD pack plus per-process
+     `tobe.md`). Either way it is the durable record of the feature (`PR.md` was written in §5, so this
+     tidy commit carries the complete dossier).
+  5. Commit it: `chore(<slug>): tidy feature dossier`.
 
 ## 7 · Open the PR (autonomous)
 
@@ -255,10 +257,12 @@ force-push.** If `superpowers:finishing-a-development-branch` is installed, use 
 
 ## 8 · Close out — checklist, then the report
 
-After the PR is open (or merged), clean up: remove the worktree and delete the merged branch (see the
-worktree reference). Then run the **close-out checklist** — every box, against the actual repo state, not
-memory. `progress.md` Phase = `done` is **earned by this checklist**; an unticked box means ship is not
-finished, no matter what the console already said:
+After the PR is open (or merged), clean up: remove the worktree (safe once the branch is pushed), and
+delete the **local** branch only if it is fully merged (`git branch -d`, which refuses otherwise — see
+the worktree reference); the remote branch and an open PR are never deleted. Then run the
+**close-out checklist** — every box, against the actual repo state, not memory. `progress.md` Phase =
+`done` is **earned by this checklist**; an unticked box means ship is not finished, no matter what the
+console already said:
 
 - [ ] PR is **open** and its URL is logged in `progress.md` (sole substitute: branch pushed + failure
       reason + the frontmatter-stripped `gh pr create …` recovery command (§7) recorded as a blocker)
@@ -271,9 +275,10 @@ finished, no matter what the console already said:
 - [ ] `.wi/learnings.md` index has this feature's line (and the detail file exists if one was warranted)
 - [ ] dossier = exactly the flow's manifest (per progress.md `Flow:`, missing = dev — dev: the seven-file
       dossier in wi-directory.md; rpa: the run dossier in rpa-directory.md; **RPA runs: see rpa/SKILL §7
-      mapping**); ephemera pruned (`research/`, `verification.md`, `moa-review.md`); no strays anywhere
+      mapping**); ephemera pruned (the flow's directory reference names them); no strays anywhere
       in `.wi/`
-- [ ] worktree removed; merged branch deleted
+- [ ] worktree removed; local branch deleted only if fully merged (`git branch -d` refuses otherwise) —
+      the remote branch / open PR never deleted
 
 All green: set Phase = `done`, add a final Log line with the PR link, and if `roadmap.md` exists mark this
 feature done and surface the next one.

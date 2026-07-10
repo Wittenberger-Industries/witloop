@@ -143,6 +143,15 @@ timestamp: <YYYY-MM-DD>
 - **Worktree:** <path or "-">
 - **Branch:** <branch or "-">
 
+## Model routing (resolved)
+<!-- written when progress.md is seeded (dev step 1-2 / rpa step 2) from .wi/models.md; dispatches
+     read THIS block, not models.md. Rewrite only when absent or .wi/models.md changed after the
+     stamp (models.md's resolve-once rule). Keep the stamp mid-line — Log-span parsing keys on
+     stamps that OPEN a line. -->
+- resolved <ISO-8601 stamp> from .wi/models.md (preset: <smart | simple | custom | none — all inherit>)
+- orchestrator=<tier> (informational) · checker=<tier> · researcher=<tier> · task-runner=<tier> · rpa-build=<tier>
+- cross-provider=<none | provider model (at-finish | per-wave)> · MoA=<none | points=<…>; proposers=<…>; layers=<n>; aggregator=<tier>>
+
 ## Log
 - <YYYY-MM-DDTHH:MM:SS±hh:mm> **Created** feature, phase = brainstorm
 

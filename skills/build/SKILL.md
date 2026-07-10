@@ -19,7 +19,12 @@ Precondition: a plan exists (`tasks.md`) **and the design gate passed** — appr
 skill instead. First act once engaged: append `build engine engaged (wi <version>)` to progress.md's Log — read
 <version> from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`, don't guess it — so the invocation is
 auditable. From here build runs autonomously; the gate was the last question.
-Inputs: `tasks.md`, `spec.md`, `constitution.md`, `repo-map.md`.
+Inputs: `tasks.md`, `spec.md`, `constitution.md`, `repo-map.md`. That list is also the ceiling —
+workflow.md's **context budget**: hold `tasks.md` (the active artifact) plus `progress.md` and the
+two project files; consult `spec.md` **by section** when a task needs a criterion verbatim. Runners
+read everything else — never pre-read a runner's source files "to prepare" a dispatch. On re-entry,
+`progress.md`'s ticks + Log are the build's state; don't re-Read prior-phase artifacts to
+reconstruct it.
 
 ## 1 · Isolate (default: worktree + branch)
 
@@ -50,7 +55,8 @@ run it as wide as the DAG allows. Repeat until every task is ticked:
    (`tasks.md`'s Waves section is the plan's precomputed answer — trust it unless reality diverged.)
 2. **Dispatch the whole ready set at once** — one fresh `wi-task-runner` (see `agents/wi-task-runner.md`) per
    task, all in the same turn. Each gets exactly what it needs and nothing more: its task block, the
-   relevant constitution rules, and the repo commands. Fresh agents keep context from rotting across a
+   relevant constitution rules, and the repo commands. Pointers and rules, not pasted file bodies: the
+   runner reads its own files (workflow.md's context budget). Fresh agents keep context from rotting across a
    long build; parallel dispatch keeps wall-clock short. **Model per dispatch (tiered model routing):** when `.wi/models.md`
    exists, resolve each runner's model as per-agent override → `wi-task-runner` role → `inherit`
    (`${CLAUDE_PLUGIN_ROOT}/references/models.md`) and pass it on the dispatch; a model that errors as
@@ -85,11 +91,14 @@ the reference (per-task worktrees; serial verify as a last resort). Sequential e
 when the DAG is a chain, never the default: an idle DAG is wasted wall-clock.
 (`superpowers:dispatching-parallel-agents` codifies the dispatch pattern if installed.)
 
-Two scheduling refinements proven in dry runs: (a) **wave-end gate** — at each wave boundary run the full
-lint + test commands once, serially, before dispatching the next wave — and when `.wi/models.md` sets
-`check_points: per-wave`, also run **the cross-provider diff review** — the layer on top of
-wi-code-checker, when configured — over the wave's diff there
-(`${CLAUDE_PLUGIN_ROOT}/references/models.md`, same bounded 2-round loop as at ship); (b) **sole-runner exception** —
+Two scheduling refinements proven in dry runs: (a) **wave-end gate** — at each wave boundary run the
+full lint + test commands once, serially, before dispatching the next wave — output redirected per
+workflow.md's output house rule (`… > .wi/features/<slug>/.logs/w<N>-tests.txt 2>&1`), verdict read
+from the exit code + `tail -n 30`, failures pulled by grep, never the whole log — and when the
+resolved-routing block's cross-provider row says `per-wave` (progress.md; #38's resolve-once rule),
+also run **the cross-provider diff review** — the layer on top of wi-code-checker, when configured —
+over the wave's diff there (`${CLAUDE_PLUGIN_ROOT}/references/models.md`, same bounded 2-round loop
+as at ship); (b) **sole-runner exception** —
 when exactly one task in a wave executes tests (the rest are docs/config), that runner keeps full TDD
 (watch-fail / watch-pass); only multi-test waves switch to authored-not-run + orchestrator serial Verify.
 

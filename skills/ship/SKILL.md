@@ -329,13 +329,17 @@ is merge-ready the moment a remote appears.
 
 **The remote-checks gate — before any cleanup.** The §1 gate was local; the PR's checks — CI runs and
 deployment checks (e.g. Vercel) — are the authoritative signal, and they run remotely *after* the push.
-The PR must be green, not just the worktree. Give the checks a moment to register, then watch them to
-completion: `gh pr checks <pr-url-or-number> --watch --fail-fast`, bounded by a sane timeout —
-redirected to `.wi/features/<slug>/.logs/pr-checks.txt`; the final table (its tail) is the evidence
-you log to `progress.md` (default ~15 minutes; the constitution may override). If no checks register
-after ~2 minutes AND the repo has no
-CI config (no `.github/workflows/`, nothing in `repo-map.md`), log `remote checks: none configured` in
-`progress.md` and proceed to cleanup — the remote-checks box below passes on that recorded substitute.
+The PR must be green, not just the worktree. Re-create the log dir first if the §6 tidy pruned it —
+`mkdir -p .wi/features/<slug>/.logs && printf '*\n' > .wi/features/<slug>/.logs/.gitignore`
+(idempotent; keeps it self-gitignored so a red-path fix commit can never stage CI logs —
+workflow.md's output house rule). Then give the checks a moment to register and watch them to
+completion: `gh pr checks <pr-url-or-number> --watch --fail-fast`, bounded by a sane timeout
+(default ~15 minutes; the constitution may override) — redirected to
+`.wi/features/<slug>/.logs/pr-checks.txt`; the final table (its tail) is the evidence you log to
+`progress.md`. If no checks register after ~2 minutes AND the repo has no CI config (no
+`.github/workflows/`, nothing in `repo-map.md`), log `remote checks: none configured` in
+`progress.md` and proceed to cleanup — the remote-checks box below passes on that recorded
+substitute.
 
 - **Green** — every reported check (or every **required** check, where branch protection defines them)
   concluded successfully. Log the evidence in `progress.md`: `remote checks: N/N green` plus the check

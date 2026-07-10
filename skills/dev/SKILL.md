@@ -118,6 +118,10 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
 - User interactions by mode: **interactive** = brainstorm + a one-line handoff confirmation + the design
   gate; **`--auto`** = brainstorm only (no handoff confirmation, gate auto-approved and recorded). Never
   stop for anything else.
+- **Context budget (workflow.md):** dev holds `repo-map.md`, `constitution.md`, and the feature's
+  `progress.md`; resume detection reads each in-flight feature's `progress.md` — nothing else; the
+  handoff preflight checks `brief.md` once. Bigger reads are delegated — the phase skills' subagents
+  do the reading.
 - If brainstorming reveals several features, capture them in `.wi/roadmap.md` — committed where written
   (`docs(wi): roadmap`) — and run each as its own `/wi:dev`. One feature = one PR.
 - **Mid-run user input is routed, never absorbed silently.** If the user interjects during the autonomous

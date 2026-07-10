@@ -21,6 +21,11 @@ keep-alive loop (`/goal` or Autopilot) if the user armed it.
   the best option given `brief.md` + `constitution.md`, record it, continue.
 - **State on disk.** Layout: `${CLAUDE_PLUGIN_ROOT}/skills/research/references/wi-directory.md`. Never
   re-derive what a file records.
+- **Hold the budget.** workflow.md's **context budget** is a hard rule: `constitution.md`,
+  `repo-map.md`, `progress.md`, plus the one active artifact (`brief.md` while researching;
+  `spec.md`/`tasks.md` while planning). Researchers read sources and return short reports — never
+  pull their material into this context. Re-entry (§0) reads `progress.md` + the active artifact,
+  not prior-phase files.
 - **Delegate, summarize, discard.** Researchers run in parallel subagents and return short reports; append
   each one's token count as a row to `tokens.md` the moment its completion notification arrives (the figure
   exists only there — NOT retrievable later), with its `Duration` cell (the notification's elapsed time, or

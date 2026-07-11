@@ -90,7 +90,7 @@ def parse_duration(text):
 def _data_rows(text):
     """[(tokens, duration_cell_or_None), ...] for ledger rows whose Tokens (3rd) cell is an
     integer. Header, separator, the orchestrator row, and <n> placeholders are excluded.
-    duration_cell is None for legacy 4-column rows. Scanning stops at the first '## '
+    duration_cell is None for a malformed short row. Scanning stops at the first '## '
     heading: the ledger table lives above '## Orchestrator' by template design, and the
     finalized tail carries other numeric tables (the per-subagent split) that must never
     be re-counted as ledger rows."""
@@ -248,12 +248,12 @@ def verify(path):
         return "no subagent row with an integer token count"
     if not subagents_sum_filled(text):
         return "Subagents (exact) sum not filled (still '<sum>')"
-    # Duration checks apply only to v2 ledgers; a legacy 4-column tokens.md still passes.
-    if has_duration_column(text):
-        if not _duration_cells_ok(text):
-            return "a subagent row's Duration cell is empty (write the figure or 'unavailable')"
-        if not compute_totals_filled(text):
-            return "duration totals not filled (Σ compute / wall-clock — token_report.py --write fills them)"
+    if not has_duration_column(text):
+        return "no Duration column in the ledger header (write the current 5-column format)"
+    if not _duration_cells_ok(text):
+        return "a subagent row's Duration cell is empty (write the figure or 'unavailable')"
+    if not compute_totals_filled(text):
+        return "duration totals not filled (Σ compute / wall-clock — token_report.py --write fills them)"
     if not orchestrator_resolved(text):
         return "Orchestrator section still PENDING / unresolved"
     return None

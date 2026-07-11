@@ -15,8 +15,7 @@ this step is what makes the later UiPath handoff complete.
 
 - **Derive `<run-slug>` first** — it's the feature-folder name used everywhere below: a kebab name from the
   PDD/solution, **prefixed with the next global 4-digit ordinal** (`NNNN-<name>`, e.g. `0001-invoices`) —
-  wi-directory.md's **Slugs bullet** (monotonic, assigned once at creation, never renumbered; legacy
-  unnumbered runs ignored by the next-number scan).
+  wi-directory.md's **Slugs bullet** (monotonic, assigned once at creation, never renumbered).
 - If the PDD is `.docx`/`.pdf`/`.pptx`: `markitdown <pdd> -o .wi/features/<run-slug>/pdd.md`.
 - If it's already `.md`: copy/reference it as `pdd.md` as-is (don't re-process the **body** — the
   frontmatter added next is metadata *around* it, not a rewrite of it).

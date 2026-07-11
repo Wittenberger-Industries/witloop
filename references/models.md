@@ -117,17 +117,14 @@ per-agent override), write the file **and commit it** (`chore(wi): models config
 in `wi-directory.md`: committed where written, so post-worktree phases read the same tracked copy).
 **`--auto`** → write + commit the **simple** preset and log it as an
 assumption. Either way the file persists and is **never re-asked** (edit `.wi/models.md` to change it). When
-the file exists, skip setup entirely, just apply it. The entry skills also handle the legacy migration: a
-pre-1.3 config under the old filename (the tell: an old-named `.wi/*.md` carrying the same `## Roles` /
-`## Cross-provider config` sections) is renamed to `.wi/models.md` with its frontmatter set to
-`type: Model Routing Config` — the section format is unchanged. Setup ends by resolving the routing once
+the file exists, skip setup entirely, just apply it. Setup ends by resolving the routing once
 and recording it as the `## Model routing (resolved)` block when the feature's `progress.md` is seeded
 (dev:2 / rpa's run seed) — the resolve-once rule below.
 
 ## Dispatch rule (build, research, ship, rpa) — resolve once, dispatch many
 
 **Resolve at entry.** At dev:1 / rpa:2 — or at the first dispatch that finds no block
-(legacy features, pre-1.7 runs) — resolve every dispatch kind **once**: per-agent override → the
+(a hand-edited or incomplete `progress.md`) — resolve every dispatch kind **once**: per-agent override → the
 agent's own role → `inherit` (`wi-code-checker` reads the `wi-code-checker` role, `wi-researcher`
 reads `wi-researcher`, `wi-task-runner` reads `wi-task-runner`; RPA build delegations resolve
 `rpa-build` override → `wi-task-runner` role → `inherit` — `rpa-build` is a **role label** for those

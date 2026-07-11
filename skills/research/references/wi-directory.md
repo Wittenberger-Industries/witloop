@@ -46,10 +46,10 @@ reasoned about. Keep every file small and current; these are working artifacts, 
 - **Slugs** are short, kebab-case, derived from the feature, **prefixed with a global 4-digit ordinal
   assigned at creation**: "Add Stripe webhooks" -> `0001-stripe-webhooks`. The prefix mirrors `ADR-NNNN`
   (global across `.wi/features/`, monotonic, **never renumbered**) so `.wi/features/` lists in implementation
-  order; next number = highest existing `.wi/features/` ordinal + 1 (else `0001`). Legacy features — unnumbered or with a non-numeric prefix — are left as-is and
-  ignored by the next-number scan (they contribute nothing to the max). A resumed feature keeps its
+  order; next number = highest existing `.wi/features/` ordinal + 1 (else `0001`) — the scan reads only
+  `NNNN-` prefixes, so non-numeric folder names contribute nothing to the max. A resumed feature keeps its
   number; a roadmap row's name is numbered when its folder is first created. Creation-time edge cases (resume,
-  in-flight overlap, done-collision, roadmap rows, legacy migration):
+  in-flight overlap, done-collision, roadmap rows):
   `${CLAUDE_PLUGIN_ROOT}/references/feature-folder-cases.md`.
 - **Commit `.wi/`.** It is documentation. Feature-folder lifecycle: untracked in the main checkout through
   brainstorm/research/plan; research commits it on main at the design gate (`docs(<slug>): feature

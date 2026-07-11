@@ -256,9 +256,8 @@ findings with severity. Distilled from verification.md; the dossier tidy (ship:6
      fold it in first. Prune tracked ephemera with `git rm -f` (the ship:2 result-mode checker refreshed
      `verification.md` *after* the commit that last touched it, so a plain `git rm` refuses on the local
      modifications); a never-committed one (`cross-review.md` is written at ship:2 and typically never
-     committed) is untracked — plain-delete it, `git rm` has no pathspec to match (prune a review file
-     left under its pre-1.3 legacy name too; `.logs/` is likewise never tracked (self-gitignored) —
-     plain-delete the directory).
+     committed) is untracked — plain-delete it, `git rm` has no pathspec to match (`.logs/` is likewise
+     never tracked (self-gitignored) — plain-delete the directory).
      (Skip pruning if the constitution says to keep them.)
   3. *Finalize `tokens.md` — NOW, not at close-out.* The file must be complete **inside the dossier
      commit**, or it never rides the PR. The ledger was scaffolded at research/build start and its

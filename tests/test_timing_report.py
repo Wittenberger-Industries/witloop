@@ -65,8 +65,8 @@ class ProgressSpanTests(unittest.TestCase):
         self.assertEqual(s2, 3012)
 
     def test_date_only_stamps_are_ignored(self):
-        legacy = PROGRESS_FIXTURE.replace("2026-07-05T14:19:47+02:00", "2026-07-05")
-        s1, _ = token_report.parse_progress_spans(legacy)
+        date_only = PROGRESS_FIXTURE.replace("2026-07-05T14:19:47+02:00", "2026-07-05")
+        s1, _ = token_report.parse_progress_spans(date_only)
         self.assertIsNone(s1)
 
     def test_negative_span_is_none(self):

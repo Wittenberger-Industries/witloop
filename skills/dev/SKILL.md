@@ -36,41 +36,20 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
    `inherit` per dispatch kind — models.md's **resolve-once rule**); step 2 records it as the
    `## Model routing (resolved)` block when `progress.md` is seeded, and a resumed feature missing the
    block gets it written on re-entry. Every later dispatch reads the block, not `.wi/models.md`.
-2. **Open the feature folder — or resume the one already open.** Parse flags: `--auto` sets **Gate mode:
+2. **Open the feature folder — or route the edge case first.** Parse flags: `--auto` sets **Gate mode:
    auto-approve** in progress.md — tell the user the design gate will be auto-approved and recorded, not
-   asked. Then **check before creating** — the slug ordinal, then whether this idea is new, a resume, or a
-   collision:
-   - **Legacy migration:** a repo whose work units still live under the pre-rename folder gets a one-time
-     `git mv .wi/goals .wi/features` before proceeding — commit it; the dossiers inside are untouched.
-   - **Ordinal assignment:** Derive a kebab-case name, then prefix the **next global 4-digit ordinal** so
-     `<slug>` = `NNNN-<name>` (e.g. `0001-stripe-webhooks`) — mirroring `ADR-NNNN`: the ordinal is global
-     across `.wi/features/`, monotonic, assigned **once at creation, never renumbered** (next = highest
-     existing `.wi/features/` ordinal + 1, else `0001`; legacy unnumbered features are left as-is and ignored by
-     the scan; a resumed feature keeps its number; a roadmap row's name is numbered when its folder is first
-     created).
-   - **Resume detection:** Scan `.wi/features/*/progress.md` for Phase ≠ `done`. One matches this idea
-     (same/near slug, or a title that reads as the same feature)? Then this is a **resume, not a new feature**:
-     re-read its progress.md, announce the phase and what's left (ticked tasks, recorded decisions), and
-     re-enter that phase — research/build/ship all re-enter from progress.md (workflow.md). Never seed a
-     second folder for the same feature; never overwrite an existing dossier.
-   - **In-flight overlap:** Idea is new but other features are in flight: say so in one line (slug + phase
-     each). If their `tasks.md` files overlap this idea's likely surface, run sequentially — two features
-     editing the same module trades merge conflicts for wall-clock.
-   - **Done-slug collision:** Slug collides with a **done** feature: the global ordinal already makes the new
-     folder unique (it gets the next number), so the kebab name may safely repeat across ordinals; only add
-     a `-2` suffix to disambiguate identical names when scanning. A finished dossier is history, not a
-     scratch folder.
-   - **Roadmap match & dependency stacking:** if `.wi/roadmap.md` exists and this idea is one of its rows,
-     use the row's slug, mark it `in-progress`, and carry the row's notes + sequencing rationale into
-     brainstorm as seed context — the WHAT was part-captured when the roadmap was written, so brainstorm
-     gets shorter, not skipped. Check its **Depends on**: a dependency that is done-but-unmerged (PR still
-     open) means this feature would build against code `main` doesn't have — ask once (inside the brainstorm
-     stop, like the preflight): wait for the merge, **stack** this branch on the dependency's branch (record
-     it in progress.md; retarget the PR after the dep merges), or proceed off `main` deliberately.
-   Only then create `.wi/features/<slug>/` and seed `progress.md` (template in the research skill's
-   `wi-directory.md`). Every Log line — the `**Created**` seed included — opens with a full ISO-8601
-   timestamp from the OS clock (`date -Iseconds`, or `python
-   ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/now.py`); ship computes the run's timing from these
+   asked. Then **classify the idea before creating anything** — **new / resume / in-flight-overlap /
+   done-collision / roadmap-row / legacy-repo** (tells: an in-flight `features/*/progress.md` reading as
+   this same idea → resume; others merely in flight → overlap; a done feature with this name →
+   done-collision; a matching `.wi/roadmap.md` row → roadmap-row; a pre-rename work-unit folder
+   (`goals`, not `features`) → legacy). Anything but a plain new feature → follow
+   `${CLAUDE_PLUGIN_ROOT}/references/feature-folder-cases.md` for every case whose tell fires, before
+   creating anything. The common path: derive a kebab-case name, prefix the **next global 4-digit
+   ordinal** so `<slug>` = `NNNN-<name>` (e.g. `0001-stripe-webhooks`; full numbering rule — monotonic,
+   never renumbered — in wi-directory.md's Slugs bullet), create `.wi/features/<slug>/`, and seed
+   `progress.md` (template in the research skill's `wi-directory.md`). Every Log line — the `**Created**`
+   seed included — opens with a full ISO-8601 timestamp from the OS clock (`date -Iseconds`, or
+   `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/now.py`); ship computes the run's timing from these
    stamps, so never write a date-only or guessed one.
 3. **Brainstorm** (skill `wi:brainstorm`) — the dialogue about desired behavior, scope, constraints.
    Writes `brief.md`.

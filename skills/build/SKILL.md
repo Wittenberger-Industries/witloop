@@ -43,10 +43,7 @@ Branch name: `wi/<slug>`. Worktree path: a sibling dir, e.g. `../<repo>-wi-<slug
 **The feature dossier rides in with the checkout.** Research committed `.wi/features/<slug>/` on main at
 the design gate (`docs(<slug>): feature dossier (design gate)`), and the worktree branches from main — so
 the worktree starts with the dossier in place; nothing to move. During build the worktree's copy is
-canonical; main's catches up when the branch merges. One fallback for pre-1.3 features: if the dossier is
-still untracked in the main checkout, move `.wi/features/<slug>/` into the worktree and commit it as the
-branch's **first commit** — `chore(<slug>): feature dossier` (moving, not copying, leaves main's working
-tree clean).
+canonical; main's catches up when the branch merges.
 
 ## 2 · Execute in parallel waves (the default)
 

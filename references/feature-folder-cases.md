@@ -1,30 +1,20 @@
 ---
 type: Reference
 title: "Feature-folder cases — the rare branches of opening a feature"
-description: "On-demand handling for the non-default cases hit when opening a feature folder — legacy migration, ordinal edge cases, resume, in-flight overlap, done-slug collision, roadmap rows — factored verbatim out of dev:2; loaded only when the classifier lands on one."
+description: "On-demand handling for the non-default cases hit when opening a feature folder — ordinal edge cases, resume, in-flight overlap, done-slug collision, roadmap rows — factored verbatim out of dev:2; loaded only when the classifier lands on one."
 timestamp: 2026-07-11
 tags: [dev, feature-folder, resume, roadmap, reference]
 ---
 
 # Feature-folder cases — the rare branches of opening a feature
 
-dev:2 classifies every idea — **new / resume / in-flight-overlap / done-collision / roadmap-row /
-legacy-repo** — and opens this file for anything but a plain new feature (`rpa`'s run seed routes its
-legacy case here too). Each case carries its detection tell and its handling, factored verbatim out of
-the skill so nothing changes in substance; the common path (derive slug, assign the next global ordinal,
-create the folder, seed `progress.md`) stays in the skill and never needs this file — the numbering rule
-itself is wi-directory.md's **Slugs bullet**, and each case below carries its own numbering note. Cases
-compose — a legacy repo may also hold a resume; a roadmap row still gets an ordinal — so apply every
-case whose tell fires, in the order below.
-
-## Legacy migration
-
-**Tell:** the repo's work units still live under the pre-rename folder (`goals`, not `features`).
-
-A repo whose work units still live under the pre-rename folder gets a one-time
-`git mv .wi/goals .wi/features` before proceeding — commit it; the dossiers inside are untouched.
-Migrated dossiers that are unnumbered stay unnumbered — ignored by the next-number scan
-(wi-directory.md's Slugs bullet).
+dev:2 classifies every idea — **new / resume / in-flight-overlap / done-collision / roadmap-row** — and
+opens this file for anything but a plain new feature. Each case carries its detection tell and its
+handling, factored verbatim out of the skill so nothing changes in substance; the common path (derive
+slug, assign the next global ordinal, create the folder, seed `progress.md`) stays in the skill and never
+needs this file — the numbering rule itself is wi-directory.md's **Slugs bullet**, and each case below
+carries its own numbering note. Cases compose — a roadmap row may also be a resume; a roadmap row still
+gets an ordinal — so apply every case whose tell fires, in the order below.
 
 ## Resume detection
 

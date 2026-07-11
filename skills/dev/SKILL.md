@@ -29,7 +29,7 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
    **Model routing first-run setup** (`${CLAUDE_PLUGIN_ROOT}/references/models.md` "First-run setup"):
    `.wi/models.md` absent → ask once and write+commit per that section (`--auto` → the **simple** preset,
    logged as an assumption); present → apply it silently, warning once if the session model is below the
-   configured orchestrator tier; a pre-1.3 legacy config → rename per that section. Never re-ask an
+   configured orchestrator tier. Never re-ask an
    existing config. Finish by resolving the routing once (override → role →
    `inherit` per dispatch kind — models.md's **resolve-once rule**); dev:2 records it as the
    `## Model routing (resolved)` block when `progress.md` is seeded, and a resumed feature missing the
@@ -37,10 +37,9 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
 2. **Open the feature folder — or route the edge case first.** Parse flags: `--auto` sets **Gate mode:
    auto-approve** in progress.md — tell the user the design gate will be auto-approved and recorded, not
    asked. Then **classify the idea before creating anything** — **new / resume / in-flight-overlap /
-   done-collision / roadmap-row / legacy-repo** (tells: an in-flight `features/*/progress.md` reading as
+   done-collision / roadmap-row** (tells: an in-flight `features/*/progress.md` reading as
    this same idea → resume; others merely in flight → overlap; a done feature with this name →
-   done-collision; a matching `.wi/roadmap.md` row → roadmap-row; a pre-rename work-unit folder
-   (`goals`, not `features`) → legacy). Anything but a plain new feature → follow
+   done-collision; a matching `.wi/roadmap.md` row → roadmap-row). Anything but a plain new feature → follow
    `${CLAUDE_PLUGIN_ROOT}/references/feature-folder-cases.md` for every case whose tell fires. The
    common path: derive a kebab-case name, prefix the **next global 4-digit ordinal** so `<slug>` =
    `NNNN-<name>` (next = highest existing `.wi/features/` ordinal + 1, else `0001` — e.g.

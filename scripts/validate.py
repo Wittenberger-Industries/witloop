@@ -31,9 +31,8 @@ Checks (from the repo root, detected automatically):
      (a truncated/lazy `...` or `..`); the section-sign symbol (U+00A7) is banned outright — citations
      use the name:N locator (ship:8, sdd:7.1.3, protocol:5) or a quoted heading (workflow.md
      "Script invocation"); and four dead strings are banned — the retired `uipath-rpa-workflows`
-     slug, the pre-rename work-unit dir `.wi/goals` (the unit is a feature; the dir is `.wi/features` —
-     only the one-time `git mv .wi/goals .wi/features` migration line, which lives in
-     references/feature-folder-cases.md's legacy case, may name the old path),
+     slug, the dead work-unit dir `.wi/goals` (the unit is a feature; the dir is `.wi/features` —
+     banned unconditionally: #48 dropped the migration, an old-format repo is simply unrecognized),
      `python3` launching a bundled `${CLAUDE_PLUGIN_ROOT}` script (the broken Windows Store stub;
      prose `python3`/`py -3` fallback notes are not flagged, only actual invocations), and the retired
      sdd.md acceptance-criteria anchor spelled `sdd:13` or `section 13` (the acceptance-criteria
@@ -297,11 +296,10 @@ for f in desc_files:
     if desc is not None and desc.rstrip().endswith(("..", "…")):
         errors.append(f"{f.relative_to(ROOT)}: description ends mid-thought (trailing '..'/'…') — write a real one-line summary")
 
-# 7c. Dead strings: a retired external slug, the pre-rename `.wi/goals` dir, and python3-launched
+# 7c. Dead strings: a retired external slug, the dead `.wi/goals` dir, and python3-launched
 #     bundled scripts (broken on Windows).
 DEAD_SLUG = re.compile(r"uipath-rpa-workflows")
 DEAD_GOALS_DIR = re.compile(r"\.wi/goals")  # goal->feature rename (M1): the work-unit dir is .wi/features
-MIGRATION_CMD = "git mv .wi/goals .wi/features"  # the one sanctioned mention (dev/rpa legacy migration)
 PY3_INVOKE = re.compile(r"python3[ \t]+\$\{CLAUDE_PLUGIN_ROOT\}")  # an invocation — bare prose `python3` won't match
 SECTION_SIGN = re.compile("§")  # the section-sign symbol is banned in shipped text (#49): cite name:N locators or quoted headings
 DEAD_SDD_S13 = re.compile(r"(?i)\b(?:sdd:13|section 13)\b")  # the SDD acceptance-criteria anchor is semantic (sdd:10 in the base ToC)
@@ -319,7 +317,7 @@ for f in lint_scope:
     rel = f.relative_to(ROOT)
     if DEAD_SLUG.search(txt):
         errors.append(f"{rel}: dead skill slug 'uipath-rpa-workflows' (the UiPath authoring skill is 'uipath-rpa')")
-    if any(DEAD_GOALS_DIR.search(ln) and MIGRATION_CMD not in ln for ln in txt.splitlines()):
+    if DEAD_GOALS_DIR.search(txt):
         errors.append(f"{rel}: dead path '.wi/goals' — the work unit is a feature; use '.wi/features' (goal->feature rename)")
     if PY3_INVOKE.search(txt):
         errors.append(f"{rel}: 'python3 ${{CLAUDE_PLUGIN_ROOT}}' invocation — use 'python' (python3 is the broken Store stub on Windows)")

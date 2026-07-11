@@ -33,10 +33,7 @@ Then work happens in `../<repo>-wi-<slug>` on branch `wi/<slug>`. Record both in
 The feature folder arrives with the checkout: research commits the dossier on main at the design gate
 (`docs(<slug>): feature dossier (design gate)`), and the worktree branches from main — `.wi/features/<slug>/`
 is in place from the first command. During build the worktree's copy is canonical, and main's copy catches
-up when the branch merges. Fallback for pre-1.3 features whose dossier is still untracked on main: **move**
-`.wi/features/<slug>/` from the main checkout into the worktree and commit it as the branch's first commit
-(`chore(<slug>): feature dossier`) — the move leaves main's working tree clean, since the files were
-untracked there. Resume-safe either way: a dossier already present in the worktree needs nothing.
+up when the branch merges. Resume-safe: a dossier already present in the worktree needs nothing.
 
 ### Finish / clean up (done by the ship phase)
 

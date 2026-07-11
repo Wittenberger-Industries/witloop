@@ -30,16 +30,14 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
    it) are installed (offer to install if absent), and on an existing UiPath repo delegate structure discovery
    to UiPath's `uipath-project-discovery-agent`.
 2. **Register inputs & components, ingest the PDD.** Follow
-   `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/ingest.md`: a legacy repo (work units under the
-   pre-rename `goals` folder) gets the one-time migration in
-   `${CLAUDE_PLUGIN_ROOT}/references/feature-folder-cases.md` before anything else; then derive the **numbered run-slug**
+   `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/ingest.md`: derive the **numbered run-slug**
    (`NNNN-<name>` — the next global 4-digit ordinal, mirroring `ADR-NNNN`; see ingest:1); catalog the
    supporting files in the repo (API refs, CSV/mapping tables, sample data, screenshots) into
    `.wi/inputs.md`; detect reusable components into `.wi/components.md`; convert the PDD to `pdd.md` with
    markitdown (skip if it's already Markdown). Run the **model routing first-run setup** here too
    (`${CLAUDE_PLUGIN_ROOT}/references/models.md` "First-run setup"): absent → one preset question
-   (`--auto` → simple, logged); present → apply, warn once on an orchestrator-tier mismatch; a pre-1.3
-   legacy config → rename per that section. Never re-ask. Resolve the routing once now (models.md's
+   (`--auto` → simple, logged); present → apply, warn once on an orchestrator-tier
+   mismatch. Never re-ask. Resolve the routing once now (models.md's
    **resolve-once rule**) and
    record it as the `## Model routing (resolved)` block when the run's `progress.md` is seeded
    (rpa-directory.md's template); every build delegation then reads the block's `rpa-build` cell
@@ -133,9 +131,7 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
    (`${CLAUDE_PLUGIN_ROOT}/skills/build/references/worktrees-and-subagents.md`;
    `superpowers:using-git-worktrees` if installed) — the same first step as `wi:build`,
    **framework-neutral**. The worktree already contains `.wi/features/<run-slug>/` (committed on main at
-   the design gate; the branch starts from main). Fallback: a dossier still untracked in main (a pre-1.3
-   run) is moved into the worktree and committed as the branch's first commit
-   (`chore(<run-slug>): feature dossier`). Then
+   the design gate; the branch starts from main). Then
    **reuse components from `.wi/components.md` before building new**, and build per the **`Framework`**:
    **REFramework** → `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/build-uipath.md`,
    delegating to `uipath-rpa`; **Maestro** → `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/build-maestro.md`,

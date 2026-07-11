@@ -178,7 +178,7 @@ it cannot verify things are actually wired, and it does not write `verification.
    constitution rules.
 2. Run `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/cross_review.py --config .wi/models.md
    --diff <patch> --context <spec> --out .wi/features/<slug>/cross-review.md` (python fallback:
-   `skills/research/references/workflow.md` §Script invocation).
+   `references/workflow.md` §Script invocation).
 3. Exit `0` = `## REVIEW PASSED`; `1` = `## ISSUES FOUND` — treat findings like any checker finding:
    BLOCKER → fix (loop back to build), WARNING/INFO → address or record. Both layers share the **max 2
    review→fix rounds** budget; whatever remains after round 2 is surfaced, with

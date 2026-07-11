@@ -180,4 +180,4 @@ Then proceed: **build** (`wi:build`) — worktree + parallel waves — then **sh
 with the PR and the final report (token table included). The keep-alive loop (/goal or Autopilot) is the
 persistence wrapper; build/ship are the method. No questions from here on.
 
-Phase contracts & resumability: `${CLAUDE_PLUGIN_ROOT}/skills/research/references/workflow.md`.
+Phase contracts & resumability: `${CLAUDE_PLUGIN_ROOT}/references/workflow.md`.

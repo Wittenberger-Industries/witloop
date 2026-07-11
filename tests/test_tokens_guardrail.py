@@ -143,7 +143,7 @@ class LedgerHelperTests(unittest.TestCase):
             p.write_text(t, encoding="utf-8")
             self.assertEqual(_ledger.verify(p), "Subagents (exact) sum not filled (still '<sum>')")
 
-    def test_verify_duration_and_totals_gate_v2(self):
+    def test_verify_duration_and_totals_gate(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d) / "tokens.md"
             # v2 row with an EMPTY Duration cell fails
@@ -174,9 +174,11 @@ class LedgerHelperTests(unittest.TestCase):
             self.assertIsNotNone(reason)
             self.assertIn("totals", reason.lower())
 
-    def test_verify_legacy_four_column_ledger_still_passes(self):
-        legacy = (
-            "---\ntype: Token Ledger\ntitle: legacy\nfeature: old-feature\ntimestamp: 2026-05-01\n---\n\n"
+    def test_verify_four_column_ledger_fails(self):
+        # The pre-Duration 4-column format is no longer recognized (#48): the gate
+        # rejects it like any other malformed ledger instead of grandfathering it.
+        four_col = (
+            "---\ntype: Token Ledger\ntitle: old\nfeature: old-feature\ntimestamp: 2026-05-01\n---\n\n"
             "# Token ledger: old-feature\n\n"
             "| Phase | Source | Tokens | Basis |\n"
             "|-------|--------|--------|-------|\n"
@@ -186,8 +188,10 @@ class LedgerHelperTests(unittest.TestCase):
         )
         with tempfile.TemporaryDirectory() as d:
             p = Path(d) / "tokens.md"
-            p.write_text(legacy, encoding="utf-8")
-            self.assertIsNone(_ledger.verify(p))
+            p.write_text(four_col, encoding="utf-8")
+            reason = _ledger.verify(p)
+            self.assertIsNotNone(reason)
+            self.assertIn("Duration column", reason)
 
 
 CHECK = SCRIPTS / "check_tokens.py"

@@ -29,8 +29,7 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
    **Model routing first-run setup** (`${CLAUDE_PLUGIN_ROOT}/references/models.md` "First-run setup"):
    `.wi/models.md` absent → ask once and write+commit per that section (`--auto` → the **simple** preset,
    logged as an assumption); present → apply it silently, warning once if the session model is below the
-   configured orchestrator tier. Never re-ask an
-   existing config. Finish by resolving the routing once (override → role →
+   configured orchestrator tier. Never re-ask an existing config. Finish by resolving the routing once (override → role →
    `inherit` per dispatch kind — models.md's **resolve-once rule**); dev:2 records it as the
    `## Model routing (resolved)` block when `progress.md` is seeded, and a resumed feature missing the
    block gets it written on re-entry. Every later dispatch reads the block, not `.wi/models.md`.

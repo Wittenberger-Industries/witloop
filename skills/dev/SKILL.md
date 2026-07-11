@@ -26,13 +26,11 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
    don't proceed without a repo map and constitution. If it exists but looks stale — `scanned` stamp older
    than ~2 weeks, or config/lock/CI files changed since it — run the scan skill's **`--refresh`** drift
    pass (cheap; updates facts + consolidates learnings) before building on the map.
-   **Model routing first-run setup** (`${CLAUDE_PLUGIN_ROOT}/references/models.md`): `.wi/models.md`
-   absent → interactive asks once (preset smart / simple / custom, rows confirmable), `--auto` writes the
-   **simple** preset and logs the assumption; present → apply it silently, warning once if the session
-   model is below the configured orchestrator tier. A legacy config left by a pre-1.3 run (an old-named
-   `.wi/*.md` carrying the same `## Roles` / `## Cross-provider config` sections): rename it to
-   `.wi/models.md` and set its frontmatter to `type: Model Routing Config` — the section format is
-   unchanged. Never re-ask an existing config. Finish by resolving the routing once (override → role →
+   **Model routing first-run setup** (`${CLAUDE_PLUGIN_ROOT}/references/models.md` §First-run setup):
+   `.wi/models.md` absent → ask once and write+commit per that section (`--auto` → the **simple** preset,
+   logged as an assumption); present → apply it silently, warning once if the session model is below the
+   configured orchestrator tier; a pre-1.3 legacy config → rename per that section. Never re-ask an
+   existing config. Finish by resolving the routing once (override → role →
    `inherit` per dispatch kind — models.md's **resolve-once rule**); step 2 records it as the
    `## Model routing (resolved)` block when `progress.md` is seeded, and a resumed feature missing the
    block gets it written on re-entry. Every later dispatch reads the block, not `.wi/models.md`.
@@ -70,13 +68,12 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
      keep-alive at all: the condition can never hold and an armed loop would spin forever. Note in
      progress.md that the run ends at ship's no-remote close-out (ship §7) and the keep-alive applies once
      a remote exists. (All checks resolve inside the brainstorm stop — they are not a new gate.)
-   Both green → recap the brief in 3-5 lines, then print the keep-alive handoff for the current platform:
-   Claude Code & Codex CLI arm their built-in `/goal` with the PR-open condition; Copilot CLI relaunches
-   under Autopilot. The exact command templates — and the unattended-run warning that must accompany the
-   Copilot one — live in `${CLAUDE_PLUGIN_ROOT}/references/keep-alive.md`; print them from there verbatim.
+   Both green → recap the brief in 3-5 lines, then print the keep-alive handoff for the current platform
+   **verbatim from `${CLAUDE_PLUGIN_ROOT}/references/keep-alive.md`** — the single source of the platform
+   templates (`/goal` on Claude Code & Codex, the Autopilot relaunch + unattended-run warning on Copilot).
 
-   Armed, the run continues across turns until the condition holds (wi works without it, just less
-   robustly through a stalled turn). The per-platform mechanism is in
+   Armed, the run continues across turns until the condition holds (keep-alive.md). The per-platform
+   mechanism is in
    `${CLAUDE_PLUGIN_ROOT}/references/codex-tools.md` / `copilot-tools.md`. **Then branch on Gate mode
    (from `progress.md`):**
    - **auto-approve** (`--auto`): do **not** ask for confirmation — the user already chose hands-off by
@@ -92,8 +89,8 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
    / stop — or auto-approve per the flag).
 6. **Implement** (after the gate): **build** (skill `wi:build`) — worktree + parallel waves — then
    **ship** (skill `wi:ship`) — verification gate, PR opened and its remote checks verified, cleanup,
-   and the final report including the token table. **No questions anywhere in this stretch**; decisions
-   get made, recorded, and moved past.
+   and the final report including the token table. **No questions anywhere in this stretch**
+   (workflow.md's no-questions rule); decisions get made, recorded, and moved past.
 
 ## Boundaries
 
@@ -112,7 +109,7 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
   `roadmap.md` line (tell them which feature it became); contradicts the approved design/ADR → pause,
   re-open the design gate with a delta summary (approve / amend / stop), continue on the answer. The run
   never derails on input, and input never vanishes.
-- **Superpowers precedence:** during a run, superpowers skills fire only at wi's delegation points
-  (`${CLAUDE_PLUGIN_ROOT}/skills/research/references/integrations.md`) — never self-triggered mid-phase;
-  wi's artifact formats always win.
+- **Superpowers precedence** (integrations.md §Who initiates —
+  `${CLAUDE_PLUGIN_ROOT}/skills/research/references/integrations.md`): delegation points only, never
+  self-triggered mid-phase; wi's artifact formats always win.
 - Keep dev thin: it sequences; the phase skills do the work; the keep-alive loop (`/goal` or Autopilot) keeps it alive.

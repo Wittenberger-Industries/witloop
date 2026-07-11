@@ -59,7 +59,8 @@ first, then the gate renders.*
 2. **Two gates, both deliberate.** The brainstorm handoff sets scope; the design gate confirms the
    architecture + design before any code (auto-approvable via `/wi:dev --auto`, always recorded).
    There is no third checkpoint.
-3. **No questions outside the gates.** Between handoff and design gate, and after design-ok, decisions
+3. **No questions outside the gates** (the **no-questions rule** the phase skills cite). Between
+   handoff and design gate, and after design-ok, decisions
    are made on best evidence and recorded (ADR / spec / progress.md), never deferred to the user.
 4. **Write decisions immediately.** The chosen approach lives in `research/` + (if notable) an ADR; scope
    lives in `spec.md`. Later phases and a resumed session read these instead of re-deciding.

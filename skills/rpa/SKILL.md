@@ -87,7 +87,7 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
      reverse → no ADR (plan §2's rule: don't manufacture decisions).
 5. **Design gate.** **Pre-gate check (checker · plan mode):** first scaffold the token ledger (idempotent):
    `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/features/<run-slug>/tokens.md`
-   (python fallback: workflow.md) — the checker is a subagent: append its `tokens.md` row the moment its
+   (python fallback: workflow.md §Script invocation) — the checker is a subagent: append its `tokens.md` row the moment its
    completion notification arrives, per wi-directory.md's **ledger rule** (exact tokens + `Duration`,
    `unavailable` when unobservable — a round returning without a notification records `unavailable`,
    never an estimate). This mirrors the dev flow's research-start scaffold; step 6's scaffold-if-absent
@@ -145,7 +145,8 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
    coded-allowed → `.cs` workflows ok; scaffold each unit as REFramework per the SDD, never Blank),
    append each unit's tokens to `tokens.md` (scaffold it first if absent:
    `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/features/<run-slug>/tokens.md` —
-   python fallback: workflow.md), and register any new reusable component back into `.wi/components.md`.
+   python fallback: workflow.md §Script invocation), and register any new reusable component back into
+   `.wi/components.md`.
 7. **Verify & ship.** Gate = `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/verification-gate.md`, **branched on
    `Framework`**: REFramework → approved paradigm + Workflow Analyzer + `uip` validate; Maestro →
    `uip maestro flow validate` (+ `eval` if eval sets exist). Both → `tokens.md` passes `check_tokens.py`

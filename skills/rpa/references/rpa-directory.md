@@ -46,7 +46,7 @@ folder for the whole solution, with **one SDD** covering its 1..N processes.
 - **Framework references:** REFramework uses `refr-architecture.md` + `build-uipath.md`; Maestro uses
   `maestro-architecture.md` + `build-maestro.md`; the gate (`verification-gate.md`) branches on `Framework:`.
 - **Run-slugs are numbered** — `NNNN-<name>` (a global 4-digit ordinal assigned at creation — the dev
-  flow's convention, wi-directory.md's **Slugs rule**), so runs list in implementation order.
+  flow's convention, wi-directory.md's **Slugs bullet**), so runs list in implementation order.
 - **Project-level files persist & compound** across runs: `rpa-constitution.md`, `sdd-template.md` (if
   present), `inputs.md`, `components.md`, `orchestrator.md`, `glossary.md`, `models.md`, `adr/` (+ its index),
   `roadmap.md` (if present), `learnings.md`, `learnings/`. Never pruned. Build + compound write

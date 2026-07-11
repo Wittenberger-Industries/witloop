@@ -41,11 +41,11 @@ Copilot uses Autopilot: wi provides the method (skills, artifacts, gates), the l
    this same idea → resume; others merely in flight → overlap; a done feature with this name →
    done-collision; a matching `.wi/roadmap.md` row → roadmap-row; a pre-rename work-unit folder
    (`goals`, not `features`) → legacy). Anything but a plain new feature → follow
-   `${CLAUDE_PLUGIN_ROOT}/references/feature-folder-cases.md` for every case whose tell fires, before
-   creating anything. The common path: derive a kebab-case name, prefix the **next global 4-digit
-   ordinal** so `<slug>` = `NNNN-<name>` (e.g. `0001-stripe-webhooks`; full numbering rule — monotonic,
-   never renumbered — in wi-directory.md's Slugs bullet), create `.wi/features/<slug>/`, and seed
-   `progress.md` (template in the research skill's `wi-directory.md`). Every Log line — the `**Created**`
+   `${CLAUDE_PLUGIN_ROOT}/references/feature-folder-cases.md` for every case whose tell fires. The
+   common path: derive a kebab-case name, prefix the **next global 4-digit ordinal** so `<slug>` =
+   `NNNN-<name>` (next = highest existing `.wi/features/` ordinal + 1, else `0001` — e.g.
+   `0001-stripe-webhooks`; full rule: wi-directory.md's Slugs bullet), create `.wi/features/<slug>/`,
+   and seed `progress.md` (template in the research skill's `wi-directory.md`). Every Log line — the `**Created**`
    seed included — opens with a full ISO-8601 timestamp from the OS clock (`date -Iseconds`, or
    `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/now.py`); ship computes the run's timing from these
    stamps, so never write a date-only or guessed one.

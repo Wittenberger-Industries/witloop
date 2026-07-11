@@ -272,7 +272,7 @@ findings with severity. Distilled from verification.md; the dossier tidy (§6) t
      the **`## Subagent detail`** section: each dispatch's exact input/output/cache split, model,
      transcript-stamped duration, and estimated cost, read from the session's
      `subagents/agent-*.jsonl` sidecar transcripts — no manual stdout-copy anywhere. On a parse
-     failure or a missing stamp it writes the honest `unavailable` (wi-directory.md's ledger rule —
+     failure or a missing stamp it writes the honest `unavailable` (wi-directory.md's **ledger rule** —
      never a substitute, estimate, or fabricated figure). The
      **file** is the deliverable, not the console output.
   4. *What remains is the fixed dossier for this flow* — take the manifest from the flow's directory

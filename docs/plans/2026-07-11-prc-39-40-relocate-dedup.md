@@ -318,6 +318,31 @@ template section; phase skills cite it as **the ledger rule**.
 - [ ] **Step 2:** Push branch; open PR titled `PR C: relocate dev step 2 branches + dedup restated rules (#39 #40) (v1.7.1)`; body = summary, the rules-map table, #39's six-branch inventory result, dry-run + load-alone results, grep-assertion results, `Closes #39, Closes #40`. **No AI attribution.**
 - [ ] **Step 3:** Watch PR checks green (`gh pr checks --watch`).
 
+## Execution deviations (review-pass outcomes)
+
+Recorded after the pre-PR review (5 finder angles; the removed-behavior audit returned zero losses):
+
+1. **feature-folder-cases.md has five case sections, not six.** The standalone "Ordinal assignment"
+   section (Task 2's draft) duplicated the very clauses Task 5 canonicalized into wi-directory.md's
+   Slugs bullet, and its "applies at every creation" tell contradicted the file's own
+   only-for-non-default routing. Per issue #39's "How to tackle" step 1(a) (ordinal = common path, kept
+   in the skill), the section was dropped; each case section now carries its own one-line numbering
+   note (resume keeps its number; roadmap row numbered at first creation; legacy unnumbered ignored),
+   with the full rule in the Slugs bullet. The six-branch inventory maps ordinal-assignment → dev's
+   common path + wi-directory.md.
+2. **dev step 2 keeps the ordinal math inline** — "next = highest existing ordinal + 1, else `0001`" —
+   so the everyday path computes without opening any reference (step 2 stays 15 lines, vs 36 before).
+3. **Citation names unified:** "wi-directory.md's **Slugs bullet**" everywhere (ingest.md and
+   rpa-directory.md said "Slugs rule"); every python-fallback pointer names **§Script invocation**;
+   "**ledger rule**" bolded at every cite; workflow.md Rule 3 now names itself "the no-questions rule".
+4. **AGENTS.md's superpowers-precedence copy** pointer-ized like dev/rpa (it's a loaded file on
+   Codex/Copilot); validate.py's dead-path docstring updated to name feature-folder-cases.md as the
+   sanctioned home of the migration line.
+5. **Noted, not changed:** the python-fallback house rule lives in `skills/research/references/workflow.md`,
+   which scan/rpa/models now cite across skill boundaries — consistent with the context budget + output
+   house rule already living there (build/ship/dev cite it on main), but a per-skill install would lack
+   it; promoting workflow.md to top-level `references/` is a candidate follow-up issue, out of scope here.
+
 ## Out of scope (recorded for #41/#42)
 
 - Dossier-lifecycle prose consolidation (research §3 / build §1 / rpa §5 / build-uipath §1 / ship §6 / wi-directory internal) — #41.

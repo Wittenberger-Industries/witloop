@@ -77,7 +77,7 @@ run it as wide as the DAG allows. Repeat until every task is ticked:
    serialized and clean. Append the runner's `tokens.md` row the moment its completion notification
    arrives — the figure exists only there; if the file is somehow absent,
    `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wi/features/<slug>/tokens.md`
-   first (python fallback: workflow.md) — per wi-directory.md's **ledger rule** (exact tokens +
+   first (python fallback: workflow.md §Script invocation) — per wi-directory.md's **ledger rule** (exact tokens +
    `Duration`, `unavailable` when unobservable, never an estimate). Then recompute the ready set and dispatch
    the next wave without waiting for stragglers it doesn't depend on.
    A runner whose last line is **`## TASK AUTH-GATE`** (status `auth-gate` — a `401` / `run <x> login` /

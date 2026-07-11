@@ -36,6 +36,7 @@ reasoned about. Keep every file small and current; these are working artifacts, 
         ├── pitfalls.md     # plan output: known failure modes for this change
         ├── verification.md # checker output (plan mode pre-gate, result mode at ship) — EPHEMERAL; verdict folds into PR.md, pruned at ship's dossier tidy
         ├── cross-review.md # cross-provider diff review (ship; only when configured) — EPHEMERAL, pruned with verification.md
+        ├── .logs/          # redirected command output (gates, CI pulls — workflow.md's output house rule) — self-gitignored, EPHEMERAL
         ├── tokens.md       # token ledger: exact subagent usage + orchestrator (finalized by ship pre-PR)
         └── PR.md           # the PR description (ship §5) — committed, consumed by gh pr create
 ```
@@ -65,13 +66,15 @@ reasoned about. Keep every file small and current; these are working artifacts, 
 - **One writer per phase.** A phase owns its outputs; later phases read but don't silently rewrite them.
 - **No strays.** Everything feature-specific lives under `features/<slug>/` — never loose in `.wi/`. If a phase
   needs a scratch file, it goes in the slug folder (ship sweeps and deletes strays at the dossier tidy).
-- **`research/`, `verification.md`, and `cross-review.md` are ephemeral.** Working notes exist to produce
+- **`research/`, `verification.md`, `cross-review.md`, and `.logs/` are ephemeral.** Working notes exist to produce
   the ADR and spec; the checker's `verification.md` feeds the design gate (plan mode) and the ship review
   (result mode); `cross-review.md` is the cross-provider diff review's output (ship, only when configured).
   Their verdicts + any waived findings fold into `PR.md` (ship §5), then the dossier tidy (§6) prunes all
-  three before the PR (unless the constitution says keep them). This bullet is ship's prune list for the
-  dev flow — the tidy prunes exactly what it names. After `done`, a feature folder holds
-  exactly the seven-file dossier: progress, brief, spec, tasks, pitfalls, tokens, PR.
+  four before the PR (unless the constitution says keep them). This bullet is ship's prune list for the
+  dev flow — the tidy prunes exactly what it names. `.logs/` holds redirected command output (workflow.md's
+  output house rule); its own `.gitignore` (containing `*`) keeps it out of `git status` and every dossier
+  commit, so it is never tracked — the tidy plain-deletes the directory. After `done`, a feature folder
+  holds exactly the seven-file dossier: progress, brief, spec, tasks, pitfalls, tokens, PR.
 - **Project-level memory persists & compounds.** `constitution.md`, `repo-map.md`, `overview.md`,
   `architecture.md`, `glossary.md`, `adr/`, `roadmap.md`, `models.md`, `learnings.md`, and `learnings/` belong to the
   project — never pruned. Each feature reads them at the start and ship writes back into them, so the project
@@ -140,6 +143,15 @@ timestamp: <YYYY-MM-DD>
 - **Worktree:** <path or "-">
 - **Branch:** <branch or "-">
 
+## Model routing (resolved)
+<!-- written when progress.md is seeded (dev step 1-2 / rpa step 2) from .wi/models.md; dispatches
+     read THIS block, not models.md. Rewrite only when absent or .wi/models.md changed after the
+     stamp (models.md's resolve-once rule). Keep the stamp mid-line — Log-span parsing keys on
+     stamps that OPEN a line. -->
+- resolved <ISO-8601 stamp> from .wi/models.md (preset: <smart | simple | custom | none — all inherit>)
+- orchestrator=<tier> (informational) · checker=<tier> · researcher=<tier> · task-runner=<tier> · rpa-build=<tier>
+- cross-provider=<none | provider model (at-finish | per-wave)> · MoA=<none | points=<…>; proposers=<…>; layers=<n>; aggregator=<tier>>
+
 ## Log
 - <YYYY-MM-DDTHH:MM:SS±hh:mm> **Created** feature, phase = brainstorm
 
@@ -156,7 +168,9 @@ branch's copy is canonical** — the dossier was committed on main at the design
 worktree at branch time, so tick tasks and log in the worktree's `.wi/` and the updates ride the PR;
 `main`'s copy catches up on merge. The build phase ticks the task
 checkboxes here, so a resumed (or handed-off) run knows exactly what's left. Record the chosen approach and
-any blocker here too — it's what the user reads after a hands-off run.
+any blocker here too — it's what the user reads after a hands-off run. `progress.md` is the run's state
+of record — phase re-entry reads it (plus the active phase artifact) and never re-Reads prior-phase
+artifacts already summarized here (workflow.md's context budget).
 
 ## `tokens.md` template
 

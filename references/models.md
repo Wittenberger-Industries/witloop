@@ -27,8 +27,9 @@ overrides.
 
 ## The config file — `.wi/models.md`
 
-Project-level, persisted, read at every dispatch point. Template (fill from a preset, then let the user
-override any cell):
+Project-level, persisted, resolved **once per run** at the entry skills (the resolve-once rule below);
+dispatches read the resolved block in `progress.md`, not this file. Template (fill from a preset, then let
+the user override any cell):
 
 ```markdown
 ---
@@ -116,23 +117,36 @@ per-agent override), write the file **and commit it** (`chore(wi): models config
 in `wi-directory.md`: committed where written, so post-worktree phases read the same tracked copy).
 **`--auto`** → write + commit the **simple** preset and log it as an
 assumption. Either way the file persists and is **never re-asked** (edit `.wi/models.md` to change it). When
-the file exists, skip setup entirely — just apply it. The entry skills also handle the legacy migration: a
+the file exists, skip setup entirely, just apply it. The entry skills also handle the legacy migration: a
 pre-1.3 config under the old filename is renamed to `.wi/models.md` with its frontmatter set to
-`type: Model Routing Config` — the section format is unchanged.
+`type: Model Routing Config` — the section format is unchanged. Setup ends by resolving the routing once
+and recording it as the `## Model routing (resolved)` block when the feature's `progress.md` is seeded
+(dev step 2 / rpa's run seed) — the resolve-once rule below.
 
-## Dispatch rule (build, research, ship, rpa)
+## Dispatch rule (build, research, ship, rpa) — resolve once, dispatch many
 
-At every wi Agent dispatch, resolve the model as **per-agent override → the agent's own role → `inherit`**
-(`wi-code-checker` reads the `wi-code-checker` role, `wi-researcher` reads `wi-researcher`, `wi-task-runner`
-reads `wi-task-runner`; RPA build delegations resolve `rpa-build` override → `wi-task-runner` role →
-`inherit` — `rpa-build` is a **role label** for those delegations, not a registered agent; there is no
-`agents/rpa-build.md`) and pass it as the dispatch's model parameter. No `.wi/models.md` → everything
-inherits, exactly wi's pre-routing behavior. **Exception — MoA dispatches:** a dispatch carrying an
-`MoA role:` marker resolves from the `## Mixture of Agents` rows instead of override → role — each
-proposer at its listed `proposers` tier, the aggregator at the `aggregator` tier (each resolved like any
-dispatch: the literal tier, or `inherit`; `${CLAUDE_PLUGIN_ROOT}/references/moa.md`). **Fallback:** a
-configured model that errors as unavailable at dispatch time → re-dispatch with `inherit` and note it in
-`progress.md`; never stall a run on a model assignment.
+**Resolve at entry.** At dev step 1 / rpa step 2 — or at the first dispatch that finds no block
+(legacy features, pre-1.7 runs) — resolve every dispatch kind **once**: per-agent override → the
+agent's own role → `inherit` (`wi-code-checker` reads the `wi-code-checker` role, `wi-researcher`
+reads `wi-researcher`, `wi-task-runner` reads `wi-task-runner`; RPA build delegations resolve
+`rpa-build` override → `wi-task-runner` role → `inherit` — `rpa-build` is a **role label** for those
+delegations, not a registered agent; there is no `agents/rpa-build.md`). Record the result as the
+`## Model routing (resolved)` block in the feature's `progress.md` (template: wi-directory.md),
+stamped, with the cross-provider and MoA rows carried compactly. The block caches the **configured**
+tiers, never the live session model (the no-auto-escalation rule above); resolving once changes
+cost, never behavior — same `.wi/models.md`, same assignments.
+
+**Dispatch reads the block.** At every wi Agent dispatch, read the tier from the resolved block and
+pass it as the dispatch's model parameter — do **not** re-open this reference or `.wi/models.md`.
+Re-resolve (rewrite the block) only when the block is **absent** or `.wi/models.md` **changed after
+the block's stamp** (its last commit — `git log -1 --format=%cI -- .wi/models.md` — or mtime, newer
+than the stamp). No `.wi/models.md` at all → everything inherits; record
+`preset: none — all inherit` so later dispatches don't re-check. **Exception — MoA dispatches:** a
+dispatch carrying an `MoA role:` marker resolves from the block's MoA row — each proposer at its
+listed `proposers` tier, the aggregator at the `aggregator` tier
+(`${CLAUDE_PLUGIN_ROOT}/references/moa.md`). **Fallback (unchanged):** a configured model that
+errors as unavailable at dispatch time → re-dispatch with `inherit` and note it in `progress.md` —
+the block itself stands; the config didn't change. Never stall a run on a model assignment.
 
 ## wi-code-checker's two modes
 

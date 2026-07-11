@@ -30,8 +30,9 @@ It has the same two interactions as `wi:dev`: the **brainstorm** (here, the deep
    it) are installed (offer to install if absent), and on an existing UiPath repo delegate structure discovery
    to UiPath's `uipath-project-discovery-agent`.
 2. **Register inputs & components, ingest the PDD.** Follow
-   `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/ingest.md`: a repo whose work units still live under the
-   pre-rename folder gets a one-time `git mv .wi/goals .wi/features` before anything else; then derive the **numbered run-slug**
+   `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/ingest.md`: a legacy repo (work units under the
+   pre-rename `goals` folder) gets the one-time migration in
+   `${CLAUDE_PLUGIN_ROOT}/references/feature-folder-cases.md` before anything else; then derive the **numbered run-slug**
    (`NNNN-<name>` — the next global 4-digit ordinal, mirroring `ADR-NNNN`; see ingest.md §1); catalog the
    supporting files in the repo (API refs, CSV/mapping tables, sample data, screenshots) into
    `.wi/inputs.md`; detect reusable components into `.wi/components.md`; convert the PDD to `pdd.md` with

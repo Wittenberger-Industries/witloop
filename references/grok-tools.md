@@ -16,21 +16,29 @@ spike in `docs/plans/2026-07-12-43-grok-build-platform.md`); everything else is 
 ## ${CLAUDE_PLUGIN_ROOT}: resolve once, then use an absolute path (mandatory)
 
 `${CLAUDE_PLUGIN_ROOT}` means the **wi plugin root**: the directory holding `skills/`, `agents/`, and
-`.claude-plugin/`. Grok aliases the env var for hooks only, and it can read empty in a tool shell
-(SPIKE S1), so wi must resolve it, not rely on the variable:
+`.claude-plugin/`. On Grok the plugin-root vars are injected into **hook processes only, by design**
+(`~/.grok/docs/user-guide/09-plugins.md`), so they read **empty in the agent's tool shell** (confirmed:
+S1). wi resolves the root itself, never relying on the variable:
 
 1. Resolve **once** at the start of any wi entry skill (scan / dev / rpa), before the first
-   `${CLAUDE_PLUGIN_ROOT}` script call.
+   `${CLAUDE_PLUGIN_ROOT}` script call. Record the result in `progress.md` as
+   `Plugin root (resolved): <abs>` and reuse it for the rest of the run: each Grok shell tool call is a
+   fresh process and `export` does **not** persist across calls (confirmed: S2), so `progress.md` is the
+   persistence layer, not a shell variable.
 2. **Never pass an unexpanded `${CLAUDE_PLUGIN_ROOT}` into the shell.** Resolution order:
-   1. `$CLAUDE_PLUGIN_ROOT` if non-empty and it contains `skills/` + `.claude-plugin/`.
+   1. `$CLAUDE_PLUGIN_ROOT` if non-empty and it contains `skills/` + `.claude-plugin/` (usually empty on
+      Grok; see above).
    2. `$GROK_PLUGIN_ROOT` / `$PLUGIN_ROOT` if they look like the wi root.
-   3. The loaded wi plugin path from `grok inspect` / plugin list.
+   3. The active `wi@wi` entry's `installPath` in `~/.claude/plugins/installed_plugins.json` - where
+      Grok-via-Claude-compat installs live, and the step that resolves in practice. `grok plugin list` /
+      `grok inspect` may show nothing, because wi loads through Claude compatibility, not Grok's own
+      plugin registry.
    4. Walk up from cwd for a dir holding both `skills/scan/SKILL.md` and `.claude-plugin/plugin.json`
-      (clone / `--plugin-dir`).
-3. Use that **absolute path** in every `python <root>/skills/.../*.py` call for the rest of the run. If
-   `export` does not survive across Grok shell tool calls (SPIKE S2), absolute-path-per-call is the only
-   guarantee; if it does, a one-time `export CLAUDE_PLUGIN_ROOT=<resolved>` is a convenience, not a
-   substitute for step 3.
+      (only finds an in-tree clone / `--plugin-dir`, not a cache install).
+   Validate the winner: it must contain `skills/`, `.claude-plugin/`, and `skills/scan/SKILL.md`.
+3. Use that **absolute path** (read back from `progress.md`) in every `python <root>/skills/.../*.py`
+   call for the rest of the run, or inline it in the one command that runs the script
+   (`CLAUDE_PLUGIN_ROOT=<abs> python <abs>/skills/.../x.py`).
 
 This is the same root rule Copilot uses (`references/copilot-tools.md` "${CLAUDE_PLUGIN_ROOT}"), made a
 hard protocol because Grok shells out. The script-invocation fallback is `references/workflow.md`
@@ -38,10 +46,12 @@ hard protocol because Grok shells out. The script-invocation fallback is `refere
 
 ## Install & enable
 
-`grok plugin install Wittenberger-Industries/wi-plugin --trust` (SPIKE S3: confirm the exact flags and
-whether `--trust` / a post-install enable step are required), then enable if plugins are disabled by
-default. Grok loads Claude marketplace plugins (skills, agents, hooks, `AGENTS.md`) with zero config; the
-clone + `--plugin-dir` path is the fallback. Publishing to the official catalog is a separate PR to
+Confirmed: Grok loads wi from the **Claude plugin cache** (`~/.claude/plugins/cache/wi/wi/<version>/`) when
+`~/.grok/config.toml`'s `[plugins] enabled` lists `wi` - no `grok plugin install` step is needed, and
+`grok plugin list` shows Grok's *own* registry (empty for wi, since wi loads via Claude compatibility).
+Once wi is published to the xAI marketplace, `grok plugin install <name>` becomes the first-class path
+(that command pulls from a marketplace / git source, not a local branch); a local clone + `--plugin-dir` is
+the fallback for testing an unpublished build. Publishing to the official catalog is a separate PR to
 `xai-org/plugin-marketplace`.
 
 ## Tools

@@ -19,9 +19,8 @@ pick-up, into `docs/plans/`, and rides in the PR.
 
 | Slot | Issue | What | Version | Effort · Risk | Why this order |
 |---|---|---|---|---|---|
-| next | **#41** compress skill prose | One file per PR (mandated): **ship ✓ (v1.9.1, PR #55) → research → build → dev**, then rpa/scan; rationale moves to `docs/wi-design-notes/<skill>.md` | v1.9.1+ (patch per pass) | L · Medium (judgment-heavy; strongest guardrails) | Last of the sweep by design: benefits from #35 (measure), #39 (template), #40 (dedup), #42 (directive present), #48 (legacy text gone, shipped v1.9.0). Next pass: **research/SKILL.md** |
-| then | **#53** ledger split labels | `token_report.py` split rows labeled from `agent-<id>.meta.json` `description` (+ the description==Source convention) instead of 48-char prompt prefixes | minor (artifact format) | S · Low | After #48 (shared `_ledger.py`/`check_tokens.py`/tests surface); small; may interleave between #41 passes (disjoint files) |
-| then | **#52** dispatch-time skill pointer | Generalized capability-tag → registry → resolved SKILL.md path in the dispatch; frontend first; fixes the unreachable `[frontend]` delegation (charters have no Skill tool) | minor (runner behavior) | S–M · Low–Medium | After #41's build/dev passes: touches `build/SKILL.md` + a charter (hotspots, strictly serial). Owner decision 2026-07-11: pointer, **not** a Skill-bearing variant agent; Checkpoint B's baseline-b runners empirically validated the read-the-skill-file mechanism |
+| next | **#53** ledger split labels | `token_report.py` split rows labeled from `agent-<id>.meta.json` `description` (+ the description==Source convention) instead of 48-char prompt prefixes | minor (artifact format) | S · Low | After #48 (shared `_ledger.py`/`check_tokens.py`/tests surface); small |
+| then | **#52** dispatch-time skill pointer | Generalized capability-tag → registry → resolved SKILL.md path in the dispatch; frontend first; fixes the unreachable `[frontend]` delegation (charters have no Skill tool) | minor (runner behavior) | S–M · Low–Medium | After #41 (shipped): touches `build/SKILL.md` + a charter (hotspots, strictly serial). Owner decision 2026-07-11: pointer, **not** a Skill-bearing variant agent; Checkpoint B's baseline-b runners empirically validated the read-the-skill-file mechanism |
 | parallel, gated | **#43** Grok Build platform | Fourth platform adapter (`references/grok-tools.md`, keep-alive `/goal`-family branch, AGENTS.md row, bootstrap, models.md xAI entry) | minor | M · Low–Medium | Independent of the sweep; **gated on Grok Build beta access**: every runtime claim verified on a real session. The planned **release/1.8.0 → Grok "baseline-c" comparison** doubles as its verification run (evidence method: the Checkpoint B harness) |
 | ⏸ postponed | **#34** cross-vendor MoA proposers | Let the MoA council use OpenAI / DeepSeek / Grok / Gemini | - | - | Postponed (owner, 2026-07-10). Revisit after the sweep: #35 already landed (simplifies it), and #43's models.md xAI groundwork overlaps it |
 
@@ -30,13 +29,13 @@ pick-up, into `docs/plans/`, and rides in the PR.
 - **Strictly serial on the hotspots**: `build/SKILL.md`, `ship/SKILL.md`, `dev/SKILL.md`,
   `wi-directory.md`, `workflow.md`: never two branches editing them at once. Stacked PRs,
   squash-merge, rebase + retarget the next after each merge.
-- **#48 before #41** (delete before compressing): **satisfied**: #48 shipped as v1.9.0 (PR #54) before any
-  #41 pass.
-- **#41 is one file per PR**, each independently revertible, each shipping its rules inventory +
-  loaded-token delta.
 - **Agent charters are the most sensitive surface** (autonomous, no human in the loop): minimal
   additive diffs only; never alter report caps, output markers, verification-gate contracts, or
-  tool lists. Currently only #52 may touch them.
+  tool lists. The #41 charter passes (owner-directed, 2026-07-11) were the one sanctioned exception;
+  currently only #52 may touch them.
+- **No em-dashes anywhere** (owner, 2026-07-11): shipped text, scripts, manifests, PR bodies, and
+  commits are em-dash free; machine-read markers use hyphen forms. Frozen archives (`docs/plans/`,
+  `docs/specs/`) keep their original punctuation.
 - `release/1.8.0` is pinned (Checkpoint-B-validated bytes) for the Grok Build comparison; don't
   delete it; the local `checkpoint-b` evidence folder outside the repo is permanent.
 
@@ -61,10 +60,6 @@ pick-up, into `docs/plans/`, and rides in the PR.
 
 ## Pick-up notes (carried from the triage doc + the issues)
 
-- **#41**: order by loaded-per-run impact (ship → research → build → dev, then rpa/scan); rationale
-  to `docs/wi-design-notes/`; report the loaded-token delta per pass. The proven verification
-  pattern for prose refactors: per-branch fixture dry-run subagents + load-alone Q&A subagents +
-  a removed-behavior audit (the load-bearing angle).
 - **#52**: log strings and the checker contract stay byte-identical; the generality proof (new
   capability = registry row + tag, zero protocol changes) is demonstrated on paper in the PR body.
 - **#53**: prefer the meta.json `description` + description==Source convention over the id-join
@@ -75,11 +70,18 @@ pick-up, into `docs/plans/`, and rides in the PR.
 
 ## Shipped (roadmap-era)
 
-- **#41 pass 1 (ship)**: **v1.9.1**, PR #55 (2026-07-11). `ship/SKILL.md` 423→388 lines, −581
-  words (−14%), ≈ −900 loaded tokens; rationale relocated to the new `docs/wi-design-notes/ship.md`
-  (never loaded at runtime); all `ship:N` anchors, 36 grep-verified contract strings, templates, and
-  commands intact; a malformed timing-table fence fixed in passing. Verified: 19/19 load-alone Q&A
-  scenarios + a CLEAN removed-behavior audit. Plan: `docs/plans/2026-07-11-pre1-41-ship-compress.md`.
+- **#41 compress skill prose, FULL SERIES**: **v1.9.1 → v1.9.10**, PRs #55-#64, merged in stack
+  order 2026-07-12. Nine loaded files compressed (ship #55, research #56, build #57, dev #58,
+  rpa #59, scan #60, and the three charters #61-#63 under an explicit owner override of the
+  additive-only rule): 17,750 → 15,624 words (−12.0%), roughly −3,240 tokens per full context load;
+  every rule, contract string (559 grep-verified), template, command, threshold, and `name:N`
+  anchor intact; rationale relocated to `docs/wi-design-notes/<file>.md` (one per pass, never
+  loaded at runtime). Verified per file by a load-alone Q&A agent (131/131 scenarios after four
+  verbatim restorations at assembly) and an independent removed-behavior audit (9/9 CLEAN);
+  validate.py + 47 tests + CI green on every PR. PR #64 closed the series with the repo-wide
+  em-dash sweep (884 substitutions across 47 files, shared markers reconciled to hyphen forms;
+  `docs/plans/` and `docs/specs/` frozen). Method record: the E1 plan doc
+  `docs/plans/2026-07-11-pre1-41-ship-compress.md`; per-file inventories ride in the PR bodies.
 - **#48** drop legacy/backward-compat support: **v1.9.0**, PR #54 (2026-07-11). Seven
   compat families deleted (deleted-vs-relabeled disposition table in the PR body); dev classifier =
   five classes, `feature-folder-cases.md` = four case sections; validate.py bans `.wi/goals`

@@ -19,8 +19,7 @@ pick-up, into `docs/plans/`, and rides in the PR.
 
 | Slot | Issue | What | Version | Effort · Risk | Why this order |
 |---|---|---|---|---|---|
-| next | **#53** ledger split labels | `token_report.py` split rows labeled from `agent-<id>.meta.json` `description` (+ the description==Source convention) instead of 48-char prompt prefixes | minor (artifact format) | S · Low | After #48 (shared `_ledger.py`/`check_tokens.py`/tests surface); small |
-| then | **#52** dispatch-time skill pointer | Generalized capability-tag → registry → resolved SKILL.md path in the dispatch; frontend first; fixes the unreachable `[frontend]` delegation (charters have no Skill tool) | minor (runner behavior) | S–M · Low–Medium | After #41 (shipped): touches `build/SKILL.md` + a charter (hotspots, strictly serial). Owner decision 2026-07-11: pointer, **not** a Skill-bearing variant agent; Checkpoint B's baseline-b runners empirically validated the read-the-skill-file mechanism |
+| next | **#52** dispatch-time skill pointer | Generalized capability-tag → registry → resolved SKILL.md path in the dispatch; frontend first; fixes the unreachable `[frontend]` delegation (charters have no Skill tool) | minor (runner behavior) | S–M · Low–Medium | After #41 (shipped): touches `build/SKILL.md` + a charter (hotspots, strictly serial). Owner decision 2026-07-11: pointer, **not** a Skill-bearing variant agent; Checkpoint B's baseline-b runners empirically validated the read-the-skill-file mechanism |
 | parallel, gated | **#43** Grok Build platform | Fourth platform adapter (`references/grok-tools.md`, keep-alive `/goal`-family branch, AGENTS.md row, bootstrap, models.md xAI entry) | minor | M · Low–Medium | Independent of the sweep; **gated on Grok Build beta access**: every runtime claim verified on a real session. The planned **release/1.8.0 → Grok "baseline-c" comparison** doubles as its verification run (evidence method: the Checkpoint B harness) |
 | queued, before #34 | **#65** centralize MoA/routing mechanics | Thin the always-loaded skill bodies (`research`/`ship`/`build`/`dev`/`rpa` SKILL.md) to a trigger + pointer; the MoA proposer/aggregator/`layers` + routing resolve-once mechanics live only in `references/moa.md` + `references/models.md` (loaded on demand, so the MoA-off common case stops paying for them every turn) | patch (pure relocation) | S–M · Low | **Land before #34**: shrinks #34 and keeps its new cross-vendor mechanics in `moa.md` only, not reinlined into the skills. Touches the serial hotspots; same family as #40 (dedup restated rules) |
 | ⏸ postponed | **#34** cross-vendor MoA proposers | Let the MoA council use OpenAI / DeepSeek / Grok / Gemini | - | - | Postponed (owner, 2026-07-10). Revisit after the sweep: #35 already landed (simplifies it), #43's models.md xAI groundwork overlaps it, and **#65 lands first** (thins the skills; #34's new mechanisms then go into `moa.md` only) |
@@ -63,8 +62,6 @@ pick-up, into `docs/plans/`, and rides in the PR.
 
 - **#52**: log strings and the checker contract stay byte-identical; the generality proof (new
   capability = registry row + tag, zero protocol changes) is demonstrated on paper in the PR body.
-- **#53**: prefer the meta.json `description` + description==Source convention over the id-join
-  (no ledger byte-format change); keep the count-mismatch note; `--write` stays idempotent.
 - **#65**: keep the *trigger* line in each SKILL body (the orchestrator must know when to reach for
   `moa.md`); evict only the restated mechanics. No behavior change: a `points: none` run dispatches
   identically to today. Serial on the hotspots; sequence ahead of #34, never parallel with it.
@@ -74,6 +71,14 @@ pick-up, into `docs/plans/`, and rides in the PR.
 
 ## Shipped (roadmap-era)
 
+- **#53** ledger split labels: **v1.10.0**, PR #66 (2026-07-12). `token_report.py`'s `parse_agent_file`
+  labels each `## Subagent detail` row from the harness sidecar `agent-<id>.meta.json` (`description` →
+  `agentType` short name → old prompt prefix → `(no prompt)`); missing/unparseable meta.json falls
+  through to the prompt prefix (older sessions, Codex/Copilot), never crashes. `wi-directory.md` gained
+  the `description`==`Source` convention so the split and ledger tables join by name. Option 1 (name-by-
+  convention), so the ledger byte format and `_ledger.py`/`check_tokens.py`/guardrail tests are untouched
+  (clear of #48). 6 new tests; validate.py + 53 tests + CI green. Plan:
+  `docs/plans/2026-07-12-53-ledger-split-labels.md`.
 - **#41 compress skill prose, FULL SERIES**: **v1.9.1 → v1.9.10**, PRs #55-#64, merged in stack
   order 2026-07-12. Nine loaded files compressed (ship #55, research #56, build #57, dev #58,
   rpa #59, scan #60, and the three charters #61-#63 under an explicit owner override of the

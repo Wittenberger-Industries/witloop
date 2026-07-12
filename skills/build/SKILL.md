@@ -57,10 +57,8 @@ run it as wide as the DAG allows. Repeat until every task is ticked:
    task, all in the same turn. Each gets its task block, the relevant constitution rules, and the repo
    commands, nothing more. Pointers and rules, not pasted file bodies: the runner reads its own files
    (workflow.md's context budget). **Model per dispatch (tiered model routing):** pass each runner the
-   `task-runner` tier from `progress.md`'s `## Model routing (resolved)` block; block absent, or
-   `.wi/models.md` changed after its stamp → resolve once now and rewrite the block
-   (`${CLAUDE_PLUGIN_ROOT}/references/models.md`'s resolve-once rule). A model that errors as unavailable
-   → re-dispatch on `inherit` and note it in `progress.md` (the block stands). No config → inherit.
+   `task-runner` tier from `progress.md`'s `## Model routing (resolved)` block, resolving or refreshing it
+   and handling an unavailable model per `${CLAUDE_PLUGIN_ROOT}/references/models.md`'s resolve-once rule.
 3. **TDD per task** (per the constitution): failing test first, minimal implementation, green, refactor.
    **Skill-mediated routing is operational, not just asserted** (integrations.md: delegation is mandatory
    when installed). Pinned runners have no Skill tool, so for a task tagged for a skill-mediated

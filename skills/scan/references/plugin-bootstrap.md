@@ -15,7 +15,9 @@ without asking; never block if the user declines.
 ## How to check availability
 
 A skill/plugin is available if it appears in this session's skills list, or its directory exists under a
-known plugins path. If unsure, treat it as missing and offer it.
+known plugins path. If unsure, treat it as missing and offer it. (That lenient default is for this
+install offer only. Run-time delegation checks are stricter: integrations.md "How to detect an available
+skill" - absence must be verified against the installed-plugins registry before any fallback stamp.)
 
 ## Recommended set
 

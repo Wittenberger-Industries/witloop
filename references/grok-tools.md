@@ -44,6 +44,14 @@ This is the same root rule Copilot uses (`references/copilot-tools.md` "${CLAUDE
 hard protocol because Grok shells out. The script-invocation fallback is `references/workflow.md`
 "Script invocation".
 
+**Other plugins' skills (superpowers, frontend-design, ...):** the same registry step resolves ANY
+Claude-compat plugin, not just wi: the plugin's entry in `~/.claude/plugins/installed_plugins.json` gives
+its `installPath`; its skills live at `<installPath>/skills/<skill>/SKILL.md` (superpowers' reviewer
+template likewise globs under `~/.claude/plugins/**`). Availability on Grok = the session skill list
+(`grok inspect`) or that registry; measured on this harness, a run judged a skill "available" at one
+phase and "absent" at a later phase of the same session - so **never log a `(<skill> absent)` fallback
+stamp without checking the registry** (integrations.md "How to detect an available skill").
+
 ## Install & enable
 
 The standard wi install on Grok is **two steps**:

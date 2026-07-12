@@ -60,8 +60,11 @@ Never `git worktree remove --force` a tree with uncommitted work without telling
   ship hand the user a suggested branch name, commit message, and PR body to apply via the platform's
   native controls. Note "Worktree: - (sandboxed)" in progress.md.
 - **Grok Build session worktrees:** Grok's own `grok -w` session worktree is an optional outer shell;
-  keep the wi feature worktree canonical and do **not** nest it inside a session worktree. Subagent
-  `isolation: worktree` (`spawn_subagent`) stays the level-2 escalate only, exactly like the ladder below.
+  keep the wi feature worktree canonical and do **not** nest it inside a session worktree. A Grok session
+  workspace is a standalone **copy** of the repo, so the git signals above do not fire: detect it by cwd
+  under `~/.grok/worktrees/` and then follow this same sandboxed variant
+  (`${CLAUDE_PLUGIN_ROOT}/references/grok-tools.md`). Subagent `isolation: worktree` (`spawn_subagent`)
+  stays the level-2 escalate only, exactly like the ladder below.
 
 If `superpowers:using-git-worktrees` is installed, prefer it; it handles edge cases (submodules, dirty
 trees) well. This file is the fallback.

@@ -63,21 +63,21 @@ The standard wi install on Grok is **two steps**:
 
 ## Tools
 
-Exact ids are read from `grok inspect` on the spike (SPIKE S3/S7). The `?`-flagged rows differ most across
-Grok Build versions.
+Ids confirmed live on Grok Build `0.2.93` (spike, 2026-07-12) from the session tool list.
 
-| wi/skill says | Grok equivalent (confirm on spike) |
+| wi/skill says | Grok equivalent |
 |---|---|
 | Read a file | `read_file` |
-| Write / create a file | `write` (some builds `create_file`) ? |
+| Write / create a file | `write` (there is no `create_file`) |
 | Edit a file | `search_replace` |
 | Bash / run a command | `run_terminal_command` |
-| Grep / Glob | `grep` / file search (`run_terminal_command` with `rg`/`grep`/`find`) |
+| Grep / Glob | `grep` (native) / `list_dir`; shell fallback (`run_terminal_command` with `rg`/`find`) |
 | dispatch a subagent / task-runner | `spawn_subagent` (built-in types `general-purpose \| explore \| plan`, depth limit 1; `isolation`, `background`, `capability_mode` optional) |
-| parallel waves | multiple `spawn_subagent` calls in one turn; inline the runner/researcher prompt (do not rely on named-role dispatch) |
-| TodoWrite | `todo_write` |
+| parallel waves | multiple `spawn_subagent` calls in one turn; inline the runner/researcher prompt (do not rely on named-role dispatch; the live session registered only 2 of wi's 3 agents) |
+| TodoWrite | no `todo_write`; the closest is the `tasks__*` family (`tasks__create`, `tasks__update`, ...), else keep a plain markdown checklist in the reply |
+| AskUserQuestion | `ask_user_question` |
 | WebSearch | `web_search` |
-| WebFetch | `web_fetch` or the build's fetch-style tool, if present; else `web_search` with a URL ? |
+| WebFetch | `web_fetch` (also `open_page` / `open_page_with_find` for reading a page) |
 | invoke a wi skill | user-invocable skills load as bare slash commands: `/scan`, `/dev`, `/rpa` (the phase skills are `user-invocable: false`, so `/ship` etc. are not commands). On a name clash the qualifier is **scope-based** (`/user:scan`, `/local:scan`), NOT `/wi:scan` (colon-qualification is agents-only), and a built-in of the same name wins. For a collision-free branded form, install the flat `wi-*` forwarding aliases into `~/.agents/skills/` (the shared flat-skills dir Grok scans, same target as Copilot/Codex; never into Grok's own `~/.grok/skills/`) -> `/wi-scan`, `/wi-dev`, `/wi-rpa`. Natural-language auto-trigger also works. (confirmed S4) |
 | resolve a skill's `SKILL.md` path (dispatch pointer for pinned runners) | it is under the skill's install dir (the resolved wi root's `skills/<skill>/SKILL.md`, or `~/.agents/skills/<skill>/SKILL.md` for flat aliases); the orchestrator resolves it once and passes it in the `[frontend]`-style dispatch |
 
@@ -99,10 +99,16 @@ content is always inline, exactly as on Codex (`skills/build/references/worktree
 
 - **wi feature worktree** (`git worktree add -b wi/<slug> ...`) is canonical; the orchestrator is the sole
   committer.
-- **Grok session `-w`** is an optional outer shell; do **not** nest a wi feature worktree inside it
-  (SPIKE S8). If already inside a session worktree (detached HEAD / linked worktree), follow the sandboxed
-  variant in `skills/build/references/worktrees-and-subagents.md`: commit in place, hand the user a
-  branch name + commit + PR text.
+- **Grok session `-w`** is an optional outer shell; do **not** run wi's worktree flow inside it. Measured
+  (S8, `0.2.93`): the session workspace is a **standalone copy** of the repo under
+  `~/.grok/worktrees/<project>/<stamp>/`, NOT a git linked worktree - inside it `git rev-parse --git-dir`
+  equals `--git-common-dir` (both `.git`) on the normal branch, so the generic linked-worktree/detached-HEAD
+  detection in `skills/build/references/worktrees-and-subagents.md` does **not** fire. Detect it by
+  **path**: cwd under `~/.grok/worktrees/` means you are in a session copy - follow the sandboxed variant
+  (commit in place, no new worktrees, hand the user branch + commit + PR text; a `wi/<slug>` branch or
+  sibling worktree created inside the copy stays in the copy). Also measured: `-w` needs a HEAD commit; on
+  a commitless repo it fails with `hub error: failed to get HEAD commit from source` (irrelevant mid-run:
+  wi repos have commits by build time).
 - **Subagent `isolation: worktree`** is the level-2 escalate only (file collision / non-parallel-safe
   tests), matching the existing escalation ladder.
 

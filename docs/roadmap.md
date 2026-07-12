@@ -17,11 +17,14 @@ pick-up, into `docs/plans/`, and rides in the PR.
 
 ## Queue (in order)
 
+**The actionable sweep queue is drained** (2026-07-12): every non-gated issue has shipped. The two
+items below are both blocked, so there is no clean "next" to pick up without an owner decision, unblock
+either one or file new work.
+
 | Slot | Issue | What | Version | Effort · Risk | Why this order |
 |---|---|---|---|---|---|
-| next | **#65** centralize MoA/routing mechanics | Thin the always-loaded skill bodies (`research`/`ship`/`build`/`dev`/`rpa` SKILL.md) to a trigger + pointer; the MoA proposer/aggregator/`layers` + routing resolve-once mechanics live only in `references/moa.md` + `references/models.md` (loaded on demand, so the MoA-off common case stops paying for them every turn) | patch (pure relocation) | S–M · Low | **Land before #34**: shrinks #34 and keeps its new cross-vendor mechanics in `moa.md` only, not reinlined into the skills. Touches the serial hotspots; same family as #40 (dedup restated rules) |
-| parallel, gated | **#43** Grok Build platform | Fourth platform adapter (`references/grok-tools.md`, keep-alive `/goal`-family branch, AGENTS.md row, bootstrap, models.md xAI entry) | minor | M · Low–Medium | Independent of the sweep; **gated on Grok Build beta access**: every runtime claim verified on a real session. The planned **release/1.8.0 → Grok "baseline-c" comparison** doubles as its verification run (evidence method: the Checkpoint B harness) |
-| ⏸ postponed | **#34** cross-vendor MoA proposers | Let the MoA council use OpenAI / DeepSeek / Grok / Gemini | - | - | Postponed (owner, 2026-07-10). Revisit after the sweep: #35 already landed (simplifies it), #43's models.md xAI groundwork overlaps it, and **#65 lands first** (thins the skills; #34's new mechanisms then go into `moa.md` only) |
+| ⛔ gated (beta) | **#43** Grok Build platform | Fourth platform adapter (`references/grok-tools.md`, keep-alive `/goal`-family branch, AGENTS.md row, bootstrap, models.md xAI entry) | minor | M · Low–Medium | Independent of the sweep; **gated on Grok Build beta access**: every runtime claim verified on a real session. The planned **release/1.8.0 → Grok "baseline-c" comparison** doubles as its verification run (evidence method: the Checkpoint B harness) |
+| ⏸ postponed | **#34** cross-vendor MoA proposers | Let the MoA council use OpenAI / DeepSeek / Grok / Gemini | - | - | Postponed (owner, 2026-07-10); **its prerequisite #65 has now shipped** (skills thinned; #34's new cross-vendor mechanics go into `moa.md` only). Also simplified by #35, and #43's models.md xAI groundwork overlaps it. Owner un-postpones when ready |
 
 ## Sequencing rules (standing)
 
@@ -59,15 +62,25 @@ pick-up, into `docs/plans/`, and rides in the PR.
 
 ## Pick-up notes (carried from the triage doc + the issues)
 
-- **#65**: keep the *trigger* line in each SKILL body (the orchestrator must know when to reach for
-  `moa.md`); evict only the restated mechanics. No behavior change: a `points: none` run dispatches
-  identically to today. Serial on the hotspots; sequence ahead of #34, never parallel with it.
+- **#34** (when un-postponed): #65 shipped, so add the cross-vendor proposer mechanisms to
+  `references/moa.md` only; do not reinline them into the thinned SKILL bodies.
 - **#43**: all runtime claims (install path, namespace, `/goal` semantics vs wi's condition
   template, model ids) verified on a real Grok Build session before merge; keep-alive lands in the
   `/goal` family branch with the headless `-p`/`--max-turns`/`--continue` fallback.
 
 ## Shipped (roadmap-era)
 
+- **#65** centralize MoA/routing mechanics: **v1.11.1**, PR #68 (2026-07-12). The five always-loaded
+  SKILL bodies (research/ship/build/dev/rpa) restated MoA proposer/aggregator/`layers` + routing
+  resolve-once mechanics on top of pointing at `references/moa.md` + `references/models.md`; move-then-
+  compress relocated the skill-only bits into the references (moa.md gained the proposer research-charter
+  + dissent-to-ADR/gate wiring, the identical-proposer-prompt rule, the aggregator dedupe/max-severity/
+  verify-before-drop rule, "counts as one review round"; models.md gained the warn-once clause at the
+  apply step) and thinned each skill to a trigger + pointer. Always-loaded bodies -290 words (paid every
+  turn); moa.md +114 (on-demand only, MoA off by default so most runs never load it). Every trigger +
+  the four contract log strings intact; a `points: none` run is byte-identical to before. Independent
+  removed-behavior audit SAFE; validate.py + 53 tests + CI green. Pure relocation -> patch. Plan:
+  `docs/plans/2026-07-12-65-centralize-moa-routing.md`.
 - **#52** dispatch-time skill pointer: **v1.11.0**, PR #67 (2026-07-12). Pinned runners have no `Skill`
   tool, so the orchestrator resolves a capability-tagged skill's `SKILL.md` path once per run into
   progress.md's new `## Skill paths (resolved)` block (lazy) and the dispatch hands the runner that path

@@ -57,7 +57,7 @@ stamp without checking the registry** (integrations.md "How to detect an availab
 The standard wit install on Grok is **two steps**:
 
 1. **The plugin.** Confirmed: Grok loads wit from the **Claude plugin cache**
-   (`~/.claude/plugins/cache/wit/wit/<version>/`) when `~/.grok/config.toml`'s `[plugins] enabled` lists
+   (`~/.claude/plugins/cache/witloop/wit/<version>/`, keyed marketplace/plugin) when `~/.grok/config.toml`'s `[plugins] enabled` lists
    `wit` - no `grok plugin install` step is needed, and `grok plugin list` shows Grok's *own* registry
    (empty for wit, since wit loads via Claude compatibility). Once wit is published to the xAI marketplace,
    `grok plugin install <name>` becomes the first-class path (that command pulls from a marketplace / git

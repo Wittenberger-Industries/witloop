@@ -60,8 +60,18 @@ Persistence uses Autopilot instead of `/goal`: wit's hands-off handoff prints
 unattended** (prompts suppressed, all tools/paths granted); drop `--allow-all` to keep risky-action
 confirmations. The exact handoff templates and the full warning live in `references/keep-alive.md`.
 
-**Grok Build**: Grok discovers Claude-installed plugins with zero config - install wit for Claude Code
-(above) and list `wit` under `[plugins] enabled` in `~/.grok/config.toml`. Then install the flat `wit-*`
+**Grok Build**: Grok discovers Claude-installed plugins with zero config (no `grok plugin install` step;
+Grok loads wit straight from the Claude plugin cache). Install through Claude Code once:
+```
+/plugin marketplace add Wittenberger-Industries/witloop
+/plugin install wit@witloop
+```
+then enable it for Grok in `~/.grok/config.toml`:
+```toml
+[plugins]
+enabled = ["wit"]
+```
+Then install the flat `wit-*`
 aliases into `~/.agents/skills/` (scan's bootstrap offers the copy): the bare entry points are `/scan`,
 `/dev`, `/rpa`, and the aliases add the collision-free `/wit-scan`, `/wit-dev`, `/wit-rpa`. Persistence uses
 Grok's native `/goal`, which is **model-judged** (the agent self-completes via `update_goal`), not a hard

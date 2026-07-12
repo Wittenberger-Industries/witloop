@@ -124,10 +124,25 @@ applies.
 
 ## Models & usage
 
-`grok models` lists ids (`grok-4.5` default, `grok-composer-2.5-fast` fast; SPIKE S6). Pass the model on
-`spawn_subagent` / the session per `references/models.md` "Platform model resolution (non-Claude hosts)".
-Usage: `/usage`; `token_report.py`'s Claude transcript parse does not apply, so per-subagent figures are
-`unavailable` and durations come from wi's own stamps, the same as the Copilot ledger note.
+`grok models` lists ids (`grok-4.5` default, `grok-composer-2.5-fast` fast; confirmed S6). Pass the model
+on `spawn_subagent` / the session per `references/models.md` "Platform model resolution (non-Claude
+hosts)".
+
+**The tokens.md ledger on Grok** (differs from both Claude and Copilot):
+
+- **In-run rows:** the per-dispatch token figure is unobservable at dispatch return, so append each row
+  with Tokens `0` and Basis `Grok: tokens unobservable in-run (0 = placeholder, not a measurement)`;
+  the Duration cell is exact (the completion notification / OS stamps), `_ledger`-parseable format
+  (`1m25s`, never bare `121s`).
+- **Finalize (ship's dossier tidy):** run
+  `python <resolved-root>/skills/ship/scripts/grok_token_report.py --write .wi/features/<slug>/tokens.md`
+  INSTEAD of `token_report.py --write`. Grok persists **exact** per-subagent figures
+  (`subagent_finished.tokens_used` in the session's `updates.jsonl`), so the finalizer sets the
+  Subagents (exact) sum from the session split, appends the per-agent split section, and fills the
+  duration totals. The parent session has **no cumulative I/O on disk** (context-window occupancy
+  only), so the Orchestrator line stays the honest `unavailable` sentinel with the occupancy facts
+  beneath it; never add occupancy to the subagent total. `/usage` on screen may be copied verbatim
+  like Copilot's rule.
 
 ## Permissions (unattended)
 

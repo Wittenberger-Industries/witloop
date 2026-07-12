@@ -17,14 +17,12 @@ pick-up, into `docs/plans/`, and rides in the PR.
 
 ## Queue (in order)
 
-**The actionable sweep queue is drained** (2026-07-12): every non-gated issue has shipped. The two
-items below are both blocked, so there is no clean "next" to pick up without an owner decision, unblock
-either one or file new work.
+**The queue is empty** (2026-07-12): every actionable issue has shipped, #43 included. The one item
+below stays owner-postponed; un-postpone it or file new work to continue.
 
 | Slot | Issue | What | Version | Effort · Risk | Why this order |
 |---|---|---|---|---|---|
-| ⛔ gated (beta) | **#43** Grok Build platform | Fourth platform adapter (`references/grok-tools.md`, keep-alive `/goal`-family branch, AGENTS.md row, bootstrap, models.md xAI entry) | minor | M · Low–Medium | Independent of the sweep; **gated on Grok Build beta access**: every runtime claim verified on a real session. The planned **release/1.8.0 → Grok "baseline-c" comparison** doubles as its verification run (evidence method: the Checkpoint B harness) |
-| ⏸ postponed | **#34** cross-vendor MoA proposers | Let the MoA council use OpenAI / DeepSeek / Grok / Gemini | - | - | Postponed (owner, 2026-07-10); **its prerequisite #65 has now shipped** (skills thinned; #34's new cross-vendor mechanics go into `moa.md` only). Also simplified by #35, and #43's models.md xAI groundwork overlaps it. Owner un-postpones when ready |
+| ⏸ postponed | **#34** cross-vendor MoA proposers | Let the MoA council use OpenAI / DeepSeek / Grok / Gemini | - | - | Postponed (owner, 2026-07-10); **its prerequisite #65 has now shipped** (skills thinned; #34's new cross-vendor mechanics go into `moa.md` only). Also simplified by #35, and #43's shipped models.md xAI + platform-map groundwork overlaps it. Owner un-postpones when ready |
 
 ## Sequencing rules (standing)
 
@@ -63,12 +61,29 @@ either one or file new work.
 ## Pick-up notes (carried from the triage doc + the issues)
 
 - **#34** (when un-postponed): #65 shipped, so add the cross-vendor proposer mechanisms to
-  `references/moa.md` only; do not reinline them into the thinned SKILL bodies.
-- **#43**: all runtime claims (install path, namespace, `/goal` semantics vs wi's condition
-  template, model ids) verified on a real Grok Build session before merge; keep-alive lands in the
-  `/goal` family branch with the headless `-p`/`--max-turns`/`--continue` fallback.
+  `references/moa.md` only; do not reinline them into the thinned SKILL bodies. #43's shipped
+  groundwork already covers the models.md xAI entry + the platform model map.
 
 ## Shipped (roadmap-era)
+
+- **#43** Grok Build as the fourth platform: **v1.12.0**, PR #69 (2026-07-12). Thin adapter, every
+  runtime claim measured on a real Grok Build 0.2.93 session (S1-S8 spike + two-run live E2E; record:
+  `docs/plans/2026-07-12-43-grok-spike-results.md`). Corrected issue #43's own framing three ways: Grok's
+  `/goal` is model-judged (`update_goal`) -> a THIRD keep-alive branch, not the Claude/Codex predicate
+  family; `${CLAUDE_PLUGIN_ROOT}` is hook-only/empty in tool shells -> mandatory resolve-once protocol in
+  `references/grok-tools.md` (the `installed_plugins.json` step resolves in practice, merge-gated on a
+  live agent-resolved script run); `grok -w` is a standalone COPY, not a linked worktree -> path-based
+  detection. models.md gained `## Platform model resolution` + xAI cross-provider (rides `_call_openai`,
+  `XAI_BASE`); new `skills/ship/scripts/grok_token_report.py` finalizes tokens.md from Grok session files
+  (exact per-subagent split; 8 tests). Charter exception: one owner-sanctioned token
+  (`wi-code-checker` `color: magenta` -> `purple`; Grok silently drops agents on unsupported colors).
+  Rode along owner-directed: **F1** (interactive `--auto` can no longer skip brainstorm; closed
+  self-answer stamp set, headless-only carve-out) and **F2** (verify skill absence against the
+  installed-plugins registry before any fallback stamp) - both surfaced by the baseline a/b/c comparison,
+  where the brainstorm-skipping run graded C+ with a security BLOCKER while the dialogue runs graded A-
+  on both harnesses; validate.py anchors both clauses. Byte-stable Claude/Codex/Copilot branches;
+  three-way manifest parity; validate.py + 68 tests + CI green. Evidence archives (permanent):
+  `D:\ClaudeCowork\wi-plugin\checkpoint-b\` (baseline-c runs + four-way quality review).
 
 - **#65** centralize MoA/routing mechanics: **v1.11.1**, PR #68 (2026-07-12). The five always-loaded
   SKILL bodies (research/ship/build/dev/rpa) restated MoA proposer/aggregator/`layers` + routing

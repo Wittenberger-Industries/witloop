@@ -117,7 +117,8 @@ per-agent override), write the file **and commit it** (`chore(wi): models config
 in `wi-directory.md`: committed where written, so post-worktree phases read the same tracked copy).
 **`--auto`** → write + commit the **simple** preset and log it as an
 assumption. Either way the file persists and is **never re-asked** (edit `.wi/models.md` to change it). When
-the file exists, skip setup entirely, just apply it. Setup ends by resolving the routing once
+the file exists, skip setup entirely, just apply it, warning once if the session model is below the
+configured orchestrator tier (the orchestrator-model rule above). Setup ends by resolving the routing once
 and recording it as the `## Model routing (resolved)` block when the feature's `progress.md` is seeded
 (dev:2 / rpa's run seed), the resolve-once rule below.
 

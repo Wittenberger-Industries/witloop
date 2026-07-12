@@ -71,9 +71,8 @@ parallel, in the same turn. Each charter names: its single question **and mode**
 hard the researcher hits the web; see the agent), what is OUT of scope (the sibling charters, by name),
 and any standing ADR it must respect. Ship each researcher `brief.md` + the relevant constitution rules
 + `repo-map.md` + any relevant learning. One small question = one researcher; never fan out for the
-sake of it. Dispatch on the `researcher` tier from `progress.md`'s resolved-routing block (absent, or
-`.wi/models.md` changed after its stamp → resolve once now and rewrite the block;
-`${CLAUDE_PLUGIN_ROOT}/references/models.md`'s resolve-once rule).
+sake of it. Dispatch on the `researcher` tier from `progress.md`'s resolved-routing block (resolve or
+refresh it per `${CLAUDE_PLUGIN_ROOT}/references/models.md`'s resolve-once rule).
 
 **d · Reconcile -> decide.** Merge the reports into one recommended approach and adopt it. A report
 that returns empty, blows its budget, or wanders off-charter gets **one** narrower re-dispatch; after
@@ -82,19 +81,12 @@ that, proceed on the best evidence available and log the gap in `progress.md`. C
 dropping one silently is a defect.
 
 **Mixture of Agents (optional).** When the resolved-routing block's MoA row includes `research` in its
-`points` (contract: `${CLAUDE_PLUGIN_ROOT}/references/moa.md`): dispatch N proposer researchers
-(`agents/wi-researcher.md`, one per listed `proposers` tier) in parallel, same turn, each with the SAME
-charter (`brief.md` + all researcher reports + the relevant constitution rules + standing ADRs) plus
-the marker `MoA role: proposer <i>/<N>`; each commits to ONE approach in `research/proposal-<i>.md`.
-`layers: 2` → a second parallel round: each proposer reads ALL round-1 proposals and returns a
-refinement in `research/proposal-<i>-r2.md` (may change position; must say why). Then one aggregator
-dispatch (`MoA role: aggregator`, at
-the `aggregator` tier) reads all proposals, writes `research/proposal-synthesis.md`, and returns the
-single recommendation with dissent noted. Adopt it; the orchestrator still decides and writes the ADR,
-and dissent feeds the ADR's rejected-alternatives and the gate's **Rejected:** line. Log
-`approach via MoA (<N> proposers, <L> layers, aggregator <tier>)`; each dispatch appends its own
-`tokens.md` row on completion. MoA row `none`, or `research` not in its `points` → skip this branch
-entirely; the reconcile above is the unchanged default.
+`points`, run this approach decision as an MoA proposer/aggregator pass instead of the single reconcile
+above: N proposer researchers answer in parallel, an optional second layer refines, and one aggregator
+synthesizes `research/proposal-synthesis.md`; you still adopt the recommendation and write the ADR. Full
+contract (proposer charters, layer semantics, who-writes-what, the dissent-to-ADR/gate wiring, the
+`approach via MoA (...)` log line, `tokens.md` rows): `${CLAUDE_PLUGIN_ROOT}/references/moa.md`. MoA row
+`none`, or `research` not in its `points` → skip this branch; the reconcile above is the unchanged default.
 
 If the decision is **hard to reverse**, record it as the next **ADR-NNNN** in the project-wide
 `.wi/adr/` log (global numbering + an index.md row, per the plan skill's ADR template). Commit the ADR

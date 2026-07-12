@@ -57,19 +57,27 @@ dispatch: the literal tier, or `inherit`).
 
 ## Research point: who writes what
 
+Each proposer gets the same inputs a normal researcher dispatch would (`brief.md` + the round's
+researcher reports + the relevant constitution rules + any standing ADRs) plus its `MoA role:` marker.
 Proposer i writes `.wi/features/<slug>/research/proposal-<i>.md` (layer 2: `proposal-<i>-r2.md`); the
-aggregator writes `research/proposal-synthesis.md` and returns the recommendation. All ephemeral
-(`research/` already is). The ORCHESTRATOR (research skill) still adopts the recommendation, writes the
-ADR, and owns Phase flips: the aggregator recommends, it does not decide.
+aggregator writes `research/proposal-synthesis.md` and returns the recommendation with dissent noted. All
+ephemeral (`research/` already is). The ORCHESTRATOR (research skill) still adopts the recommendation,
+writes the ADR, and owns Phase flips: the aggregator recommends, it does not decide; the synthesis's
+dissent feeds the ADR's rejected-alternatives and the design gate's **Rejected:** line.
 
 Log line (progress.md): `approach via MoA (<N> proposers, <L> layers, aggregator <tier>)`
 
 ## Review point: who writes what
 
-Proposer checkers RETURN findings only: they NEVER write `verification.md`; the aggregator checker alone
-writes `verification.md` (both passes' sections, one verdict marker). wi has exactly one review agent
-CONTRACT, `wi-code-checker`; MoA runs multiple INSTANCES of it, and only the aggregator instance writes
-`verification.md`. Do not "fix" this by splitting the review into a second agent type.
+Each proposer checker gets the IDENTICAL result-mode prompt (both passes, the same `Line review
+template:` line) plus its `MoA role:` marker. Proposer checkers RETURN findings only: they NEVER write
+`verification.md`; the aggregator checker alone writes `verification.md` (both passes' sections, one
+verdict marker), after it dedupes the proposals, keeps the MAX severity any proposer assigned a finding,
+and verifies against the repo before dropping anything as a false positive. wi has exactly one review
+agent CONTRACT, `wi-code-checker`; MoA runs multiple INSTANCES of it, and only the aggregator instance
+writes `verification.md`. Do not "fix" this by splitting the review into a second agent type. A full MoA
+pass counts as **one** review round: the cross-provider layer (`models.md`) and ship's max-2
+review-to-fix rounds are unchanged.
 
 Log line (progress.md): `review via MoA (<N> proposers, <L> layers, aggregator <tier>)`, appended to the
 existing review log label (e.g. `review via wi-code-checker + superpowers:requesting-code-review[inline] + MoA (3 proposers, 1 layer, aggregator opus)`).

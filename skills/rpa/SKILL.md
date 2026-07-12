@@ -35,14 +35,11 @@ never loaded at runtime).
    (`NNNN-<name>`, the next global 4-digit ordinal; ingest:1); catalog the repo's supporting files into
    `.wi/inputs.md`; detect reusable components into `.wi/components.md`; convert the PDD to `pdd.md` with
    markitdown (skip if it's already Markdown). Run the **model routing first-run setup** here too
-   (`${CLAUDE_PLUGIN_ROOT}/references/models.md` "First-run setup": absent → one preset question,
-   `--auto` → simple, logged; present → apply, warn once on an orchestrator-tier mismatch; never
-   re-ask). Resolve the routing once now (models.md's
-   **resolve-once rule**) and record it as the `## Model routing (resolved)` block when the run's
-   `progress.md` is seeded (rpa-directory.md's template); every build delegation then reads the block's
-   `rpa-build` cell (resolves override → `wi-task-runner` role → `inherit`; a routing role label, not a
-   registered agent, per models.md), and at ship the cross-provider diff review layers on top of
-   wi-code-checker's result-mode pass, per the same rules as `wi:ship`. The project-level `.wi/`
+   (`${CLAUDE_PLUGIN_ROOT}/references/models.md` "First-run setup"), then resolve the routing once per
+   that reference and record the `## Model routing (resolved)` block when the run's `progress.md` is
+   seeded (rpa-directory.md's template); every build delegation reads the block's `rpa-build` cell (a
+   routing role label, resolved per models.md), and at ship the cross-provider diff review layers on top
+   of wi-code-checker's result-mode pass, per `wi:ship`. The project-level `.wi/`
    outputs of rpa:1–3 (`inputs.md`,
    `components.md`, `orchestrator.md`, `models.md`, a first-run `rpa-constitution.md`) are **committed
    where written** (`chore(wi): …`, the project-level rule in `wi-directory.md`).

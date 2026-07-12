@@ -26,14 +26,11 @@ never loaded at runtime).
    don't proceed without a repo map and constitution. Stale (`scanned` stamp older than ~2 weeks, or
    config/lock/CI files changed since it) → run the scan skill's **`--refresh`** drift pass before
    building on the map.
-   **Model routing first-run setup** (`${CLAUDE_PLUGIN_ROOT}/references/models.md` "First-run setup"):
-   `.wi/models.md` absent → ask once and write+commit per that section (`--auto` → the **simple** preset,
-   logged as an assumption); present → apply it silently, warning once if the session model is below the
-   configured orchestrator tier. Never re-ask an existing config. Finish by resolving the routing once
-   (override → role → `inherit` per dispatch kind; models.md's **resolve-once rule**); dev:2 records it
-   as the `## Model routing (resolved)` block when `progress.md` is seeded, and a resumed feature
-   missing the block gets it written on re-entry. Every later dispatch reads the block, not
-   `.wi/models.md`.
+   **Model routing first-run setup** here (`${CLAUDE_PLUGIN_ROOT}/references/models.md` "First-run
+   setup"): set up `.wi/models.md` if absent, else apply it, then resolve the routing once per that
+   reference. dev:2 records the result as the `## Model routing (resolved)` block when `progress.md` is
+   seeded, and a resumed feature missing the block gets it written on re-entry; every later dispatch reads
+   the block, not `.wi/models.md`.
 2. **Open the feature folder, or route the edge case first.** Parse flags: `--auto` sets
    **Gate mode: auto-approve** in progress.md; tell the user the design gate will be auto-approved and
    recorded, not asked. Then **classify the idea before creating anything**:

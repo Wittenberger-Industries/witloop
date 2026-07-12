@@ -63,28 +63,22 @@ BLOCKER/WARNING/INFO taxonomy. This dispatch is unconditional (on the `checker` 
 cross-provider configuration demotes or replaces it.
 
 **Mixture of Agents layer (only when configured).** If the resolved-routing block's MoA row includes
-`review` in its `points` (see `${CLAUDE_PLUGIN_ROOT}/references/moa.md`), dispatch N proposer checkers
-(one per listed `proposers` tier) in parallel, same turn, instead of the one dispatch above: IDENTICAL
-prompts (result mode, both passes, the same `Line review template:` line) plus the marker
-`MoA role: proposer <i>/<N>`. Proposers RETURN findings only; they never write `verification.md`.
-`layers: 2` → a second parallel round: each proposer receives the union of round-1 findings and returns
-a refinement (may change position; must say why). Then dispatch one aggregator checker
-(`MoA role: aggregator`, at the `aggregator` tier): it receives all findings, dedupes, keeps the MAX
-severity any proposer assigned, verifies against the repo before dropping anything as a false positive,
-and alone writes `verification.md` (both passes' sections, one verdict marker). Append
-`+ MoA (<N> proposers, <L> layers, aggregator <tier>)` to the review log line above; every proposer and
-aggregator dispatch appends its own `tokens.md` row (with its `Duration` cell) on completion. A full
-MoA pass counts as one review round; the cross-provider layer below and the max-2-rounds loop are
-unchanged. MoA row `none`, or `review` not in its `points` → the single dispatch above runs unchanged.
+`review` in its `points`, run the result-mode review as an MoA proposer/aggregator pass instead of the
+single dispatch above: N proposer checkers return findings, an optional second layer refines, and one
+aggregator checker alone writes `verification.md` and counts as one review round (the cross-provider layer
+below and the max-2-rounds loop unchanged). Append `+ MoA (<N> proposers, <L> layers, aggregator <tier>)`
+to the review log line above. Full contract (identical proposer prompts, markers, layer semantics, the
+aggregator's dedupe/max-severity/verify-before-drop rule, `tokens.md` rows):
+`${CLAUDE_PLUGIN_ROOT}/references/moa.md`. MoA row `none`, or `review` not in its `points` → the single
+dispatch above runs unchanged.
 
 **Cross-provider layer (only when configured).** If the resolved-routing block's cross-provider row
-names a provider (≠ `none`) and its API key is present, **additionally** run an independent
-cross-provider diff review per `${CLAUDE_PLUGIN_ROOT}/references/models.md`: full feature diff +
-`spec.md` through `skills/ship/scripts/cross_review.py` → `.wi/features/<slug>/cross-review.md`. It is
-a second opinion layered on top of the checker dispatch: it never writes `verification.md` and never
-replaces the checker. Unconfigured, exit 2 (config/API error), or exit 3 (missing API key) governs only
-whether this layer runs: log `cross-provider layer skipped (<reason>)` and continue; the checker
-dispatch above ran regardless.
+names a provider (≠ `none`) and its API key is present, **additionally** run the independent
+cross-provider diff review (`${CLAUDE_PLUGIN_ROOT}/references/models.md`: the `cross_review.py`
+mechanics, inputs, and exit codes): a second opinion layered on top of the checker dispatch, it never
+writes `verification.md` and never replaces the checker. When it cannot run (unconfigured, or the script
+signals a config/API error or a missing key), log `cross-provider layer skipped (<reason>)` and continue;
+the checker dispatch above ran regardless.
 
 Findings from all layers feed the same loop: a BLOCKER (an unmet criterion, a decision silently
 reduced to a stub, a correctness bug in the diff) sends the feature **back to build**,

@@ -75,6 +75,15 @@ Operational notes for the record: run 1 executed elevated (worktree files owned 
 BUILTIN/Administrators -> git dubious-ownership friction during cleanup; not a wi defect); local gate on
 run 2 was typecheck + lint + format:check + 375 unit tests + build, result-mode checker PASS (0 BLOCKER).
 
+Two contract deviations surfaced by the a/b/c comparison are **fixed on this branch**: (F1) run 2
+skipped the interactive brainstorm by minting an unsanctioned `self-answered (roadmap-seeded)` stamp -
+dev:3/dev:4 and brainstorm now close the stamp set (`self-answered (headless)` is the only sanctioned
+self-answer, headless = no user can answer, a roadmap row seeds the dialogue but never replaces it);
+(F2) run 2 bypassed available superpowers skills ("for speed" at plan; a false "superpowers absent" at
+ship) - integrations.md now requires verifying absence against the installed-plugins registry before any
+`(<skill> absent)` stamp and names speed/`--auto` as non-reasons, with the Grok-concrete paths in
+grok-tools.md. validate.py anchors both clauses so compression passes cannot drop them.
+
 ## Consequences already folded into the branch
 
 S1/S2 -> resolution protocol hardened (resolve once, cache in `progress.md`, absolute path per call);

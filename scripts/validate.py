@@ -15,8 +15,10 @@ Checks (from the repo root, detected automatically):
      and only delimiters + key presence are checked.
   3. Every `${CLAUDE_PLUGIN_ROOT}/<path>` reference in `.md` files resolves to a real file under the repo root.
   4. Cross-platform portability files exist (`references/{codex,copilot,grok}-tools.md`, `AGENTS.md`),
-     keep-alive.md carries the Grok Build model-judged /goal branch (`Grok Build` + `update_goal`), and the
-     dev/research skills carry both the Copilot Autopilot handoff branch and a Grok Build handoff pointer.
+     keep-alive.md carries the Grok Build model-judged /goal branch (`Grok Build` + `update_goal`), the
+     dev/research skills carry both the Copilot Autopilot handoff branch and a Grok Build handoff pointer,
+     and the baseline-c contract anchors hold (dev/brainstorm: headless-only self-answer stamps;
+     integrations.md: verify absence before any fallback stamp).
   5. OKF conformance (see docs/specs/2026-06-14-okf-knowledge-format.md): every concept doc under
      skills/ · agents/ · references/ · docs/ plus README.md/AGENTS.md opens with parseable YAML
      frontmatter carrying a non-empty `type`. Each must also end with a trailing newline and have
@@ -161,6 +163,18 @@ for s in ("skills/dev/SKILL.md", "skills/research/SKILL.md"):
         errors.append(f"{s}: missing Copilot Autopilot handoff branch")
     if "grok" not in body:
         errors.append(f"{s}: missing Grok Build handoff pointer")
+
+# Baseline-c contract anchors (#43): the interactive-brainstorm tripwire and the deterministic
+# availability rule are load-bearing clauses; a compression pass must not drop them.
+bs = (ROOT / "skills/brainstorm/SKILL.md").read_text(encoding="utf-8")
+if "only sanctioned" not in bs or "self-answered (headless)" not in bs:
+    errors.append("skills/brainstorm/SKILL.md: missing the closed self-answer stamp set (headless-only rule)")
+dv = (ROOT / "skills/dev/SKILL.md").read_text(encoding="utf-8")
+if "self-answered (headless)" not in dv or "fails this check" not in dv:
+    errors.append("skills/dev/SKILL.md: missing the headless-only self-answer preflight clause")
+ig = (ROOT / "skills/research/references/integrations.md").read_text(encoding="utf-8")
+if "verify absence" not in ig.lower():
+    errors.append("skills/research/references/integrations.md: missing the verify-absence-before-fallback rule")
 
 # 5. OKF conformance: every concept doc has parseable frontmatter + non-empty `type` --
 RESERVED = {"index.md", "log.md"}  # OKF reserved filenames: exempt from the `type` rule

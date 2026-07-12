@@ -30,8 +30,8 @@ pick-up, into `docs/plans/`, and rides in the PR.
   squash-merge, rebase + retarget the next after each merge.
 - **Agent charters are the most sensitive surface** (autonomous, no human in the loop): minimal
   additive diffs only; never alter report caps, output markers, verification-gate contracts, or
-  tool lists. The #41 charter passes (owner-directed, 2026-07-11) were the one sanctioned exception;
-  currently only #52 may touch them.
+  tool lists. The sanctioned exceptions are spent (#41 charter passes and #52's one clause swap, both
+  owner-directed and shipped); no open issue may touch them.
 - **No em-dashes anywhere** (owner, 2026-07-11): shipped text, scripts, manifests, PR bodies, and
   commits are em-dash free; machine-read markers use hyphen forms. Frozen archives (`docs/plans/`,
   `docs/specs/`) keep their original punctuation.

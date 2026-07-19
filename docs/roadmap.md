@@ -17,12 +17,12 @@ pick-up, into `docs/plans/`, and rides in the PR.
 
 ## Queue (in order)
 
-**The queue is active** (2026-07-19): the learnings lifecycle shipped in v1.13.1 and red-gate
-reflection ships in v1.13.2, followed by process-drift telemetry plus the full dry-run in v1.13.3.
+**The queue is active** (2026-07-19): the learnings lifecycle shipped in v1.13.1, red-gate
+reflection shipped in v1.13.2, and process-drift telemetry ships in v1.13.3. The full dry-run starts
+immediately after #82 merges.
 
 | Slot | Issue | What | Version | Effort · Risk | Why this order |
 |---|---|---|---|---|---|
-| 1 | **#82** process-drift telemetry | Track ship/scan process drift across features and run the full dry-run | v1.13.3 | TBD | Runs after #81 so the complete lifecycle can be exercised; **#79 and #81 dry-run AC deferred to the post-#82 full dry-run** |
 | ⏸ postponed | **#34** cross-vendor MoA proposers | Let the MoA council use OpenAI / DeepSeek / Grok / Gemini | - | - | Postponed (owner, 2026-07-10); **its prerequisite #65 has now shipped** (skills thinned; #34's new cross-vendor mechanics go into `moa.md` only). Also simplified by #35, and #43's shipped models.md xAI + platform-map groundwork overlaps it. Owner un-postpones when ready |
 
 ## Sequencing rules (standing)
@@ -67,16 +67,21 @@ reflection ships in v1.13.2, followed by process-drift telemetry plus the full d
 
 ## Shipped (roadmap-era)
 
+- **#82** process-drift telemetry: **v1.13.3** (2026-07-19). Ship close-out records a compact
+  `process:` clause on each feature's learnings-index line; scan `--refresh` trends shared friction
+  across features and proposes amendments at `>= 3`, but never applies them. The full dry-run,
+  including the deferred **#79 and #81 dry-run ACs**, runs immediately after merge.
+
 - **#81** stamped failure Reflection: **v1.13.2** (2026-07-19). Every local gate, review BLOCKER,
   remote-check, and plan-wrong red path writes a stamped Reflection before its fix loop; ship treats
   those lines as mandatory compound candidates and calls out recurrence. **#81 dry-run AC deferred to
-  the post-#82 full dry-run**, tracked in the v1.13.3 queue entry above.
+  the post-#82 full dry-run**, tracked in the #82 shipped entry above.
 
 - **#78 + #79 + #80 + #83** learnings lifecycle: **v1.13.1** (2026-07-19). Research stamps applicable
   learnings and the checker verifies them; lessons use causal WHEN to DO/AVOID to BECAUSE format with
   evidence counters and reinforce-not-duplicate behavior; scan promotes and retires rules on evidence;
   test-level, checker pre-mortem, and waiver-pointer polish complete the loop. **#79 dry-run AC deferred
-  to the post-#82 full dry-run**, tracked in the queue above.
+  to the post-#82 full dry-run**, tracked in the #82 shipped entry above.
 
 - **Witloop rebrand**: **v1.12.2**, PR #73 (2026-07-12, owner-directed, no issue number). The commercial
   rename: plugin id `wi` -> `wit` (commands `/wit:*` on Claude, `/wit-*` Copilot/Grok aliases, `$wit-*`

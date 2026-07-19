@@ -45,3 +45,21 @@ against it.
   delegation points only, never self-triggered mid-phase; wit's artifact formats always win.
 
 These skills auto-trigger from their `description` fields. When a user's request matches one, use it.
+
+## Cursor Cloud specific instructions
+
+This repo is the Witloop plugin source: Markdown skills/agents + Python 3 stdlib helper scripts. There is
+**no application server, build step, or database** — the "product" (the wit dev loop) runs inside an AI
+harness against a *target* repo, not from this repo. So the dev workflow here is validation + tests, which
+mirrors CI (`.github/workflows/validate.yml`):
+
+- Lint / validate gate: `python3 scripts/validate.py`
+- Tests: `python3 -m unittest discover -s tests` (stdlib `unittest`, not pytest; ~80 tests)
+
+Notes:
+- `pyyaml` is the only external dependency; the update script installs it. `validate.py` degrades to
+  reduced frontmatter checks without it, but CI installs it, so keep it present.
+- The helper scripts are stdlib-only and runnable directly, e.g. `python3 skills/add-issues/scripts/check_draft.py <draft.md>`
+  and `python3 skills/ship/scripts/check_tokens.py --init <tokens.md>`; these are the closest thing to a
+  runnable "app" in this repo.
+- `${CLAUDE_PLUGIN_ROOT}` in skill/script docs resolves to this repo root when working from a clone.

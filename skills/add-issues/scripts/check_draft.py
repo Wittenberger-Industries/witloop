@@ -4,8 +4,9 @@
 Checks (stdlib only, no PyYAML):
   1. OKF frontmatter block exists and declares a known issue_type.
   2. All required sections for that type are present.
-  3. Bug drafts have >= 1 acceptance-criteria checkbox naming a test
-     (skippable with --allow-no-test after an explicit user override).
+  3. Bug drafts have >= 1 acceptance-criteria checkbox that commits to a
+     new/automated/regression/unit/integration test (word-boundary match;
+     skippable with --allow-no-test after an explicit user override).
 
 Exit 0 = draft ok, exit 1 = problems (listed on stdout).
 """
@@ -28,6 +29,12 @@ REQUIRED = {
     "task": ["Summary", "Context", "Acceptance criteria"],
 }
 
+# Word-boundary commitment to a new/automated test — not the substring "test"
+# (which also matches contested / attestation / latest).
+NEW_AUTOMATED_TEST = re.compile(
+    r"(?i)\b(?:new|automated|regression|unit|integration)\s+tests?\b"
+)
+
 
 def acceptance_section(body: str) -> str:
     """Return the text of '## Acceptance criteria' up to the next H2 (or EOF)."""
@@ -35,6 +42,11 @@ def acceptance_section(body: str) -> str:
     if len(parts) < 2:
         return ""
     return re.split(r"(?m)^##\s", parts[1], maxsplit=1)[0]
+
+
+def names_new_automated_test(item: str) -> bool:
+    """True when *item* commits to a new automated test (skill / template bar)."""
+    return bool(NEW_AUTOMATED_TEST.search(item))
 
 
 def main() -> None:
@@ -60,7 +72,10 @@ def main() -> None:
         sys.exit("DRAFT CHECK FAILED:\n  - missing OKF frontmatter block (--- ... ---)")
     frontmatter, body = fm_match.group(1), text[fm_match.end():]
 
-    type_match = re.search(r"(?m)^issue_type:\s*([A-Za-z]+)", frontmatter)
+    # Optional YAML quotes: issue_type: Bug | "Bug" | 'Bug'
+    type_match = re.search(
+        r"""(?m)^issue_type:\s*["']?([A-Za-z]+)["']?""", frontmatter
+    )
     issue_type = type_match.group(1).lower() if type_match else ""
 
     if issue_type not in REQUIRED:
@@ -78,7 +93,7 @@ def main() -> None:
             boxes = re.findall(
                 r"(?m)^\s*-\s*\[[ xX]\]\s*(.+)$", acceptance_section(body)
             )
-            if not any("test" in item.lower() for item in boxes):
+            if not any(names_new_automated_test(item) for item in boxes):
                 errors.append(
                     "Bug needs >= 1 acceptance criterion naming a new automated test "
                     "(rerun with --allow-no-test only after an explicit user override)"

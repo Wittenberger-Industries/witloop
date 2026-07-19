@@ -224,10 +224,12 @@ findings with severity. Distilled from verification.md; the dossier tidy (ship:6
      Project-level files stay where they are: the whitelist is the flow reference's project-level list
      (dev: wit-directory.md's "Project-level memory" bullet; rpa: rpa-directory.md's "Project-level
      files" bullet. The RPA registries `rpa-constitution.md`, `sdd-template.md`, `inputs.md`,
-     `components.md`, `orchestrator.md` are project files, never strays). When in doubt the directory
-     reference wins; never sweep a file it marks project-level.
+     `components.md`, `orchestrator.md` are project files, never strays). `.wit/issues/` is add-issues
+     staging (wit-directory.md's separate bullet), never a stray — leave it alone. When in doubt the
+     directory reference wins; never sweep a file it marks project-level.
   2. *Prune the ephemera*: exactly the flow reference's list (dev: wit-directory.md's ephemera bullet;
-     rpa: rpa-directory.md's run-dossier bullet), nothing more. Their value must already be distilled:
+     rpa: rpa-directory.md's run-dossier bullet), nothing more. That list is feature-folder ephemera
+     only — never `.wit/issues/` (add-issues owns those drafts). Their value must already be distilled:
      ship:5 folded the review verdicts into `PR.md`'s Verification; research notes live on in the ADR
      and `spec.md`; anything still load-bearing is folded in first. Tracked ephemera: `git rm -f` (a
      plain `git rm` refuses: the ship:2 checker refreshed `verification.md` after its last commit).

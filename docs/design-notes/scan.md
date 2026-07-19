@@ -36,9 +36,13 @@ whose "why" is deleted instead of relocated loses its guard against future "simp
   feature can fill honest gaps; the confirmed intent is on record either way.
 - **Why one folded question round:** the greenfield questions merge into scan:4's constitution-confirm
   so the user answers once, not twice.
-- **Why the greenfield `.gitignore` names `.wit/features/*/.logs/`:** that dir is wit's redirected command
-  output (workflow.md's output house rule); seeding the ignore at scan time keeps the first build from
-  leaking caches, build artifacts, and command logs into `git status`.
+- **Why the greenfield `.gitignore` names `.wit/features/*/.logs/` and `.wit/issues/`:** the former is
+  wit's redirected command output (workflow.md's output house rule); the latter is add-issues'
+  transient draft staging. Seeding both at scan time keeps the first build / first issue-filing from
+  leaking caches, build artifacts, command logs, and drafts into `git status`. Belt-and-suspenders
+  only: `.logs/` and `.wit/issues/` are also self-gitignored (`*` in a dir-local `.gitignore`) when
+  the phase that creates them runs, so existing projects that never got a greenfield `.gitignore`
+  stay clean.
 
 ## scan:5 (plugin bootstrap)
 

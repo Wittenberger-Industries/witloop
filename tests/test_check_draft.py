@@ -104,11 +104,53 @@ class CheckDraftCliTests(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         self.assertIn("draft ok", r.stdout)
 
+    def test_bug_ok_quoted_issue_type(self):
+        """YAML-quoted issue_type values must parse (not 'got: none')."""
+        for quoted in ('issue_type: "Bug"', "issue_type: 'Bug'"):
+            with self.subTest(quoted=quoted):
+                draft = BUG_OK.replace("issue_type: Bug", quoted)
+                r = self._run(self._write(draft))
+                self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+                self.assertIn("draft ok", r.stdout)
+
     def test_bug_missing_new_test(self):
         r = self._run(self._write(BUG_NO_TEST))
         self.assertNotEqual(r.returncode, 0)
         self.assertIn("DRAFT CHECK FAILED", r.stdout)
         self.assertIn("new automated test", r.stdout)
+
+    def test_bug_rejects_test_substring_false_positives(self):
+        """Substring 'test' alone (contested / attestation / latest) is not enough."""
+        for criterion in (
+            "Behavior is contested and needs triage",
+            "Manual attestation of the fix in staging",
+            "Latest release still broken",
+        ):
+            with self.subTest(criterion=criterion):
+                draft = BUG_OK.replace(
+                    "- [ ] New test `tests/test_ship.py::test_example` "
+                    "fails on the bug and passes after the fix\n",
+                    f"- [ ] {criterion}\n",
+                )
+                r = self._run(self._write(draft))
+                self.assertNotEqual(r.returncode, 0, r.stdout + r.stderr)
+                self.assertIn("new automated test", r.stdout)
+
+    def test_bug_accepts_new_automated_test_variants(self):
+        for criterion in (
+            "New test `tests/test_ship.py::test_example` fails on the bug and passes after the fix",
+            "Add automated test `tests/foo.py::test_bar` that fails before the fix",
+            "Regression test covering the edge case fails on the bug and passes after",
+            "Unit test for the parser fails on the bug and passes after the fix",
+        ):
+            with self.subTest(criterion=criterion):
+                draft = BUG_OK.replace(
+                    "- [ ] New test `tests/test_ship.py::test_example` "
+                    "fails on the bug and passes after the fix\n",
+                    f"- [ ] {criterion}\n",
+                )
+                r = self._run(self._write(draft))
+                self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
 
     def test_bug_allow_no_test(self):
         r = self._run(self._write(BUG_NO_TEST), "--allow-no-test")

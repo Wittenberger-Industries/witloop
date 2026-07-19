@@ -35,9 +35,13 @@ Design rationale for this skill lives in the wit repo's `docs/design-notes/add-i
   user exactly what to fix.
 - Note `gh --version` once per session: type / parent / dependency flags need ≥ 2.94.0
   (see `${CLAUDE_PLUGIN_ROOT}/skills/add-issues/references/gh-metadata.md`).
-- `.wit/issues/` is transient staging and should be empty (gitignored; see wit-directory.md).
-  If a draft is sitting there, a previous run didn't finish - offer to resume it or discard it
-  before starting fresh.
+- Ensure `.wit/issues/` is self-gitignored before any draft lands (idempotent; same pattern as
+  `.logs/` in workflow.md):
+  `mkdir -p .wit/issues && printf '*\n' > .wit/issues/.gitignore`
+  Do not rely on a root `.gitignore` entry - scan only seeds that on greenfield setup. The
+  directory is transient staging and should be empty (see wit-directory.md). If a draft is
+  sitting there, a previous run didn't finish - offer to resume it or discard it before
+  starting fresh.
 
 ### 2. Classify and gather
 
@@ -82,9 +86,17 @@ Design rationale for this skill lives in the wit repo's `docs/design-notes/add-i
 
 ### 5. Publish and clean up
 
-- Strip the frontmatter to a temp body file (same awk pattern as ship), then:
-  `gh issue create --title … --body-file … [--type … --label … --milestone … --assignee …
-  --parent … --blocked-by …]`
+- Strip the draft's OKF frontmatter into a throwaway body file (dossier metadata, not issue
+  text — same CRLF-safe awk as `${CLAUDE_PLUGIN_ROOT}/skills/ship/SKILL.md` ship:7; inlined so
+  agents that only load add-issues never publish YAML), then create the issue:
+
+  ```bash
+  body=$(mktemp)
+  awk '{sub(/\r$/,"")} NR==1&&$0=="---"{f=1;next} f&&$0=="---"{f=0;next} !f' .wit/issues/<slug>.md > "$body"
+  gh issue create --title "…" --body-file "$body" [--type … --label … --milestone … --assignee …
+    --parent … --blocked-by …]
+  rm -f "$body"
+  ```
 - If a metadata flag fails: retry without it, log `skipped <capability> (<reason>)`, and try to
   set it post-create via `gh issue edit` where supported
   (`${CLAUDE_PLUGIN_ROOT}/skills/add-issues/references/gh-metadata.md` has the fallback map).

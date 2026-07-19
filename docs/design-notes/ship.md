@@ -65,6 +65,11 @@ rationale lives here, anchored by step. When editing the skill, keep this file i
   modifications.
 - **Why `cross-review.md` is plain-deleted:** it is written at ship:2 and typically never committed:
   untracked, so `git rm` has no pathspec to match. Same for `.logs/` (self-gitignored by design).
+- **Why `.wit/issues/` is not on the prune list:** that dir is add-issues draft staging, not feature
+  ephemera. add-issues deletes drafts on publish/abort and keeps them only when `gh issue create`
+  fails (resume). Ship's tidy prunes exactly wit-directory.md's ephemera bullet; putting issues
+  there would plain-delete an unpublished draft during a normal `/wit:dev` ship. The two skills are
+  separate entry points — never fold add-issues cleanup into ship.
 - **Why the manifest is read from the directory reference, not memory:** the dossier is the durable
   record; `PR.md` was written in ship:5, so the tidy commit is the one that carries the complete
   dossier into the PR.

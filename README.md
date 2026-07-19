@@ -1,7 +1,7 @@
 ---
 type: Readme
 title: "Witloop: a cross-platform agentic dev loop"
-description: An opinionated, low-token dev loop (scan/dev/rpa) that runs on Claude Code, Codex CLI, Copilot CLI, and Grok Build from one source.
+description: An opinionated, low-token dev loop (scan/dev/rpa/add-issues) that runs on Claude Code, Codex CLI, Copilot CLI, and Grok Build from one source.
 timestamp: 2026-06-14
 tags: [witloop, readme, overview]
 ---
@@ -18,13 +18,14 @@ its own.
 | **`/wit:scan`** | Documents an existing project (incl. a mermaid architecture diagram) and bootstraps wit (constitution + optional plugin installs). |
 | **`/wit:dev "idea"`** | Brainstorms a feature with you, designs, confirms architecture + design at one gate, then builds and ships hands-off to an open PR. Add `--auto` to auto-approve the gate. |
 | **`/wit:rpa "pdd"`** | Parses a PDD (markitdown), refines the TO-BE, writes an SDD + architecture + assumptions, then builds a REFramework or Maestro solution via the UiPath skills (XAML-only or coded, your choice at the design gate) to a PR. One run per PDD (1..N processes); `--auto` supported. |
+| **`/wit:add-issues`** | Files a well-formed GitHub issue (Bug / Feature / Task) with typed body, labels, and relationships. |
 
-On Claude the commands are `/wit:scan`, `/wit:dev`, `/wit:rpa`; on Copilot they read `/wit-scan`, `/wit-dev`,
-`/wit-rpa`, on Codex `$wit-scan`, `$wit-dev`, `$wit-rpa`, and on Grok `/scan`, `/dev`, `/rpa` (or the `/wit-*`
-aliases) - flat aliases scan's bootstrap offers to install
-to `~/.agents/skills/` (the raw plugin forms `/wit dev` and `$dev` always work), or, on any harness,
-auto-trigger from natural language. Only these three entry points surface as commands; the phase skills
-are hidden (`user-invocable: false`) and run inside the loop.
+On Claude the commands are `/wit:scan`, `/wit:dev`, `/wit:rpa`, `/wit:add-issues`; on Copilot they read
+`/wit-scan`, `/wit-dev`, `/wit-rpa`, `/wit-add-issues`, on Codex `$wit-scan`, `$wit-dev`, `$wit-rpa`,
+`$wit-add-issues`, and on Grok `/scan`, `/dev`, `/rpa`, `/add-issues` (or the `/wit-*` aliases) - flat
+aliases scan's bootstrap offers to install to `~/.agents/skills/` (the raw plugin forms `/wit dev` and
+`$dev` always work), or, on any harness, auto-trigger from natural language. Only these four entry points
+surface as commands; the phase skills are hidden (`user-invocable: false`) and run inside the loop.
 
 ## Install
 
@@ -45,9 +46,10 @@ its default component paths):
 copilot plugin marketplace add Wittenberger-Industries/witloop
 copilot plugin install wit@witloop
 ```
-Copilot prefixes plugin skills automatically (`/wit scan`, `/wit dev`, `/wit rpa`); the first `/wit scan`
-offers to install the one-token aliases `/wit-scan`, `/wit-dev`, `/wit-rpa` (a one-time copy to
-`~/.agents/skills/`, which Codex reads too; there they invoke as `$wit-scan`, `$wit-dev`, `$wit-rpa`).
+Copilot prefixes plugin skills automatically (`/wit scan`, `/wit dev`, `/wit rpa`, `/wit add-issues`); the
+first `/wit scan` offers to install the one-token aliases `/wit-scan`, `/wit-dev`, `/wit-rpa`,
+`/wit-add-issues` (a one-time copy to `~/.agents/skills/`, which Codex reads too; there they invoke as
+`$wit-scan`, `$wit-dev`, `$wit-rpa`, `$wit-add-issues`).
 
 **Migrating from `wi` (pre-1.12.2)**: the plugin id changed `wi` -> `wit` and the marketplace is now
 `witloop`, so updates don't carry across: uninstall the old plugin (`/plugin uninstall wi@wi` on Claude,
@@ -73,7 +75,8 @@ enabled = ["wit"]
 ```
 Then install the flat `wit-*`
 aliases into `~/.agents/skills/` (scan's bootstrap offers the copy): the bare entry points are `/scan`,
-`/dev`, `/rpa`, and the aliases add the collision-free `/wit-scan`, `/wit-dev`, `/wit-rpa`. Persistence uses
+`/dev`, `/rpa`, `/add-issues`, and the aliases add the collision-free `/wit-scan`, `/wit-dev`, `/wit-rpa`,
+`/wit-add-issues`. Persistence uses
 Grok's native `/goal`, which is **model-judged** (the agent self-completes via `update_goal`), not a hard
 predicate, so treat it as Copilot-class autonomy. Handoff templates and the warning live in
 `references/keep-alive.md`; tool mappings and the plugin-root resolution rule in
@@ -101,6 +104,7 @@ Tool-name mappings live in `references/codex-tools.md`, `references/copilot-tool
 /wit:dev "idea"         -> brainstorm (you) -> research -> plan -> check -> DESIGN GATE (you) -> build -> check -> ship -> PR
 /wit:dev "idea" --auto  -> same, gate auto-approved & recorded, fully hands-off
 /wit:rpa "PDD.docx"     -> ingest(markitdown) -> refine TO-BE (you) -> SDD -> check -> DESIGN GATE (you) -> REFramework/Maestro build -> check -> PR
+/wit:add-issues         -> classify -> draft (.wit/issues/) -> confirm -> gh issue create -> delete draft
 ```
 
 The same machine, two domains; the flows differ until the design gate, then share the spine:
@@ -185,16 +189,17 @@ title / description / timestamp), so each phase (and `validate.py`) can parse th
 | `scan` | `/wit:scan` | Document an existing project and bootstrap wit; `--refresh` = drift check + learnings consolidation |
 | `dev` | `/wit:dev "idea"` | The interactive entry: brainstorm, then hand off |
 | `rpa` | `/wit:rpa "pdd"` | RPA entry: ingest PDD -> refine TO-BE -> SDD -> REFramework/Maestro build via UiPath skills -> PR |
+| `add-issues` | `/wit:add-issues` | File a well-formed GitHub issue (Bug / Feature / Task) via gh |
 | `brainstorm` | via `dev` | The requirements dialogue (the one interactive phase) + glossary upkeep |
 | `research` | via `dev` | The design half: research -> plan -> design gate (your confirmation) |
 | `plan` | via `research` | spec + tasks + pitfalls (+ ADR) |
 | `build` | post-gate | worktree + parallel waves of task subagents (TDD) |
 | `ship` | post-gate | gate -> review -> docs-sync -> learnings -> PR.md -> tidy + tokens -> open PR -> checklist |
 
-Only `scan`/`dev`/`rpa` are user-invocable commands; the five phase skills carry `user-invocable: false`;
-hidden from every slash picker, reachable through the loop and by natural language ("ship it"). On
-Copilot/Codex the entry points also install as flat one-token aliases (`/wit-dev`, `$wit-dev`, …) from
-`references/skill-aliases/`.
+Only `scan`/`dev`/`rpa`/`add-issues` are user-invocable commands; the five phase skills carry
+`user-invocable: false`; hidden from every slash picker, reachable through the loop and by natural
+language ("ship it"). On Copilot/Codex the entry points also install as flat one-token aliases
+(`/wit-dev`, `$wit-dev`, `/wit-add-issues`, …) from `references/skill-aliases/`.
 
 Agents: **task-runner** (executes one build task in isolation), **researcher** (picks the approach in the
 autonomous phase), and **checker** (read-only verification working backward from the feature's acceptance
@@ -316,9 +321,9 @@ If none are installed, wit still runs the whole loop on its own.
 - **One-token entry commands on Copilot/Codex** (v1.2.0) shipped: Copilot auto-prefixes plugin skills
   (`/wit dev`; the prefix isn't configurable), so wit ships flat forwarding aliases
   (`references/skill-aliases/`) that scan's bootstrap offers to copy to `~/.agents/skills/`: the entry
-  points read `/wit-scan`, `/wit-dev`, `/wit-rpa` on Copilot and `$wit-*` on Codex; `/wit:*` unchanged on
-  Claude. The five phase skills are now `user-invocable: false`: hidden from slash pickers everywhere,
-  still natural-language- and orchestrator-invocable.
+  points read `/wit-scan`, `/wit-dev`, `/wit-rpa`, `/wit-add-issues` on Copilot and `$wit-*` on Codex;
+  `/wit:*` unchanged on Claude. The five phase skills are now `user-invocable: false`: hidden from slash
+  pickers everywhere, still natural-language- and orchestrator-invocable.
 - **Tiered models + cross-provider review** (v1.1.0) shipped (renamed to **tiered model routing** in
   v1.3.0): an optional per-agent model config (today `.wit/models.md`) assigns a model per dispatched
   agent (`wit-code-checker`, `wit-researcher`, `wit-task-runner`; the `orchestrator` tier

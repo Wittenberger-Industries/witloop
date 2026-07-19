@@ -27,7 +27,7 @@ read the file by its path under that root. This covers cross-skill refs such as 
 | parallel waves | `spawn_agent` bounded by `[agents] max_threads` (default 6); inline the task-runner/researcher prompt; do not rely on named-role dispatch |
 | TodoWrite | `update_plan` |
 | WebFetch / WebSearch | `web_search` |
-| invoke a wit skill | skills load natively: `$skill-name` or `/skills` (entry points also as `$wit-scan`/`$wit-dev`/`$wit-rpa` once scan's bootstrap installs the flat aliases to `~/.agents/skills/`); just follow its instructions |
+| invoke a wit skill | skills load natively: `$skill-name` or `/skills` (entry points also as `$wit-scan`/`$wit-dev`/`$wit-rpa`/`$wit-add-issues` once scan's bootstrap installs the flat aliases to `~/.agents/skills/`); just follow its instructions |
 | resolve a skill's `SKILL.md` path (dispatch pointer for pinned runners) | it is under the skill's native install dir (`~/.agents/skills/<skill>/SKILL.md`, or the plugin/clone dir wit was installed from); the orchestrator resolves it once and passes it in the `[frontend]`-style dispatch |
 
 ## /goal keep-alive

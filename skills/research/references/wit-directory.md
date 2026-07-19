@@ -26,6 +26,7 @@ reasoned about. Keep every file small and current; these are working artifacts, 
 ├── learnings/              # substantial per-feature learnings, each its own .md (ship; indexed above).
 ├── roadmap.md              # optional. Ordered list of features for a larger effort.
 ├── models.md               # tiered model routing: model assignments (optional; references/models.md); written+committed at first dev/rpa run
+├── issues/                 # add-issues transient drafts only (.gitignore *); deleted on publish/abort
 └── features/
     └── 0001-<slug>/        # one folder per feature; NNNN- global ordinal (creation order) + kebab slug
         ├── progress.md     # the state machine for this feature: single source of truth
@@ -69,15 +70,17 @@ reasoned about. Keep every file small and current; these are working artifacts, 
 - **One writer per phase.** A phase owns its outputs; later phases read but don't silently rewrite them.
 - **No strays.** Everything feature-specific lives under `features/<slug>/`, never loose in `.wit/`. If a phase
   needs a scratch file, it goes in the slug folder (ship sweeps and deletes strays at the dossier tidy).
-- **`research/`, `verification.md`, `cross-review.md`, and `.logs/` are ephemeral.** Working notes exist to produce
-  the ADR and spec; the checker's `verification.md` feeds the design gate (plan mode) and the ship review
-  (result mode); `cross-review.md` is the cross-provider diff review's output (ship, only when configured).
-  Their verdicts + any waived findings fold into `PR.md` (ship:5), then the dossier tidy (ship:6) prunes all
-  four before the PR (unless the constitution says keep them). This bullet is ship's prune list for the
-  dev flow: the tidy prunes exactly what it names. `.logs/` holds redirected command output (workflow.md's
-  output house rule); its own `.gitignore` (containing `*`) keeps it out of `git status` and every dossier
-  commit, so it is never tracked; the tidy plain-deletes the directory. After `done`, a feature folder
-  holds exactly the seven-file dossier: progress, brief, spec, tasks, pitfalls, tokens, PR.
+- **`research/`, `verification.md`, `cross-review.md`, `.logs/`, and `.wit/issues/` are ephemeral.**
+  Working notes exist to produce the ADR and spec; the checker's `verification.md` feeds the design gate
+  (plan mode) and the ship review (result mode); `cross-review.md` is the cross-provider diff review's
+  output (ship, only when configured). Their verdicts + any waived findings fold into `PR.md` (ship:5),
+  then the dossier tidy (ship:6) prunes all four before the PR (unless the constitution says keep them).
+  This bullet is ship's prune list for the dev flow: the tidy prunes exactly what it names. `.logs/` holds
+  redirected command output (workflow.md's output house rule); its own `.gitignore` (containing `*`) keeps
+  it out of `git status` and every dossier commit, so it is never tracked; the tidy plain-deletes the
+  directory. `.wit/issues/` holds add-issues drafts only until publish or abort (gitignored `*`; never
+  committed). After `done`, a feature folder holds exactly the seven-file dossier: progress, brief, spec,
+  tasks, pitfalls, tokens, PR.
 - **Project-level memory persists & compounds.** `constitution.md`, `repo-map.md`, `overview.md`,
   `architecture.md`, `glossary.md`, `adr/`, `roadmap.md`, `models.md`, `learnings.md`, and `learnings/` belong to the
   project, never pruned. Each feature reads them at the start and ship writes back into them, so the project

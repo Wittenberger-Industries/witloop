@@ -58,7 +58,7 @@ passes: the **feature-level result check**, every `spec.md` acceptance criterion
 (ADRs, constitution) confirmed delivered and **wired**, not just present (the checker reads the actual
 repo), and the **line-level review** of the branch diff, from the template path above or the checker's
 built-in review when `none`. Include the applicable learnings from `progress.md`'s `applicable
-learnings:` Log line (same source as research:1). Findings from both passes land in `verification.md` in the
+learnings:` Log line (same source as research:2). Findings from both passes land in `verification.md` in the
 BLOCKER/WARNING/INFO taxonomy. This dispatch is unconditional (on the `checker` tier from
 `progress.md`'s resolved-routing block; models.md's resolve-once rule; else inherit); no
 cross-provider configuration demotes or replaces it.

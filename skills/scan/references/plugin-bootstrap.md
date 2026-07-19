@@ -33,20 +33,24 @@ is available on xAI's plugin marketplace as well as via Claude-plugin compatibil
 
 ## Entry-command aliases (Copilot / Codex / Grok)
 
-On Claude Code the plugin namespace already gives `/wit:scan`, `/wit:dev`, `/wit:rpa`; skip this section.
-On Copilot CLI the plugin prefix renders the entry points as `/wit scan`, `/wit dev`, `/wit rpa`, and on
-Codex they invoke as `$scan`, `$dev`, `$rpa`; on Grok Build they invoke as bare `/scan`, `/dev`, `/rpa`
-(Grok qualifies clashes by **scope**, `/user:scan`, not `/wit:scan`, and a built-in of the same name wins).
-wit ships flat **forwarding aliases** that read as one token: `/wit-scan`, `/wit-dev`, `/wit-rpa` (Copilot /
-Grok) and `$wit-scan`, `$wit-dev`, `$wit-rpa` (Codex), which are also the collision-free branded form on Grok.
+On Claude Code the plugin namespace already gives `/wit:scan`, `/wit:dev`, `/wit:rpa`, `/wit:add-issues`;
+skip this section.
+On Copilot CLI the plugin prefix renders the entry points as `/wit scan`, `/wit dev`, `/wit rpa`,
+`/wit add-issues`, and on Codex they invoke as `$scan`, `$dev`, `$rpa`, `$add-issues`; on Grok Build they
+invoke as bare `/scan`, `/dev`, `/rpa`, `/add-issues` (Grok qualifies clashes by **scope**, `/user:scan`,
+not `/wit:scan`, and a built-in of the same name wins).
+wit ships flat **forwarding aliases** that read as one token: `/wit-scan`, `/wit-dev`, `/wit-rpa`,
+`/wit-add-issues` (Copilot / Grok) and `$wit-scan`, `$wit-dev`, `$wit-rpa`, `$wit-add-issues` (Codex),
+which are also the collision-free branded form on Grok.
 
 As part of the same offer below, ask once whether to install them: copy each directory under
-`${CLAUDE_PLUGIN_ROOT}/references/skill-aliases/` (i.e. `wit-scan/`, `wit-dev/`, `wit-rpa/`) into
-`~/.agents/skills/`, the shared flat-skills directory these harnesses read (Copilot, Codex, and Grok Build
-all scan it; never a harness's own managed dir like `~/.grok/skills/`; create it if absent; overwriting an
-existing `wit-*` alias there is fine, they are wit's own forwarders). The aliases are version-independent
-(they forward to whatever wit plugin is installed), so this is a one-time copy per machine, not a
-per-update chore. Declining costs nothing: the plugin forms keep working.
+`${CLAUDE_PLUGIN_ROOT}/references/skill-aliases/` (i.e. `wit-scan/`, `wit-dev/`, `wit-rpa/`,
+`wit-add-issues/`) into `~/.agents/skills/`, the shared flat-skills directory these harnesses read
+(Copilot, Codex, and Grok Build all scan it; never a harness's own managed dir like `~/.grok/skills/`;
+create it if absent; overwriting an existing `wit-*` alias there is fine, they are wit's own
+forwarders). The aliases are version-independent (they forward to whatever wit plugin is installed), so
+this is a one-time copy per machine, not a per-update chore. Declining costs nothing: the plugin forms
+keep working.
 
 ## The offer
 

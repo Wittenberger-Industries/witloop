@@ -32,10 +32,12 @@ against it.
 - Start a feature: the `dev` skill (`/wit:dev` on Claude; `/wit-dev` on Copilot / `$wit-dev` on Codex once
   scan's bootstrap has installed the flat aliases into `~/.agents/skills/`; the raw plugin forms
   `/wit dev` and `$dev` always work; or describe the feature and let it auto-trigger).
+- File a GitHub issue: the `add-issues` skill (`/wit:add-issues` on Claude; `/wit-add-issues` on
+  Copilot / Grok; `$wit-add-issues` on Codex once aliases are installed).
 - Bootstrap a repo first with the `scan` skill.
-- Only scan/dev/rpa are user-facing commands. The phase skills (brainstorm, research, plan, build, ship)
-  carry `user-invocable: false`; hidden from slash pickers, still invoked by the orchestrating skill and
-  by natural language ("ship it").
+- Only scan/dev/rpa/add-issues are user-facing commands. The phase skills (brainstorm, research, plan,
+  build, ship) carry `user-invocable: false`; hidden from slash pickers, still invoked by the
+  orchestrating skill and by natural language ("ship it").
 - Persistence: wit hands off to a keep-alive loop at the end of brainstorm: Claude/Codex use built-in
   `/goal`; Grok Build uses its native (model-judged) `/goal`; Copilot uses Autopilot flags (see the tool
   map). wit runs without it too, just less robustly.

@@ -54,7 +54,9 @@ Plus a plugin check (scan:5) that may install the skills wit delegates to.
    confirmed answers into `repo-map.md` (`Kind: greenfield`) and seed `constitution.md` from them; skip
    `overview.md`. Anything the user genuinely can't answer → `UNKNOWN - ask`; don't invent it. Also drop
    a stack-appropriate `.gitignore` (caches, build artifacts, `.wit/features/*/.logs/`: wit's redirected
-   command output).
+   command output; `.wit/issues/`: add-issues transient drafts). Both of those dirs are also
+   self-gitignored (`*` in a dir-local `.gitignore`) when build / add-issues create them - the
+   greenfield entry is belt-and-suspenders for projects that have not run those skills yet.
 
 3. **Classify frontend / backend / both.** A UI framework in `package.json` or a `components/` tree ⇒
    frontend present. Record it; build routes `[frontend]` tasks to a design skill.

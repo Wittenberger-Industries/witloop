@@ -135,6 +135,18 @@ Two tiers, one index:
    ## Gotchas / patterns to reuse
    ```
 
+   Phrase each behavioral bullet as a causal triple where the lesson is behavioral; keep prose for
+   narrative context:
+
+   `WHEN <context> → DO/AVOID <action> → BECAUSE <observed outcome>`
+
+   Example under Gotchas:
+
+   - WHEN parallel tasks share a file → AVOID scheduling them in the same wave → BECAUSE the worktree merge fights the second writer
+
+   For index hooks: where natural, compress to `WHEN <context> → AVOID <action>` so the hook alone is
+   actionable at recall.
+
 2. **The index `.wit/learnings.md`** (create lazily) is updated **every feature**: it is how later
    phases recall learnings without opening every file. One line per learning, hook included:
 
@@ -151,6 +163,19 @@ Two tiers, one index:
    - [<feature title>](learnings/<slug>.md): <one-line hook, the gotcha/pattern in ~10 words>
    - <slug> (<YYYY-MM-DD>): nothing above the bar
    ```
+
+   **Index rule (before adding a line):** check whether the new learning matches an existing hook
+   (same WHEN-context). Match → do not duplicate the detail file: increment or append
+   `(seen: N, last: NNNN-<slug>)` on the original index line, sharpen its wording if this cycle refined
+   it, and write the current feature's mandatory index line as a reference:
+   `- <slug> (<YYYY-MM-DD>): reinforces <earlier-slug>'s <hook>`.
+   New nuance goes into the original detail file. The reinforce line stands alone as the feature's
+   index line only when the reinforcement is its sole harvest; a feature that also produced a
+   genuinely new lesson gets its normal line (± detail file), with the `reinforces …` note appended
+   to that line. No match → current behavior (new line ± detail file).
+
+   If the checker flagged a learning as violated-again this run, sharpen the existing hook's wording
+   instead of adding a second lesson for the same WHEN.
 
    A feature with no substantial learnings gets the one-liner directly in the index and **no** detail
    file.

@@ -96,7 +96,9 @@ reasoned about. Keep every file small and current; these are working artifacts, 
   re-confirms a lesson; `reinforces <slug>'s <hook>` lines satisfy the close-out checklist without
   duplicating a detail file. Timing note: ship commits a feature's learnings (+ its index line) on the
   **feature branch**, so main's `learnings.md` lacks in-flight features' lines until their PRs merge;
-  `scan --refresh` on main reads that as normal lag, not drift.
+  `scan --refresh` on main reads that as normal lag, not drift. Index lines may also carry an optional
+  ` · process: clean` or ` · process: <friction>` suffix written at ship close-out; tidy/checklist treat
+  it as part of the line, not a stray.
 
 ## OKF frontmatter & conventions
 

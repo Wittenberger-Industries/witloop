@@ -127,6 +127,11 @@ If `.wit/learnings.md` exists (dev or rpa projects alike), give the compounding 
    then tombstone the line as `- <hook> → enforced by <check> (<date>)` and delete the detail file.
 4. **Target:** keep the index readable at a glance (roughly ≤30 lines). If it's bigger after
    consolidation, the bar for "worth a line" in ship:4 was too low; note that in the report.
+5. **Process-drift trend:** scan index lines' `process:` clauses. The same friction appearing in
+   ~3 features (or more) → surface it in the refresh report with a concrete proposed amendment
+   (example: "checker round budget too small for this repo - raise to 3 in constitution?" /
+   "remote checks flaky - add the CI wait note to repo-map?"). Propose, never self-apply;
+   constitution stays user-owned. Fewer than 3 shared frictions → stay silent on process drift.
 
 Glossary gets the same light pass: merge duplicate/aliased terms, drop ones the codebase no longer uses.
 ADRs are **immutable history, never pruned** (supersede with a new ADR instead).
@@ -135,7 +140,7 @@ ADRs are **immutable history, never pruned** (supersede with a new ADR instead).
 
 Commit what drifted (`chore(wit): scan refresh`). Then report, 3-6 lines: what drifted and was fixed
 (commands, diagram, facts), contradictions flagged for the user, learnings merged/promoted/pruned
-(counts), or "no drift - scan is current."
+(counts), process-drift trends surfaced (if any), or "no drift - scan is current."
 
 ## `repo-map.md` template
 

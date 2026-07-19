@@ -50,8 +50,9 @@ Design rationale for this charter lives in the wit repo's `docs/design-notes/wit
 ## Modes
 
 - **`plan`**: *before* the design gate. Read `brief.md`, `spec.md`, `tasks.md`, `pitfalls.md`,
-  `constitution.md`, `glossary.md`, and the relevant ADRs. The question: **will this plan, built exactly as
-  written, deliver the feature?**
+  `constitution.md`, `glossary.md`, the relevant ADRs, and **applicable learnings from the dispatch**
+  (`progress.md`'s `applicable learnings:` line, or an explicit "none applicable"). The question: **will
+  this plan, built exactly as written, deliver the feature?**
 - **`result`**: at ship, *before* the PR. Two sequential passes, in order:
   1. **Feature-level pass.** Read the diff / built tree and `spec.md`'s acceptance criteria + locked
      decisions (ADRs, constitution). The question: **did the build actually satisfy them: wired, not
@@ -84,9 +85,17 @@ generated REFramework project.
    a pass.
 2. **Build the coverage matrix.** Every `spec.md` acceptance criterion, applicable constitution rule, ADR
    decision, glossary term that must be honored, **Runtime State Inventory** row (rename/migration
-   features), and `pitfalls.md` entry must map to a covering task (plan) or a covering change (result).
-   An unmapped item is a finding. (Prohibitive constitution rules, the Simplicity constraints, don't map
-   to a task; they're verified in (4), not here.) Put the matrix in your report.
+   features), `pitfalls.md` entry, and **applicable learning named in the dispatch** (from
+   `progress.md`'s `applicable learnings:` line; or an explicit "none applicable") must map to a
+   covering task (plan) or a covering change (result). An unmapped item is a finding. **Learnings
+   are the exception to the mapping rule:** "covered" for a learning means the plan or diff
+   **honors** it - no covering task is required. A plan or diff that hits a learning's context and
+   ignores its action is a finding with evidence (the hook + offending task # / `file:line`);
+   severity **WARNING**; a learning that does not apply to this feature passes with a one-line note
+   in the matrix. If the lesson was already promoted to a
+   constitution rule, the existing constitution row makes it a **BLOCKER** - no new severity logic.
+   (Prohibitive constitution rules, the Simplicity constraints, don't map to a task; they're verified
+   in (4), not here.) Put the matrix in your report.
 3. **Hunt silent scope-reduction.** Scan the tasks / diff for
    "v1 / simplified / static for now / stub / mock / wire later / TODO" against the locked decisions. A
    decision quietly downgraded to a stub is a **BLOCKER**, never a soft note.
@@ -100,6 +109,9 @@ generated REFramework project.
 5. **Stay adversarial.** Assume the plan / result is flawed until coverage proves otherwise. Credit only
    verifiable coverage, never stated intent: "this will handle auth" is not coverage; the auth check in a
    named task or a diff hunk is. This extends wit's verification iron-law: evidence before assertions.
+   **Pre-mortem (plan mode):** assume the build stalled mid-implementation; name the plan line that
+   caused it - an untestable Verify, a hidden file overlap between parallel tasks, or a missing
+   dependency edge. Findings take the normal severities.
 6. **Watch the ceilings** (plan mode). Flag any task-unit that won't fit a fresh context window: rough
    ceiling ~5-8 files or a sprawling multi-concern change in one task.
 7. **Frontend delegation** (result mode). If the feature shipped UI from `[frontend]` tasks, confirm

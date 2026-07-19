@@ -17,13 +17,12 @@ pick-up, into `docs/plans/`, and rides in the PR.
 
 ## Queue (in order)
 
-**The queue is active** (2026-07-19): the learnings lifecycle ships in v1.13.1, followed by red-gate
-reflection in v1.13.2 and process-drift telemetry plus the full dry-run in v1.13.3.
+**The queue is active** (2026-07-19): the learnings lifecycle shipped in v1.13.1 and red-gate
+reflection ships in v1.13.2, followed by process-drift telemetry plus the full dry-run in v1.13.3.
 
 | Slot | Issue | What | Version | Effort · Risk | Why this order |
 |---|---|---|---|---|---|
-| 1 | **#81** stamped failure Reflection | Add a stamped Reflection at every red ship gate | v1.13.2 | TBD | Builds on the v1.13.1 learnings lifecycle before telemetry measures process drift |
-| 2 | **#82** process-drift telemetry | Track ship/scan process drift across features and run the full dry-run | v1.13.3 | TBD | Runs after #81 so the complete lifecycle can be exercised; **#79 dry-run AC deferred to the post-#82 full dry-run** |
+| 1 | **#82** process-drift telemetry | Track ship/scan process drift across features and run the full dry-run | v1.13.3 | TBD | Runs after #81 so the complete lifecycle can be exercised; **#79 and #81 dry-run AC deferred to the post-#82 full dry-run** |
 | ⏸ postponed | **#34** cross-vendor MoA proposers | Let the MoA council use OpenAI / DeepSeek / Grok / Gemini | - | - | Postponed (owner, 2026-07-10); **its prerequisite #65 has now shipped** (skills thinned; #34's new cross-vendor mechanics go into `moa.md` only). Also simplified by #35, and #43's shipped models.md xAI + platform-map groundwork overlaps it. Owner un-postpones when ready |
 
 ## Sequencing rules (standing)
@@ -67,6 +66,11 @@ reflection in v1.13.2 and process-drift telemetry plus the full dry-run in v1.13
   groundwork already covers the models.md xAI entry + the platform model map.
 
 ## Shipped (roadmap-era)
+
+- **#81** stamped failure Reflection: **v1.13.2** (2026-07-19). Every local gate, review BLOCKER,
+  remote-check, and plan-wrong red path writes a stamped Reflection before its fix loop; ship treats
+  those lines as mandatory compound candidates and calls out recurrence. **#81 dry-run AC deferred to
+  the post-#82 full dry-run**, tracked in the v1.13.3 queue entry above.
 
 - **#78 + #79 + #80 + #83** learnings lifecycle: **v1.13.1** (2026-07-19). Research stamps applicable
   learnings and the checker verifies them; lessons use causal WHEN to DO/AVOID to BECAUSE format with

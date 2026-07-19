@@ -84,8 +84,13 @@ the checker dispatch above ran regardless.
 Findings from all layers feed the same loop: a BLOCKER (an unmet criterion, a decision silently
 reduced to a stub, a correctness bug in the diff) sends the feature **back to build**,
 **max 2 review→fix rounds** shared across all of it; whatever remains goes with its severity into `PR.md`'s
-Verification. A BLOCKER from any layer blocks the PR; ship never opens the PR on a feature
-wit-code-checker says isn't delivered. `cross-review.md` is ephemeral (pruned in ship:6, after ship:5
+Verification. **Before each fix round**, append one stamped Log line to `progress.md` per BLOCKER:
+
+`- <ts> **Reflection** <finding>: <what went wrong, one clause> - earlier catch: <phase | none>`
+
+(`<ts>` from the OS clock; `<finding>` is the BLOCKER summary; `earlier catch` is the phase that
+should have caught it - research, plan, build, or `none`.) Then loop back to build. A BLOCKER from any
+layer blocks the PR; ship never opens the PR on a feature wit-code-checker says isn't delivered. `cross-review.md` is ephemeral (pruned in ship:6, after ship:5
 distills it into `PR.md`). Address findings before proceeding; note anything deliberately deferred.
 A WARNING carried into `PR.md` as waived or deferred requires a pointer - a `roadmap.md` line or a
 GitHub issue (via `/wit:add-issues`) - not prose alone. Record the pointer in Verification.
@@ -119,6 +124,10 @@ time if known up front*:
 - a non-obvious, reusable pattern or gotcha (stack quirk, CI surprise, test-harness trap).
 
 Do **not** record what's already obvious from the code, the constitution, or the PR ("we added X").
+
+`progress.md` **Reflection** lines from this run are mandatory candidate lessons. A Reflection that
+repeats a previous feature's reflection (visible via the learnings index) is called out as recurring -
+prime promotion material for the counters lifecycle.
 
 Two tiers, one index:
 1. **Substantial learnings** get their own file `.wit/learnings/<slug>.md` (create the dir lazily):
@@ -340,9 +349,15 @@ and proceed to cleanup; the remote-checks box below passes on that recorded subs
 - **Red**: **the run is not done and the keep-alive condition is not satisfied.** Pull the failing
   logs to a file, not into context (`gh run view <run-id> --log-failed >
   .wit/features/<slug>/.logs/ci-<run-id>.txt 2>&1`; an external check via its details URL), read the
-  failing lines by grep/tail, and diagnose. The worktree still exists (cleanup hasn't run) so fix
-  there, commit, push, re-watch. **Max 2 remote-fix rounds**; a genuine flake (runner died, transient
-  network, timeout with no log) may be re-run without consuming a round. Budget exhausted:
+  failing lines by grep/tail, and diagnose. **Before the fix loop**, append one stamped Log line to
+  `progress.md` per **distinct** failure (not per re-run of the same check):
+
+  `- <ts> **Reflection** <check that failed>: <what went wrong, one clause> - earlier catch: <phase | none>`
+
+  (`<ts>` from the OS clock; `earlier catch` is the phase that should have caught it - research, plan,
+  build, or `none`.) A genuine flake (runner died, transient network, timeout with no log) re-run gets
+  **no** Reflection and does not consume a round. The worktree still exists (cleanup hasn't run) so fix
+  there, commit, push, re-watch. **Max 2 remote-fix rounds**. Budget exhausted:
   interactive → present the concrete failures and let the user decide (keep fixing, or accept red →
   record `remote checks: red - accepted by user (<reason>)` in `progress.md`'s Decisions); `--auto` →
   hold the run open: log the failures, Phase stays `ship`, keep the worktree; the keep-alive loop

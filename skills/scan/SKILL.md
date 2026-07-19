@@ -115,13 +115,16 @@ Re-stamp `repo-map.md` (`scanned <today>, refreshed`). If the **Kind or core sta
 If `.wit/learnings.md` exists (dev or rpa projects alike), give the compounding memory a maintenance pass:
 
 1. **Dedupe:** index lines (or detail files) describing the same gotcha → merge into one, keep the
-   clearest hook, fix the links.
-2. **Promote:** a learning that has recurred across features (or reads as a standing rule, not an
-   incident) → fold the rule into its source of truth (`constitution.md`, user-owned: confirm with the
-   user; `repo-map.md`; or `glossary.md`), then shrink the index line to a tombstone:
-   `- <hook> → promoted to constitution (<date>)`. Delete the detail file once promoted.
-3. **Prune stale:** the code/tool the learning warns about is gone (verify against the repo, not memory)
-   → delete the detail file and its index line.
+   clearest hook, fix the links. Match on **WHEN-context** (the situation the lesson fires in), not
+   on surface wording alone.
+2. **Promote:** use the index counter as promotion evidence - promote at `seen >= 3` (`>= 2` for
+   rule-shaped lessons). Fold the rule into its source of truth (`constitution.md`, user-owned:
+   confirm with the user; `repo-map.md`; or `glossary.md`), then shrink the index line to a
+   tombstone: `- <hook> → promoted to constitution (<date>)`. Delete the detail file once promoted.
+3. **Prune / retire:** (a) the code/tool the learning warns about is gone (verify against the repo,
+   not memory) → delete the detail file and its index line; or (b) the lesson is now structurally
+   enforced - verify the named test, CI check, or constitution rule actually exists in the repo,
+   then tombstone the line as `- <hook> → enforced by <check> (<date>)` and delete the detail file.
 4. **Target:** keep the index readable at a glance (roughly ≤30 lines). If it's bigger after
    consolidation, the bar for "worth a line" in ship:4 was too low; note that in the report.
 

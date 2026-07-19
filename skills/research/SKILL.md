@@ -57,6 +57,10 @@ question**. If the brief genuinely contradicts a standing ADR, that's a delibera
 ADR citing the old one), never a silent re-litigation. Then `.wit/learnings.md` (the index): open a
 `learnings/<slug>.md` detail file only when its hook is relevant.
 
+After the settled-check, record the shortlist as a stamped Log line in `progress.md`:
+`- <ts> **Update** applicable learnings: <slug: ~10-word hook; …> | none`.
+This line is the single source later dispatches read - do not re-derive at ship.
+
 **b · Decompose into load-bearing unknowns.** From `brief.md`, list the questions whose answer would
 change the design: the integration seam, a library/technique choice, the data shape, a migration/compat
 risk. Most features have 1-3; **cap at 4**; anything settled in (a) drops off the list. Tag each
@@ -99,7 +103,8 @@ Run **plan** (`wit:plan`): brief + research -> `spec.md` (testable acceptance cr
 
 **Pre-gate check (checker · plan mode).** Before the gate, dispatch the **checker**
 (`agents/wit-code-checker.md`) in `plan` mode over `spec.md` + `tasks.md` + `pitfalls.md` +
-`constitution.md` + the relevant ADRs (and any **Runtime State Inventory** rows). It builds a
+`constitution.md` + the relevant ADRs (and any **Runtime State Inventory** rows) + the applicable
+learnings from `progress.md`'s `applicable learnings:` Log line. It builds a
 feature-backward coverage matrix and returns BLOCKER/WARNING/INFO findings, writing `verification.md`.
 Feed them back: a BLOCKER (an unmapped acceptance criterion, a silently down-scoped decision) loops to
 plan to fix, then the checker re-checks (**max 2 rounds**; each round appends its own `tokens.md` row

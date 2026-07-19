@@ -17,11 +17,13 @@ pick-up, into `docs/plans/`, and rides in the PR.
 
 ## Queue (in order)
 
-**The queue is empty** (2026-07-12): every actionable issue has shipped, #43 included. The one item
-below stays owner-postponed; un-postpone it or file new work to continue.
+**The queue is active** (2026-07-19): the learnings lifecycle ships in v1.13.1, followed by red-gate
+reflection in v1.13.2 and process-drift telemetry plus the full dry-run in v1.13.3.
 
 | Slot | Issue | What | Version | Effort · Risk | Why this order |
 |---|---|---|---|---|---|
+| 1 | **#81** stamped failure Reflection | Add a stamped Reflection at every red ship gate | v1.13.2 | TBD | Builds on the v1.13.1 learnings lifecycle before telemetry measures process drift |
+| 2 | **#82** process-drift telemetry | Track ship/scan process drift across features and run the full dry-run | v1.13.3 | TBD | Runs after #81 so the complete lifecycle can be exercised; **#79 dry-run AC deferred to the post-#82 full dry-run** |
 | ⏸ postponed | **#34** cross-vendor MoA proposers | Let the MoA council use OpenAI / DeepSeek / Grok / Gemini | - | - | Postponed (owner, 2026-07-10); **its prerequisite #65 has now shipped** (skills thinned; #34's new cross-vendor mechanics go into `moa.md` only). Also simplified by #35, and #43's shipped models.md xAI + platform-map groundwork overlaps it. Owner un-postpones when ready |
 
 ## Sequencing rules (standing)
@@ -65,6 +67,12 @@ below stays owner-postponed; un-postpone it or file new work to continue.
   groundwork already covers the models.md xAI entry + the platform model map.
 
 ## Shipped (roadmap-era)
+
+- **#78 + #79 + #80 + #83** learnings lifecycle: **v1.13.1** (2026-07-19). Research stamps applicable
+  learnings and the checker verifies them; lessons use causal WHEN to DO/AVOID to BECAUSE format with
+  evidence counters and reinforce-not-duplicate behavior; scan promotes and retires rules on evidence;
+  test-level, checker pre-mortem, and waiver-pointer polish complete the loop. **#79 dry-run AC deferred
+  to the post-#82 full dry-run**, tracked in the queue above.
 
 - **Witloop rebrand**: **v1.12.2**, PR #73 (2026-07-12, owner-directed, no issue number). The commercial
   rename: plugin id `wi` -> `wit` (commands `/wit:*` on Claude, `/wit-*` Copilot/Grok aliases, `$wit-*`

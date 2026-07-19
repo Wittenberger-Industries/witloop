@@ -397,6 +397,13 @@ checklist**; an unticked box means ship is not finished, no matter what the cons
 - [ ] worktree removed; local branch deleted only if fully merged (`git branch -d` refuses otherwise);
       the remote branch / open PR never deleted
 
+**Process telemetry (after the checklist, before Phase = done):** append a compact clause to this
+feature's learnings-index line in `.wit/learnings.md`:
+` · process: clean` when the run did not strain the process, or
+` · process: <friction>` naming countable facts already in `progress.md` (examples: `checker 2/2 rounds`,
+`remote-fix 1`, `task 3 debug pass`, `frontend stamp missing`). No judgment, no scores. If the index
+line already has a `process:` suffix, leave it (do not duplicate).
+
 All green: set Phase = `done`, add a final stamped Log line (`- <ts> **Update** phase = done` + the PR
 link), and if `roadmap.md` exists mark this feature done and surface the next one.
 

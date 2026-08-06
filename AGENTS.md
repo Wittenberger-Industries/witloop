@@ -45,3 +45,25 @@ against it.
   delegation points only, never self-triggered mid-phase; wit's artifact formats always win.
 
 These skills auto-trigger from their `description` fields. When a user's request matches one, use it.
+
+## Cursor Cloud specific instructions
+
+This repo is the Witloop plugin itself: markdown skills/agents/references plus a few stdlib-only Python
+helper scripts. There is **no server, web app, or CLI binary to launch** — "running" the project means
+running its CI gate (structural validation + unit tests) and, optionally, exercising a bundled skill
+script directly. The full command set lives in `.github/workflows/validate.yml`.
+
+- **Interpreter:** on the cloud VM only `python3` (and `pip`/`pip3`) are on PATH — bare `python` is not,
+  even though `validate.py`'s docstring and CI (via `actions/setup-python`) say `python`. Use `python3`
+  locally: `python3 scripts/validate.py` and `python3 -m unittest discover -s tests`.
+- **Dependencies:** the only external dep is PyYAML, and only `scripts/validate.py` uses it (it degrades
+  gracefully and skips the full YAML parse when absent; the unit tests never need it). The update script
+  installs it for CI parity.
+- **Known pre-existing test failure:** `test_encode_drops_drive_colon_and_separators`
+  (`tests/test_tokens_guardrail.py`) asserts Windows drive-letter path semantics (`D:/...` → `D-...`) that
+  do not hold on Linux/POSIX. It fails identically on GitHub CI (also Ubuntu), so a red result here is the
+  repo's own state, not a broken environment. Expect 84 pass / 1 fail until the repo fixes it upstream.
+- **validate.py is the guardrail:** it enforces trailing newlines, balanced code fences, OKF `type`
+  frontmatter, manifest version parity across the three `plugin.json`/`marketplace.json` manifests, and
+  several banned-string lints. Run it after editing any `skills/`, `agents/`, `references/`, `docs/`,
+  `AGENTS.md`, or `README.md` file, or a manifest.

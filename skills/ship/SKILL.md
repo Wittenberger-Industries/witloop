@@ -19,9 +19,9 @@ enters as `--stat` + hunks (ship:2), command output as exit code + tail (ship:1/
 checker (not you) re-reads the repo.
 
 First act once engaged: append `- <ts> **Update** phase = ship (ship engine engaged (wit <version>))` to
-progress.md's Log: full ISO-8601 stamp from the OS clock (`date -Iseconds` /
-`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/now.py`), <version> read from
-`${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`.
+progress.md's Log: full ISO-8601 stamp from the OS clock
+(`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/now.py`; `date -Iseconds` where POSIX),
+<version> read from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`.
 
 Design rationale for this skill lives in the wit repo's `docs/design-notes/ship.md` (maintainer doc,
 never loaded at runtime).
@@ -275,16 +275,16 @@ verification.md; the dossier tidy (ship:6) then prunes it.>
      Never-committed ones are untracked: plain-delete them (`cross-review.md`; `.logs/` likewise,
      self-gitignored). Skip pruning if the constitution says to keep them.
   3. *Finalize `tokens.md`: NOW, inside the dossier commit*, or it never rides the PR:
-     `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write .wit/features/<slug>/tokens.md`
-     (auto-detects the active session transcript; `--transcript <path>` / `--progress <path>` to
-     override). That is the Claude Code finalizer; a **non-Claude host runs the one its platform tool
-     map names** (Grok Build: `grok_token_report.py --write`, same flags;
-     `${CLAUDE_PLUGIN_ROOT}/references/grok-tools.md`). It rewrites the `## Orchestrator` section in place, recomputes the **Subagents
-     (exact)** sum from the ledger rows, fills the **duration totals** (Σ compute from the rows'
-     Duration cells; wall-clock from `progress.md`'s stamped phase spans), and on Claude Code appends
-     the per-dispatch **`## Subagent detail`** split, writing the honest `unavailable` wherever a
-     parse fails (wit-directory.md's **ledger rule**: never a substitute, estimate, or fabricated
-     figure). The **file** is the deliverable, not the console output.
+     `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/finalize_tokens.py --write .wit/features/<slug>/tokens.md`
+     (`--progress <path>` to override the sibling `progress.md`). That is the only ship:6 token
+     CLI; it reads `Host:` from progress.md and routes per **the capability table** (`tokens` cell;
+     see the script docstring). It rewrites the `## Orchestrator` section in place, recomputes the
+     **Subagents (exact)** sum from the ledger rows, fills the **duration totals** (Σ compute from
+     the rows' Duration cells; wall-clock from `progress.md`'s stamped phase spans), and on a Claude
+     host appends the per-dispatch **`## Subagent detail`** split, writing the honest `unavailable`
+     wherever a parse fails or the host has no local usage field (wit-directory.md's **ledger
+     rule**: never a substitute, estimate, fabricated figure, or dashboard scrape). The **file** is
+     the deliverable, not the console output.
   4. *What remains is the fixed dossier for this flow*: take the manifest from the flow's directory
      reference, not from memory: `dev` → wit-directory.md's seven-file dossier (progress, brief, spec,
      tasks, pitfalls, tokens, PR); `rpa` → rpa-directory.md's run dossier (the SDD pack plus
@@ -294,24 +294,24 @@ verification.md; the dossier tidy (ship:6) then prunes it.>
 ## 7 · Open the PR (autonomous)
 
 The user chose hands-off-to-PR, so open it without asking. Push the branch
-(`git push -u origin wit/<slug>`), strip PR.md's OKF frontmatter into a throwaway body file (outside the
-repo, so the dossier stays clean), then open the PR from it:
+(`git push -u origin wit/<slug>`), strip PR.md's OKF frontmatter into a throwaway body file (not a
+dossier file), then open the PR from it. Write UTF-8 with the CLI; do not redirect stdout with `>`
+(PowerShell `>` is UTF-16):
 
-```bash
-body=$(mktemp)
-awk '{sub(/\r$/,"")} NR==1&&$0=="---"{f=1;next} f&&$0=="---"{f=0;next} !f' .wit/features/<slug>/PR.md > "$body"
-gh pr create --title "<…>" --body-file "$body"   # add --draft if the run ended blocked or partial
-rm -f "$body"
+```
+python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/strip_frontmatter.py .wit/features/<slug>/PR.md .wit/features/<slug>/PR.body.md
+gh pr create --title "<…>" --body-file .wit/features/<slug>/PR.body.md   # add --draft if the run ended blocked or partial
 ```
 
-Log the PR URL in `progress.md` as `- <ts> **Update** PR opened: <url>` (full OS-clock stamp); this
-exact wording is the stamp `token_report.py` reads as the end of the second autonomous span. ship:8
-verifies the PR's remote checks before any cleanup.
+Delete `PR.body.md` after create (it is not a dossier file). Log the PR URL in `progress.md` as
+`- <ts> **Update** PR opened: <url>` (full OS-clock stamp); this exact wording is the stamp the
+token finalizer reads as the end of the second autonomous span. ship:8 verifies the PR's remote
+checks before any cleanup.
 
 **A pushed branch is not a shipped feature.** If `gh` is unavailable or `pr create` fails, the run is
 **not done**: record in `progress.md`'s Decisions/blockers the exact recovery command
 (frontmatter-stripped, as above):
-`body=$(mktemp); awk '{sub(/\r$/,"")} NR==1&&$0=="---"{f=1;next} f&&$0=="---"{f=0;next} !f' .wit/features/<slug>/PR.md > "$body"; gh pr create --title "<…>" --body-file "$body"`,
+`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/strip_frontmatter.py .wit/features/<slug>/PR.md .wit/features/<slug>/PR.body.md; gh pr create --title "<…>" --body-file .wit/features/<slug>/PR.body.md`,
 plus the failure reason, and tell the user in the final report that the PR still needs creating.
 Never silently stop at the push. **Never force-push.** If
 `superpowers:finishing-a-development-branch` is installed, consult it only for the close-out
@@ -333,7 +333,7 @@ merge-ready the moment a remote appears.
 **The remote-checks gate: before any cleanup.** The ship:1 gate was local; the PR's checks, CI runs
 and deployment checks (e.g. Vercel), are the authoritative signal, and they run remotely *after* the
 push. The PR must be green, not just the worktree. Re-create the log dir first if the ship:6 tidy
-pruned it: `mkdir -p .wit/features/<slug>/.logs && printf '*\n' > .wit/features/<slug>/.logs/.gitignore`
+pruned it: `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/ensure_logdir.py .wit/features/<slug>/.logs`
 (idempotent; self-gitignored so a red-path fix commit can never stage CI logs: workflow.md's output
 house rule). Give the checks a
 moment to register, then watch them to completion: `gh pr checks <pr-url-or-number> --watch
@@ -415,7 +415,8 @@ the PR URL, and the **token table read from the finalized `tokens.md`** (complet
 never recomputed here). **Subagent rows are exact** (from completion notifications): report that sum
 as the headline, with the orchestrator figure (or `unavailable`) alongside, and the cost estimate +
 per-agent split when the finalize produced them. The two numbers wit trusts: **subagent-exact**
-(completion notifications) and **orchestrator-from-transcript** (`token_report.py`). Beside the token
+(completion notifications) and **orchestrator-from-transcript** (Claude path inside
+`finalize_tokens.py`; other hosts write the unavailable sentinel). Beside the token
 table, print the **timing table**, read from the same finalized files (`unavailable` rows print
 as-is):
 

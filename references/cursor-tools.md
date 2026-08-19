@@ -88,9 +88,11 @@ go-signal.
 
 ## Tokens: unavailable
 
-Capability `tokens` is `unavailable`. Write `Orchestrator: unavailable for this run`. Do **not** run
-`token_report.py` (it binds Claude transcripts under `~/.claude/projects/**` and will pick a foreign
-session). Duration totals still fill from `progress.md` wall-clock stamps.
+Capability `tokens` is `unavailable`. ship:6 runs
+`python <resolved-root>/skills/ship/scripts/finalize_tokens.py --write .wit/features/<slug>/tokens.md`
+which writes `Orchestrator: unavailable for this run` and fills Duration from `progress.md`. Do **not**
+run `token_report.py` (it binds Claude transcripts under `~/.claude/projects/**` and will pick a foreign
+leftover session). Never scrape a Usage dashboard.
 
 ## Plugin-cache skill discovery
 

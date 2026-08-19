@@ -157,6 +157,14 @@ timestamp: <YYYY-MM-DD>
 - **Flow:** dev                <!-- dev | rpa; ship keys its dossier manifest + sweep whitelist on it; a missing line means dev -->
 - **Worktree:** <path or "-">
 - **Branch:** <branch or "-">
+- **Host:** <claude | codex | copilot | grok | cursor>
+- **Plugin root (resolved):** <path>
+
+## Capabilities (resolved)
+<!-- written at seed from references/capabilities.md for Host:; later phases
+     read THIS block, not the table and not the product name. Rewrite only when
+     absent (same staleness rule as Model routing). -->
+- keep_alive=<cell> · tokens=<cell> · ask=<cell> · subagent=<cell> · shell=<cell> · skill_invoke=<cell>
 
 ## Model routing (resolved)
 <!-- written when progress.md is seeded (dev:1-2 / rpa:2) from .wit/models.md; dispatches

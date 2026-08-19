@@ -70,6 +70,10 @@ first, then the gate renders.*
 7. **Surface failures, don't hide them.** If the run can't finish (gate won't go green after bounded
    attempts; contradictory brief), stop, record the blocker + a clean partial state, open a draft PR or
    leave a tidy branch, and report. Hands-off is not silent.
+8. **The capability table.** Host behavior follows **the capability table**
+   (`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md`). Entry skills stamp cells into
+   `progress.md`; later phases read those cells and never re-guess the product. Adapters
+   fill columns; skills do not.
 
 ## Skipping & re-running
 

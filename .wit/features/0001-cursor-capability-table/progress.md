@@ -3,7 +3,7 @@ type: Feature Progress
 title: First-class Cursor host via a capability table
 description: Make Cursor a first-class wit host by adding a capability table and filling the Cursor row.
 feature: 0001-cursor-capability-table
-status: design-gate
+status: build
 timestamp: 2026-08-19
 ---
 
@@ -11,13 +11,13 @@ timestamp: 2026-08-19
 
 - **Slug:** 0001-cursor-capability-table
 - **Created:** 2026-08-19
-- **Phase:** design-gate
+- **Phase:** build
 - **Gate mode:** interactive
 - **Flow:** dev
-- **Worktree:** -
-- **Branch:** -
+- **Worktree:** D:/ClaudeCowork/wi-plugin/wi-plugin-wit-0001-cursor-capability-table
+- **Branch:** wit/0001-cursor-capability-table
 - **Host:** cursor
-- **Plugin root (resolved):** D:\ClaudeCowork\wi-plugin\wi-plugin
+- **Plugin root (resolved):** D:/ClaudeCowork/wi-plugin/wi-plugin-wit-0001-cursor-capability-table
 
 ## Model routing (resolved)
 - resolved 2026-08-19T13:01:45+03:00 from .wit/models.md (preset: custom)
@@ -38,6 +38,9 @@ timestamp: 2026-08-19
 - 2026-08-19T13:16:23+03:00 **Update** plan via superpowers:writing-plans
 - 2026-08-19T13:16:23+03:00 **Decision** approach = ADR-0001 capability table; Cursor first row; finalize_tokens.py; keep-alive none; walk-up before cache
 - 2026-08-19T13:36:49+03:00 **Update** design gate opened
+- 2026-08-19T13:52:00+03:00 **Update** design gate approved, phase = build
+- 2026-08-19T13:52:00+03:00 **Update** build engine engaged (wit 1.13.4)
+- 2026-08-19T13:52:00+03:00 **Update** worktree via superpowers
 
 ## Tasks (mirrored from tasks.md once planned)
 - [ ] 1. Capability table, probe template, workflow pointer

@@ -8,15 +8,15 @@ timestamp: 2026-08-19
 # Witloop - overview  (documented 2026-08-19 by /wit:scan)
 
 ## What it is
-Witloop (`wit`, formerly `wi`) is an opinionated, low-token spec-driven engineering loop shipped as a plugin. One source tree targets Claude Code, Codex CLI, Copilot CLI, and Grok Build. You scan a project once, then `/wit:dev` brainstorms, designs, and ships a feature to an open PR.
+Witloop (`wit`, formerly `wi`) is an opinionated, low-token spec-driven engineering loop shipped as a plugin. One source tree targets Claude Code, Codex CLI, Copilot CLI, Grok Build, and Cursor. You scan a project once, then `/wit:dev` brainstorms, designs, and ships a feature to an open PR.
 
 ## Stack
-Markdown skills and agent charters, plus stdlib Python for validation, token ledgers, mermaid checks, and GitHub-issue drafts. No application runtime, no package lockfile. Version `1.13.4` in the three plugin manifests.
+Markdown skills and agent charters, plus stdlib Python for validation, token ledgers, mermaid checks, and GitHub-issue drafts. No application runtime, no package lockfile. Version `1.14.0` in the three plugin manifests.
 
 ## How it is organized
 - `skills/` - user-facing `scan`, `dev`, `rpa`, `add-issues`; hidden phase skills `brainstorm`, `research`, `plan`, `build`, `ship`
 - `agents/` - `wit-researcher`, `wit-task-runner`, `wit-code-checker` charters
-- `references/` - host tool maps (`codex`, `copilot`, `grok`), `workflow.md`, `keep-alive.md`, `models.md`, skill aliases
+- `references/` - host tool maps (`codex`, `copilot`, `grok`, `cursor`), `capabilities.md`, `workflow.md`, `keep-alive.md`, `models.md`, skill aliases
 - `scripts/validate.py` - plugin-structure gate (portability files, YAML, version parity)
 - `docs/` - maintainer plans/specs/design-notes and the live `docs/roadmap.md` queue
 - `.claude-plugin/` and `.codex-plugin/` - marketplace/plugin manifests
@@ -37,4 +37,4 @@ None at runtime. Token parsers read local transcripts (Claude) or Grok session f
 - Ledger rule: exact token numbers or `unavailable`, never a guessed scrape
 
 ## Open questions
-- Cursor marketplace install is already real; documenting it is issue #89, not this scan
+- None from this scan. Cursor is a documented host as of v1.14.0 (`references/cursor-tools.md`, ADR-0001). Postponed owner work remains #34 (cross-vendor MoA).

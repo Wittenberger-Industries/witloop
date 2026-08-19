@@ -3,7 +3,7 @@ type: Feature Progress
 title: First-class Cursor host via a capability table
 description: Make Cursor a first-class wit host by adding a capability table and filling the Cursor row.
 feature: 0001-cursor-capability-table
-status: build
+status: ship
 timestamp: 2026-08-19
 ---
 
@@ -11,13 +11,16 @@ timestamp: 2026-08-19
 
 - **Slug:** 0001-cursor-capability-table
 - **Created:** 2026-08-19
-- **Phase:** build
+- **Phase:** ship
 - **Gate mode:** interactive
 - **Flow:** dev
 - **Worktree:** D:/ClaudeCowork/wi-plugin/wi-plugin-wit-0001-cursor-capability-table
 - **Branch:** wit/0001-cursor-capability-table
 - **Host:** cursor
 - **Plugin root (resolved):** D:/ClaudeCowork/wi-plugin/wi-plugin-wit-0001-cursor-capability-table
+
+## Capabilities (resolved)
+- keep_alive=none · tokens=unavailable · ask=AskQuestion · subagent=Task wit-* when listed else inline agents/*.md · shell=Python scripts (POSIX or PowerShell) · skill_invoke=plugin skills + natural-language auto-trigger
 
 ## Model routing (resolved)
 - resolved 2026-08-19T13:01:45+03:00 from .wit/models.md (preset: custom)
@@ -46,6 +49,11 @@ timestamp: 2026-08-19
 - 2026-08-19T14:11:06+03:00 **Update** task 5 done (Self-Check PASS)
 - 2026-08-19T14:11:06+03:00 **Update** task 7 done (Self-Check PASS)
 - 2026-08-19T14:11:06+03:00 **Update** task 8 done (Self-Check PASS); all tasks ticked
+- 2026-08-19T14:33:42+03:00 **Update** phase = ship (ship engine engaged (wit 1.14.0))
+- 2026-08-19T14:33:42+03:00 **Update** verification via superpowers:verification-before-completion
+- 2026-08-19T14:45:31+03:00 **Update** review via wit-code-checker + superpowers:requesting-code-review[inline]
+- 2026-08-19T14:45:31+03:00 **Update** review round 1: no BLOCKER; F1/F2/F5 WARNINGs fixed (finalize_tokens + keep-alive cells in workflow/wit-directory; RPA probe fields)
+- 2026-08-19T14:45:31+03:00 **Update** docs-sync: architecture, overview, repo-map for Cursor host + capability table
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Capability table, probe template, workflow pointer

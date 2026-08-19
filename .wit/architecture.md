@@ -6,13 +6,14 @@ timestamp: 2026-08-19
 ---
 
 # Architecture - Witloop
-_Diagrammed 2026-08-19 by /wit:scan._
+_Diagrammed 2026-08-19; updated for the capability table (ADR-0001)._
 
 ```mermaid
 flowchart TD
   subgraph hosts["Host adapters"]
     claude_mf[".claude-plugin manifests"]
     codex_mf[".codex-plugin manifests"]
+    caps["capabilities.md"]
     toolmaps["references tool maps"]
     keepalive["keep-alive.md templates"]
   end
@@ -36,7 +37,9 @@ flowchart TD
   end
   subgraph py["Python gates"]
     validate_py["scripts/validate.py"]
-    token_py["ship token parsers"]
+    token_py["finalize_tokens.py"]
+    posix_py["ensure_logdir and strip_frontmatter"]
+    discover_py["discover_skills.py"]
   end
   subgraph onrepo["On-repo .wit state"]
     constitution["constitution / repo-map"]
@@ -52,6 +55,10 @@ flowchart TD
   build_sk --> runner
   ship_sk --> checker
   ship_sk --> token_py
+  ship_sk --> posix_py
+  research_sk --> discover_py
+  caps -.-> entry
+  caps -.-> keepalive
   toolmaps -.-> entry
   keepalive -.-> dev_sk
   claude_mf --> validate_py
@@ -59,4 +66,4 @@ flowchart TD
   constitution --> featuredir
 ```
 
-Legend: solid arrows are the `/wit:dev` sequence and script calls; dashed arrows are host-adapter lookups the skills read rather than own.
+Legend: solid arrows are the `/wit:dev` sequence and script calls; dashed arrows are host-adapter lookups the skills read rather than own. `capabilities.md` is the capability x host matrix; `cursor-tools.md` is one of the tool maps. Entry skills stamp cells into `progress.md`; later phases read that stamp.

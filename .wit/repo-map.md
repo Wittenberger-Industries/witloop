@@ -11,7 +11,7 @@ timestamp: 2026-08-19
 - **Languages:** Markdown (skills, agents, references) + Python 3.13 (scripts/tests; CI is Python 3.x)
 - **Package manager:** none (no pyproject/lockfile). Optional: `pip install pyyaml` so `validate.py` runs its YAML-parse checks
 - **Frontend / backend:** neither - Claude/Codex/Copilot/Grok/Cursor plugin, not an app
-- **Layout:** plugin root. `skills/` (scan, dev, brainstorm, research, plan, build, ship, rpa, add-issues), `agents/`, `references/` (host tool maps + workflow), `scripts/validate.py`, `tests/`, `docs/` (plans, specs, design-notes, roadmap), `.claude-plugin/`, `.codex-plugin/`
+- **Layout:** plugin root. `skills/` (scan, dev, brainstorm, research, plan, build, ship, rpa, add-issues), `agents/`, `references/` (capability table + host tool maps + workflow), `scripts/validate.py`, `tests/`, `docs/` (plans, specs, design-notes, roadmap), `.claude-plugin/`, `.codex-plugin/`
 - **Architecture:** see `architecture.md` (mermaid module/dependency diagram)
 
 ## Commands  (verified runnable)
@@ -35,7 +35,7 @@ timestamp: 2026-08-19
 ## Entry points
 - Skills: `/wit:scan`, `/wit:dev`, `/wit:rpa`, `/wit:add-issues` (host aliases in `references/skill-aliases/` and `AGENTS.md`)
 - Manifests: `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.codex-plugin/plugin.json` (version parity required)
-- Python: `scripts/validate.py`; ship token parsers under `skills/ship/scripts/`
+- Python: `scripts/validate.py`; ship token dispatcher `finalize_tokens.py` under `skills/ship/scripts/`; POSIX helpers `ensure_logdir.py` / `strip_frontmatter.py`; skill discovery `skills/research/scripts/discover_skills.py`
 
 ## Unknowns
-- Cursor is in real use but not a documented host (GitHub #89; this scan predates that adapter)
+- None recorded. Cursor is documented (`references/cursor-tools.md`). Codex/Copilot `ask` cells stay `unknown` (no Ask row in those adapters).

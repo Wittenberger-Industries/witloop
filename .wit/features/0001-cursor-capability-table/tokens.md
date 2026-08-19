@@ -35,7 +35,7 @@ elapsed time or the orchestrator's own dispatch/arrival stamps (OS clock); write
 
 **Subagents (exact): 0.**
 **Σ compute: unavailable across 0 dispatches.**
-**Autonomous wall-clock (excl. manual steps): 30m31s.**
+**Autonomous wall-clock (excl. manual steps): 1h33m42s.**
 
 ## Orchestrator
 

@@ -57,6 +57,7 @@ timestamp: 2026-08-19
 - 2026-08-19T14:52:50+03:00 **Update** review round 2: CHECK PASSED (F1/F2/F5 closed)
 - 2026-08-19T14:52:50+03:00 **Update** learnings captured
 - 2026-08-19T14:52:50+03:00 **Update** PR.md written
+- 2026-08-19T14:55:11+03:00 **Update** PR opened: https://github.com/Wittenberger-Industries/witloop/pull/90
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Capability table, probe template, workflow pointer

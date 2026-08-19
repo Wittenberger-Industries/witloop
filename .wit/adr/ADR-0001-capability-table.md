@@ -3,15 +3,15 @@ type: ADR
 title: Branch on a capability table; Cursor is the first filled row
 description: Skills read stamped host capabilities, not product-name if-trees; Cursor is the first complete column.
 feature: 0001-cursor-capability-table
-status: proposed
+status: accepted
 timestamp: 2026-08-19
 ---
 
 # ADR-0001: Branch on a capability table; Cursor is the first filled row
 
-- **Status:** proposed
+- **Status:** accepted
 - **Date:** 2026-08-19
-- **Deciders:** wit research (autonomous); design gate pending
+- **Deciders:** wit research (autonomous); design gate approved 2026-08-19
 - **Feature:** 0001-cursor-capability-table
 
 ## Context

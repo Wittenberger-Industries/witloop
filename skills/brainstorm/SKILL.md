@@ -104,7 +104,9 @@ Glossary updates are committed where written (`docs(wit): glossary`, the project
    - boundaries / non-goals: what's explicitly out;
    - hard constraints: deadline, performance, compatibility, must-reuse-X;
    - any approach *preferences* they hold: capture as non-binding preferences, since the research phase decides.
-   Use AskUserQuestion for the sharp forks (patterns:
+   Use AskUserQuestion (Claude verb; stamped `ask` cell from **the capability table**
+   (`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md`); Cursor `AskQuestion` via
+   `${CLAUDE_PLUGIN_ROOT}/references/cursor-tools.md`) for the sharp forks (patterns:
    `${CLAUDE_PLUGIN_ROOT}/skills/brainstorm/references/question-patterns.md`). Ask in focused rounds; stop
    when the WHAT is clear, not when you run out of questions.
 3. **Reflect and confirm.** Play the brief back. The user is about to step away: make sure it captures

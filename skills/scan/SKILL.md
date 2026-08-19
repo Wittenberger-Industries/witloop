@@ -32,6 +32,12 @@ Plus a plugin check (scan:5) that may install the skills wit delegates to.
 
 ## Procedure
 
+**Host probe (once at entry).** Detect `claude` | `codex` | `copilot` | `grok` | `cursor` per **the
+capability table** (`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md` Host probe; same tells as
+`wit:dev`). Plugin root: env if a wit root → walk-up from cwd → host cache; cwd-as-wit-root beats
+marketplace cache. Scan has no feature `progress.md`: keep the slug in-session (plugin-bootstrap reads
+it). A later `dev` / `rpa` stamps `Host:` + `Plugin root (resolved):` + `## Capabilities (resolved)`.
+
 1. **Confirm the root & census the folder.** `git rev-parse --show-toplevel` (init only if the user wants
    it). Decide **greenfield vs existing**: `git ls-files | wc -l` plus a top-level listing. A near-empty
    folder is greenfield; anything with real source is existing.
@@ -45,7 +51,8 @@ Plus a plugin check (scan:5) that may install the skills wit delegates to.
    templates; never pull the whole tree into this context.
 
    **If greenfield (empty, or no stack detectable), run a guided setup; don't just mark it UNKNOWN.**
-   In one focused round (AskUserQuestion, folded into the constitution-confirm of scan:4 so the user
+   In one focused round (stamped `ask` tool; Claude verb AskUserQuestion, via the host tool map;
+   folded into the constitution-confirm of scan:4 so the user
    answers once), define:
    - primary language(s) + version, framework(s), and package manager;
    - the intended **test / lint / format / typecheck / run** commands.
@@ -67,8 +74,9 @@ Plus a plugin check (scan:5) that may install the skills wit delegates to.
 
 5. **Plugin bootstrap (offer, don't force).** Follow
    `${CLAUDE_PLUGIN_ROOT}/skills/scan/references/plugin-bootstrap.md`: check which recommended plugins are
-   available; for any missing, use AskUserQuestion to offer installing them, and on yes give/run the exact
-   `/plugin marketplace add` + `/plugin install` commands. wit works fully without them.
+   available; for any missing, ask with the stamped `ask` tool (Claude verb AskUserQuestion, via
+   the host tool map) to offer installing them, and on yes follow that file's host install commands.
+   wit works fully without them.
 
 6. **Commit the scan outputs** (`repo-map.md`, `overview.md`, `architecture.md`, `constitution.md`, plus
    the greenfield `.gitignore` when one was created): `chore(wit): scan - repo docs` (the project-level

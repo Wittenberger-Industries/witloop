@@ -13,7 +13,8 @@ description: >
 
 `dev` captured the WHAT; you decide the HOW and get it confirmed. You own three phases (research →
 plan → **design gate**), then implementation proceeds (build → ship) to the PR, kept alive by the
-keep-alive loop (`/goal` or Autopilot) if the user armed it.
+stamped `keep_alive` capability (**the capability table**,
+`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md`) if the user armed it.
 
 Design rationale for this skill lives in the wit repo's `docs/design-notes/research.md` (maintainer
 doc, never loaded at runtime).
@@ -150,7 +151,8 @@ No ADR (nothing hard to reverse)? Render the line as **Approach:** <the decision
 *(no ADR: nothing hard to reverse)* and drop the ADR path from the footer line.
 
 Then check **Gate mode** in `progress.md`:
-- **interactive** (default): ask with AskUserQuestion: **approve** / **amend the approach** (loop to
+- **interactive** (default): ask with the stamped `ask` tool (**the capability table**; Claude verb
+  AskUserQuestion, mapped via the host tool map): **approve** / **amend the approach** (loop to
   research with the feedback) / **amend scope or spec** (loop to plan) / **stop**. Record the outcome;
   an approve is stamped `- <ts> **Update** design gate approved, phase = build` (this wording restarts
   the autonomous clock).
@@ -166,12 +168,12 @@ Only an explicit approve (or auto-approve) advances to implementation.
 ### 4 - Hand off to implementation
 **Interactive gate only:** if persistence wasn't armed at handoff, print the ready-made keep-alive
 again (the user is present; they just approved), **verbatim from
-`${CLAUDE_PLUGIN_ROOT}/references/keep-alive.md`**, the single source of the platform templates
-(`/goal` on Claude Code & Codex, Grok Build's model-judged `/goal`, the Autopilot relaunch +
-unattended-run warning on Copilot). Pasting
-the `/goal` line is the go: when it registers, continue into build **in the same turn**; don't end the
-turn waiting for another prompt. Under **auto-approve** skip the re-print: arming is the user's act,
-never wit's.
+`${CLAUDE_PLUGIN_ROOT}/references/keep-alive.md`**, keyed by the stamped `keep_alive` cell
+(**the capability table**). The go-signal is that cell: `predicate_goal` / `model_judged_goal` →
+paste `/goal`; `relaunch` → paste the Autopilot command; `none` → user confirmation (the chat
+continues; never `/goal`). When the signal registers, continue into build **in the same turn**; don't
+end the turn waiting for another prompt. Under **auto-approve** skip the re-print: arming is the user's
+act, never wit's.
 
 Then proceed: **build** (`wit:build`), worktree + parallel waves, then **ship** (`wit:ship`), which ends
 with the PR and the final report (token table included). No questions from here on.

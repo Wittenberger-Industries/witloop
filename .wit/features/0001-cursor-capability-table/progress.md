@@ -54,6 +54,9 @@ timestamp: 2026-08-19
 - 2026-08-19T14:45:31+03:00 **Update** review via wit-code-checker + superpowers:requesting-code-review[inline]
 - 2026-08-19T14:45:31+03:00 **Update** review round 1: no BLOCKER; F1/F2/F5 WARNINGs fixed (finalize_tokens + keep-alive cells in workflow/wit-directory; RPA probe fields)
 - 2026-08-19T14:45:31+03:00 **Update** docs-sync: architecture, overview, repo-map for Cursor host + capability table
+- 2026-08-19T14:52:50+03:00 **Update** review round 2: CHECK PASSED (F1/F2/F5 closed)
+- 2026-08-19T14:52:50+03:00 **Update** learnings captured
+- 2026-08-19T14:52:50+03:00 **Update** PR.md written
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Capability table, probe template, workflow pointer

@@ -97,6 +97,25 @@ class CapabilityTableTests(unittest.TestCase):
         self.assertIn("**Plugin root (resolved):**", template)
         self.assertIn("## Capabilities (resolved)", template)
 
+    def test_rpa_progress_template_has_host_probe_fields(self):
+        text = (ROOT / "skills" / "rpa" / "references" / "rpa-directory.md").read_text(
+            encoding="utf-8"
+        )
+        start = text.index("## `progress.md` template")
+        template = text[start:]
+        self.assertIn("**Host:**", template)
+        self.assertIn("**Plugin root (resolved):**", template)
+        self.assertIn("## Capabilities (resolved)", template)
+
+    def test_ledger_rule_names_finalize_tokens_as_ship_cli(self):
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn("finalize_tokens.py", workflow)
+        self.assertNotIn("ship's `token_report.py`", workflow)
+        text = WIT_DIRECTORY.read_text(encoding="utf-8")
+        start = text.index("## `tokens.md` template")
+        template = text[start:]
+        self.assertIn("finalize_tokens.py --write", template)
+
 
 if __name__ == "__main__":
     unittest.main()

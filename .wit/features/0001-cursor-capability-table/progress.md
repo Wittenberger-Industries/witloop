@@ -3,7 +3,7 @@ type: Feature Progress
 title: First-class Cursor host via a capability table
 description: Make Cursor a first-class wit host by adding a capability table and filling the Cursor row.
 feature: 0001-cursor-capability-table
-status: ship
+status: done
 timestamp: 2026-08-19
 ---
 
@@ -11,7 +11,7 @@ timestamp: 2026-08-19
 
 - **Slug:** 0001-cursor-capability-table
 - **Created:** 2026-08-19
-- **Phase:** ship
+- **Phase:** done
 - **Gate mode:** interactive
 - **Flow:** dev
 - **Worktree:** D:/ClaudeCowork/wi-plugin/wi-plugin-wit-0001-cursor-capability-table
@@ -59,6 +59,8 @@ timestamp: 2026-08-19
 - 2026-08-19T14:52:50+03:00 **Update** PR.md written
 - 2026-08-19T14:55:11+03:00 **Update** PR opened: https://github.com/Wittenberger-Industries/witloop/pull/90
 - 2026-08-19T14:57:11+03:00 **Reflection** validate: test_encode_drops_drive_colon_and_separators failed on Linux CI because Path("D:/...").resolve() is not a Windows drive path - earlier catch: none
+- 2026-08-19T14:58:42+03:00 **Update** remote checks: 1/1 green validate pass https://github.com/Wittenberger-Industries/witloop/actions/runs/32250205391/job/96059273585
+- 2026-08-19T14:58:42+03:00 **Update** phase = done https://github.com/Wittenberger-Industries/witloop/pull/90
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Capability table, probe template, workflow pointer
@@ -74,3 +76,4 @@ timestamp: 2026-08-19
 - Source issue: https://github.com/Wittenberger-Industries/witloop/issues/89
 - Cursor-first: optimize the Cursor row and adapter; capability table is the shape so the next host is a row, not a fork
 - Session is the Witloop source repo (not a clone)
+- Close-out: worktree retained (this session cwd is the feature worktree); local branch kept (PR open, not merged)

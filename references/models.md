@@ -84,23 +84,28 @@ each tier to a concrete host model through an optional `## Platform model map`:
 
 ```markdown
 ## Platform model map
-| Tier | grok |
-|------|------|
-| fable | grok-4.5 |
-| opus | grok-4.5 |
-| sonnet | grok-composer-2.5-fast |
-| haiku | grok-composer-2.5-fast |
+| Tier | grok | cursor |
+|------|------|--------|
+| fable | grok-4.5 | cursor-grok-4.6-xhigh |
+| opus | grok-4.5 | cursor-grok-4.6-xhigh |
+| sonnet | grok-composer-2.5-fast | composer-2.5-fast |
+| haiku | grok-composer-2.5-fast | composer-2.5-fast |
 ```
 
-- Columns are host names (`grok`); rows map a canonical tier to that host's model id (resolved from
-  `grok models` at config time: `grok-4.5` is the strong/default model, `grok-composer-2.5-fast` the
-  cheap/fast one). An unmapped tier, or `inherit`, passes through unchanged.
-- **Host detection:** the host is `grok` when the run follows `references/grok-tools.md` (wit was invoked
-  under the `grok` CLI); otherwise the host is `claude` and the tier tokens are used as-is. Codex and
-  Copilot are `claude`-tier hosts here unless they later gain their own map column.
+- Columns are host names (`grok`, `cursor`); rows map a canonical tier to that host's model id.
+  Grok ids are resolved from `grok models` at config time: `grok-4.5` is the strong/default model,
+  `grok-composer-2.5-fast` the cheap/fast one. Cursor ids are the live Cursor slugs:
+  `cursor-grok-4.6-xhigh` for fable/opus, `composer-2.5-fast` for sonnet/haiku. An unmapped tier, or
+  `inherit`, passes through unchanged.
+- **Host detection:** the resolve-once step reads the stamped `Host:` from the feature's `progress.md`
+  (the header bullet `- **Host:** <claude | codex | copilot | grok | cursor>`). That slug selects the
+  map column. `claude` (and Codex and Copilot, which stay claude-tier hosts here unless they later gain
+  a column) uses the tier tokens as-is. Do not infer the host from which tool-map file the run is
+  following; `references/grok-tools.md` is not a host detector. A missing `Host:` stamp is a probe bug:
+  re-run the host probe once, then resolve. Do not guess `claude`.
 - The `## Model routing (resolved)` block records the concrete per-role model for the running host: a
-  Grok model id on a Grok host, the Claude tier token on Claude. `orchestrator` stays informational (the
-  session model, set by the host's own model selector).
+  Grok model id on a Grok host, a Cursor model id on a Cursor host, the Claude tier token on Claude.
+  `orchestrator` stays informational (the session model, set by the host's own model selector).
 - **Cross-provider diversity on a Grok host:** point the cross-provider layer at `openai` or `anthropic`,
   not `xai` (a Grok host reviewing with a Grok model is same-family, which defeats the diversity purpose).
   The `provider: xai` entry is for the *other* hosts.

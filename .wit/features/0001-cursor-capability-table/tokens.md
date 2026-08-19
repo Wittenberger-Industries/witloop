@@ -21,6 +21,11 @@ elapsed time or the orchestrator's own dispatch/arrival stamps (OS clock); write
 | research | researcher: posix-helpers | unavailable | unavailable | exact (Cursor: no local usage field) |
 | plan | checker: plan-mode round 1 | unavailable | unavailable | exact (Cursor: no local usage field) |
 | plan | checker: plan-mode round 2 | unavailable | unavailable | exact (Cursor: no local usage field) |
+| build W1 | task-runner: task 1 | unavailable | unavailable | exact (Cursor: no local usage field) |
+| build W2 | task-runner: task 2 | unavailable | unavailable | exact (Cursor: no local usage field) |
+| build W2 | task-runner: task 3 | unavailable | unavailable | exact (Cursor: no local usage field) |
+| build W2 | task-runner: task 4 | unavailable | unavailable | exact (Cursor: no local usage field) |
+| build W2 | task-runner: task 6 | unavailable | unavailable | exact (Cursor: no local usage field) |
 | orchestrator | main thread, all phases | (see Orchestrator section) | n/a (see below) | parsed by token_report.py; unavailable if the parse fails: never substitute or estimate |
 
 **Subagents (exact): <sum>.**

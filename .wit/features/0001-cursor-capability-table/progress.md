@@ -41,14 +41,16 @@ timestamp: 2026-08-19
 - 2026-08-19T13:52:00+03:00 **Update** design gate approved, phase = build
 - 2026-08-19T13:52:00+03:00 **Update** build engine engaged (wit 1.13.4)
 - 2026-08-19T13:52:00+03:00 **Update** worktree via superpowers
+- 2026-08-19T13:52:00+03:00 **Update** task 1 done (Self-Check PASS)
+- 2026-08-19T14:11:06+03:00 **Update** wave 2 done: tasks 2, 3, 4, 6 (Self-Check PASS)
 
 ## Tasks (mirrored from tasks.md once planned)
-- [ ] 1. Capability table, probe template, workflow pointer
-- [ ] 2. cursor-tools.md + bootstrap listings
-- [ ] 3. POSIX helpers
-- [ ] 4. Keep-alive keyed by capability
+- [x] 1. Capability table, probe template, workflow pointer
+- [x] 2. cursor-tools.md + bootstrap listings
+- [x] 3. POSIX helpers
+- [x] 4. Keep-alive keyed by capability
 - [ ] 5. Token dispatcher
-- [ ] 6. Skill discovery + plugin-bootstrap + models cursor column
+- [x] 6. Skill discovery + plugin-bootstrap + models cursor column
 - [ ] 7. SKILL body pointers + validate.py retarget
 - [ ] 8. Manifest bump and host copy
 

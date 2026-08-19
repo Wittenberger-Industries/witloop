@@ -28,6 +28,7 @@ elapsed time or the orchestrator's own dispatch/arrival stamps (OS clock); write
 | build W2 | task-runner: task 6 | unavailable | unavailable | exact (Cursor: no local usage field) |
 | build W3 | task-runner: task 5 | unavailable | unavailable | exact (Cursor: no local usage field) |
 | build W4 | task-runner: task 7 | unavailable | unavailable | exact (Cursor: no local usage field) |
+| build W5 | task-runner: task 8 | unavailable | unavailable | exact (Cursor: no local usage field) |
 | orchestrator | main thread, all phases | (see Orchestrator section) | n/a (see below) | parsed by token_report.py; unavailable if the parse fails: never substitute or estimate |
 
 **Subagents (exact): <sum>.**

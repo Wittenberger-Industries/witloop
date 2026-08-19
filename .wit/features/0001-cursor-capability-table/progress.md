@@ -45,6 +45,7 @@ timestamp: 2026-08-19
 - 2026-08-19T14:11:06+03:00 **Update** wave 2 done: tasks 2, 3, 4, 6 (Self-Check PASS)
 - 2026-08-19T14:11:06+03:00 **Update** task 5 done (Self-Check PASS)
 - 2026-08-19T14:11:06+03:00 **Update** task 7 done (Self-Check PASS)
+- 2026-08-19T14:11:06+03:00 **Update** task 8 done (Self-Check PASS); all tasks ticked
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Capability table, probe template, workflow pointer
@@ -54,7 +55,7 @@ timestamp: 2026-08-19
 - [x] 5. Token dispatcher
 - [x] 6. Skill discovery + plugin-bootstrap + models cursor column
 - [x] 7. SKILL body pointers + validate.py retarget
-- [ ] 8. Manifest bump and host copy
+- [x] 8. Manifest bump and host copy
 
 ## Decisions / blockers
 - Source issue: https://github.com/Wittenberger-Industries/witloop/issues/89

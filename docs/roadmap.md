@@ -17,11 +17,9 @@ pick-up, into `docs/plans/`, and rides in the PR.
 
 ## Queue (in order)
 
-**The queue is empty** (2026-07-19): learnings lifecycle (#78-#80/#83), Reflection (#81), and
-process-drift telemetry (#82) shipped as v1.13.1-v1.13.3; the post-#82 full dry-run verified the
-deferred ACs (report: `docs/plans/2026-07-19-learnings-lifecycle-dryrun.md`). The three orthogonal
-dry-run follow-ups (token-gate zero-dispatch, transcript host/repo guard, ship:1 Reflection pointer)
-ship as **v1.13.4**. Only #34 remains owner-postponed.
+**The queue is empty** (2026-08-19): Cursor as a first-class host via a capability table (#89)
+shipped as **v1.14.0**. Prior: learnings lifecycle (#78-#80/#83), Reflection (#81), process-drift
+telemetry (#82), and dry-run follow-ups as v1.13.1-v1.13.4. Only #34 remains owner-postponed.
 
 | Slot | Issue | What | Version | Effort · Risk | Why this order |
 |---|---|---|---|---|---|
@@ -68,6 +66,12 @@ ship as **v1.13.4**. Only #34 remains owner-postponed.
   groundwork already covers the models.md xAI entry + the platform model map.
 
 ## Shipped (roadmap-era)
+
+- **#89** Cursor as a first-class host via a capability table: **v1.14.0** (2026-08-19).
+  Host behavior lives in `references/capabilities.md`; Cursor is the first filled row
+  (`keep_alive=none`, tokens unavailable). Adapter: `references/cursor-tools.md`. ship:6 uses
+  `finalize_tokens.py`. Cursor Autopilot is not wit persistence (keep-alive none; the chat
+  already persists). Queue remains empty except postponed #34. Three-way manifest parity at 1.14.0.
 
 - **Dry-run follow-ups** (token gate + transcript scope + ship:1 Reflection): **v1.13.4**
   (2026-07-19). Closes the three orthogonal findings from

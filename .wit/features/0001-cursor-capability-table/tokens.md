@@ -33,10 +33,13 @@ elapsed time or the orchestrator's own dispatch/arrival stamps (OS clock); write
 | ship | checker: result-mode round 2 | unavailable | unavailable | exact (Cursor: no local usage field) |
 | orchestrator | main thread, all phases | (see Orchestrator section) | n/a (see below) | finalized by finalize_tokens.py; unavailable if the host has no local usage field or the parse fails: never substitute or estimate |
 
-**Subagents (exact): <sum>.**
-**Σ compute: <dur> across <n> dispatches.**
-**Autonomous wall-clock (excl. manual steps): <dur>.**
+**Subagents (exact): 0.**
+**Σ compute: unavailable across 0 dispatches.**
+**Autonomous wall-clock (excl. manual steps): 30m31s.**
 
 ## Orchestrator
 
-_PENDING: ship replaces this section during the dossier tidy (BEFORE the dossier commit and the PR) by running `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write <this file>` on Claude Code; on a non-Claude host the platform tool map names the finalizer (Grok Build: `grok_token_report.py --write`, references/grok-tools.md). It parses the session data, fills the duration totals from the ledger rows + progress.md phase spans, and appends the exact per-subagent split. That parsed figure is the only reliable orchestrator measure; if the parse fails it writes `Orchestrator: unavailable for this run`; never a substitute, estimate, or invented figure. A tokens.md still reading PENDING after ship is a defect._
+Orchestrator: unavailable for this run
+
+- host: cursor
+- NOTE: this host exposes no local orchestrator usage field; Duration totals come from progress.md Log stamps. Never a dashboard scrape.

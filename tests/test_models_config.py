@@ -1,3 +1,4 @@
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -7,6 +8,15 @@ SCRIPTS = ROOT / "skills" / "ship" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 import cross_review  # noqa: E402
+
+# Progress.md header bullet; same pattern as ship token dispatch. Log lines do not match.
+_HOST_STAMP = re.compile(r"^\s*-\s*\*\*Host:\*\*\s*(\S+)", re.MULTILINE)
+
+
+def host_from_progress(text):
+    """Resolve-once host slug from stamped progress.md. Missing stamp is not a guess."""
+    m = _HOST_STAMP.search(text)
+    return m.group(1).casefold() if m else None
 
 
 FULL_CONFIG = """---
@@ -79,12 +89,12 @@ MOA_SECTION = """
 # Golden: byte-identical to the ## Platform model map table in references/models.md
 GROK_PLATFORM_SECTION = """
 ## Platform model map
-| Tier | grok |
-|------|------|
-| fable | grok-4.5 |
-| opus | grok-4.5 |
-| sonnet | grok-composer-2.5-fast |
-| haiku | grok-composer-2.5-fast |
+| Tier | grok | cursor |
+|------|------|--------|
+| fable | grok-4.5 | cursor-grok-4.6-xhigh |
+| opus | grok-4.5 | cursor-grok-4.6-xhigh |
+| sonnet | grok-composer-2.5-fast | composer-2.5-fast |
+| haiku | grok-composer-2.5-fast | composer-2.5-fast |
 """
 
 XAI_CONFIG = """---
@@ -191,6 +201,83 @@ class PlatformMapTest(unittest.TestCase):
         cfg = cross_review.parse_models_config(SIMPLE_CONFIG + GROK_PLATFORM_SECTION)
         # 'inherit' is not a mapped tier -> returned verbatim
         self.assertEqual(cross_review.platform_model_for("some-agent", cfg, "grok"), "inherit")
+
+    def test_cursor_column_parsed(self):
+        cfg = cross_review.parse_models_config(FULL_CONFIG + GROK_PLATFORM_SECTION)
+        self.assertEqual(cfg["platform_map"]["cursor"]["fable"], "cursor-grok-4.6-xhigh")
+        self.assertEqual(cfg["platform_map"]["cursor"]["opus"], "cursor-grok-4.6-xhigh")
+        self.assertEqual(cfg["platform_map"]["cursor"]["sonnet"], "composer-2.5-fast")
+        self.assertEqual(cfg["platform_map"]["cursor"]["haiku"], "composer-2.5-fast")
+
+    def test_cursor_host_maps_tier_to_model(self):
+        cfg = cross_review.parse_models_config(FULL_CONFIG + GROK_PLATFORM_SECTION)
+        # wit-code-checker role is fable; wit-task-runner role is sonnet
+        self.assertEqual(
+            cross_review.platform_model_for("wit-code-checker", cfg, "cursor"),
+            "cursor-grok-4.6-xhigh",
+        )
+        self.assertEqual(
+            cross_review.platform_model_for("wit-task-runner", cfg, "cursor"),
+            "composer-2.5-fast",
+        )
+        # wit-researcher override is haiku -> cheap Cursor model
+        self.assertEqual(
+            cross_review.platform_model_for("wit-researcher", cfg, "cursor"),
+            "composer-2.5-fast",
+        )
+
+    def test_progress_host_stamp_selects_cursor_column(self):
+        progress = (
+            "# Feature: demo\n\n"
+            "- **Slug:** demo\n"
+            "- **Host:** cursor\n"
+            "- **Plugin root (resolved):** /tmp/wit\n"
+        )
+        host = host_from_progress(progress)
+        cfg = cross_review.parse_models_config(FULL_CONFIG + GROK_PLATFORM_SECTION)
+        self.assertEqual(host, "cursor")
+        self.assertEqual(
+            cross_review.platform_model_for("wit-task-runner", cfg, host),
+            "composer-2.5-fast",
+        )
+
+    def test_progress_host_stamp_selects_grok_column(self):
+        host = host_from_progress("- **Host:** grok\n")
+        cfg = cross_review.parse_models_config(FULL_CONFIG + GROK_PLATFORM_SECTION)
+        self.assertEqual(host, "grok")
+        self.assertEqual(
+            cross_review.platform_model_for("wit-task-runner", cfg, host),
+            "grok-composer-2.5-fast",
+        )
+
+    def test_progress_host_stamp_claude_passes_tier_through(self):
+        host = host_from_progress("- **Host:** claude\n")
+        cfg = cross_review.parse_models_config(FULL_CONFIG + GROK_PLATFORM_SECTION)
+        self.assertEqual(host, "claude")
+        self.assertEqual(cross_review.platform_model_for("wit-task-runner", cfg, host), "sonnet")
+
+    def test_missing_host_stamp_is_not_grok_tools_else_claude(self):
+        # Resolve-once must not infer grok from grok-tools.md or default to claude.
+        self.assertIsNone(host_from_progress("# Feature\n- **Phase:** build\n"))
+        self.assertIsNone(
+            host_from_progress(
+                "- 2026-08-19T13:01:45+03:00 **Decision** followed grok-tools.md\n"
+            )
+        )
+
+    def test_platform_section_matches_models_md(self):
+        text = (ROOT / "references" / "models.md").read_text(encoding="utf-8").replace("\r\n", "\n")
+        self.assertIn(GROK_PLATFORM_SECTION.strip(), text)
+
+    def test_models_md_host_detection_reads_stamp(self):
+        text = (ROOT / "references" / "models.md").read_text(encoding="utf-8")
+        # The host-detection paragraph must name the stamp, not "follows grok-tools.md else claude".
+        detect_at = text.find("**Host detection:**")
+        self.assertGreaterEqual(detect_at, 0)
+        paragraph = text[detect_at:detect_at + 900]
+        self.assertIn("Host:", paragraph)
+        self.assertIn("progress.md", paragraph)
+        self.assertNotIn("when the run follows `references/grok-tools.md`", paragraph)
 
 
 class XaiProviderTest(unittest.TestCase):

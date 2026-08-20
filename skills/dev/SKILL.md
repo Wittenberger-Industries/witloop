@@ -14,15 +14,26 @@ description: >
 The contract: brainstorming decides the *what*; the research skill proposes the *how*; the **design
 gate** is where the user confirms it; after their go, nothing more is asked until the PR is up.
 **`--auto` collapses everything after brainstorm**, so brainstorm becomes the only stop and the run
-goes straight through to a PR. wit pairs with a **keep-alive loop** for persistence: `/goal` on Claude
-Code & Codex, Grok Build's model-judged `/goal`, Autopilot on Copilot.
+goes straight through to a PR. wit pairs with a **keep-alive loop** for persistence: print the
+template keyed by the stamped `keep_alive` cell (**the capability table**,
+`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md`; blocks in
+`${CLAUDE_PLUGIN_ROOT}/references/keep-alive.md`).
 
 Design rationale for this skill lives in the wit repo's `docs/design-notes/dev.md` (maintainer doc,
 never loaded at runtime).
 
 ## Procedure
 
-1. **Ensure the project is scanned, and current.** If the project has a legacy `.wi/` (pre-1.12.2 name)
+1. **Host probe (once), then ensure the project is scanned, and current.** Detect the running harness
+   (`claude` | `codex` | `copilot` | `grok` | `cursor`). Tells: **cursor** when AskQuestion is on
+   the session (or Task `subagent_type` includes `wit-*`, or agent-transcripts under `~/.cursor`),
+   preferring cursor when `AskQuestion` exists and `CLAUDE_PLUGIN_ROOT` is empty;
+   **grok** when following `grok-tools.md` / grok CLI; **copilot** on Copilot CLI; **codex** on Codex CLI;
+   else **claude**. Plugin root: env if a wit root → walk-up from cwd → host cache; cwd-as-wit-root beats
+   marketplace cache. When seeding `progress.md` (step 2), copy that host's cells from **the capability
+   table** into `Host:`, `Plugin root (resolved):`, and `## Capabilities (resolved)`. Stamp every host
+   including claude (`Host: claude` when that is the harness). Later phases read the stamp; never re-guess.
+   If the project has a legacy `.wi/` (pre-1.12.2 name)
    and no `.wit/`, rename it first (`git mv .wi .wit`, one commit; ask unless `--auto`).
    If `.wit/repo-map.md` is missing, run **scan** first;
    don't proceed without a repo map and constitution. Stale (`scanned` stamp older than ~2 weeks, or
@@ -72,21 +83,20 @@ never loaded at runtime).
      keep-alive at all. Note in progress.md that the run ends at ship's no-remote close-out (ship:7) and
      the keep-alive applies once a remote exists. (All checks resolve inside the brainstorm stop; they
      are not a new gate.)
-   All green → recap the brief in 3-5 lines, then print the keep-alive handoff for the current platform
-   **verbatim from `${CLAUDE_PLUGIN_ROOT}/references/keep-alive.md`**, the single source of the platform
-   templates (`/goal` on Claude Code & Codex, Grok Build's model-judged `/goal`, the Autopilot relaunch +
-   unattended-run warning on Copilot). The per-platform mechanism is in
-   `${CLAUDE_PLUGIN_ROOT}/references/codex-tools.md` / `copilot-tools.md` / `grok-tools.md`.
+   All green → recap the brief in 3-5 lines, then print the keep-alive handoff **verbatim from
+   `${CLAUDE_PLUGIN_ROOT}/references/keep-alive.md`**, keyed by the stamped `keep_alive` cell
+   (**the capability table**).
    **Then branch on Gate mode (from `progress.md`):**
    - **auto-approve** (`--auto`): do **not** ask for confirmation; the user already chose hands-off. Set
      Phase = `research`, stamp the Log line (`- <ts> **Update** phase = research`; it starts the run's
      autonomous clock), and continue straight into the design phase **in the same turn**. Brainstorm was
      the only stop.
-   - **interactive** (default): ask once, *"Ready to hand off?"*, and advance on the user's go.
-     **Pasting the `/goal` line is the go.** When the goal registers (the platform echoes "Goal set: …"),
-     do not stop: set Phase = `research` (same stamped Log line) and continue into the design phase
-     **in the same turn**, exactly as the auto path does. Never end the turn at the recap or the
-     "Goal set" acknowledgment.
+   - **interactive** (default): ask once, *"Ready to hand off?"*, and advance on the user's go-signal
+     from the stamped `keep_alive` cell: `predicate_goal` / `model_judged_goal` → paste `/goal`;
+     `relaunch` → paste the Autopilot command; `none` → user confirmation (the chat continues; never
+     `/goal`). When the signal registers, do not stop: set Phase = `research` (same stamped Log line)
+     and continue into the design phase **in the same turn**, exactly as the auto path does. Never end
+     the turn at the recap or a "Goal set" acknowledgment.
 5. **Design** (skill `wit:research`): research -> plan -> **design gate** (inline summary;
    approve / amend / stop, or auto-approve per the flag).
 6. **Implement** (after the gate): **build** (skill `wit:build`), worktree + parallel waves, then
@@ -116,5 +126,4 @@ never loaded at runtime).
 - **Superpowers precedence** (integrations.md "Who initiates";
   `${CLAUDE_PLUGIN_ROOT}/skills/research/references/integrations.md`): delegation points only, never
   self-triggered mid-phase; wit's artifact formats always win.
-- Keep dev thin: it sequences; the phase skills do the work; the keep-alive loop (`/goal` or Autopilot)
-  keeps it alive.
+- Keep dev thin: it sequences; the phase skills do the work; the stamped `keep_alive` loop keeps it alive.

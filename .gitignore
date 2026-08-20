@@ -15,6 +15,7 @@
 !/scripts/**
 !/docs/**
 !/tests/**
+!/.wit/**
 !/AGENTS.md
 !/README.md
 !/.gitignore

@@ -1,10 +1,13 @@
 """
 _ledger.py: shared helpers for the tokens.md token ledger.
 
-NOT an entrypoint. Imported by the two scripts the skills invoke:
+NOT an entrypoint. Imported by the scripts the skills invoke:
   - check_tokens.py  (--init scaffold, default = verify gate)
-  - token_report.py  (--write finalize: Orchestrator section + Subagents sum
+  - finalize_tokens.py (ship:6 dispatcher: Host: routes to token_report.py,
+                        grok_token_report.py, or the unavailable+duration path)
+  - token_report.py  (Claude --write: Orchestrator section + Subagents sum
                       + Duration totals + per-agent split/cost where recoverable)
+  - grok_token_report.py (Grok --write)
 
 tokens.md is a per-feature RUNTIME artifact in a user's .wit/, never in this plugin repo.
 This module owns the file format; the scripts are thin CLIs over it. Stdlib only.
@@ -12,7 +15,7 @@ Canonical prose for the ledger discipline ("the ledger rule"):
 skills/research/references/wit-directory.md, tokens.md template section.
 """
 import re
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 # Exact sentinel ship writes when the orchestrator transcript can't be parsed. The verify
@@ -26,6 +29,9 @@ _COMPUTE_RE = re.compile(r"\*\*Σ compute: ([^*]*?) across ([^*]*?) dispatches\.
 _WALL_RE = re.compile(r"\*\*Autonomous wall-clock \(excl\. manual steps\): ([^*]*?)\.\*\*")
 _ORCH_RE = re.compile(r"^## Orchestrator\b.*$", re.MULTILINE)
 _DUR_RE = re.compile(r"^(?:(\d+)h)?(?:(\d{1,2})m)?(\d{1,2})s$")
+STAMP_RE = re.compile(
+    r"^\s*-\s*(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+\-]\d{2}:?\d{2}))\b")
+HOST_RE = re.compile(r"^\s*(?:-\s*)?\*\*Host:\*\*\s*(\S+)", re.IGNORECASE | re.MULTILINE)
 
 TEMPLATE = """\
 ---
@@ -45,7 +51,7 @@ elapsed time or the orchestrator's own dispatch/arrival stamps (OS clock); write
 
 | Phase | Source | Tokens | Duration | Basis |
 |-------|--------|--------|----------|-------|
-| orchestrator | main thread, all phases | (see Orchestrator section) | n/a (see below) | parsed by token_report.py; unavailable if the parse fails: never substitute or estimate |
+| orchestrator | main thread, all phases | (see Orchestrator section) | n/a (see below) | finalized by finalize_tokens.py; unavailable if the host has no local usage field or the parse fails: never substitute or estimate |
 
 **Subagents (exact): <sum>.**
 **Σ compute: <dur> across <n> dispatches.**
@@ -53,7 +59,7 @@ elapsed time or the orchestrator's own dispatch/arrival stamps (OS clock); write
 
 ## Orchestrator
 
-_PENDING: ship replaces this section during the dossier tidy (BEFORE the dossier commit and the PR) by running `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write <this file>` on Claude Code; on a non-Claude host the platform tool map names the finalizer (Grok Build: `grok_token_report.py --write`, references/grok-tools.md). It parses the session data, fills the duration totals from the ledger rows + progress.md phase spans, and appends the exact per-subagent split. That parsed figure is the only reliable orchestrator measure; if the parse fails it writes `Orchestrator: unavailable for this run`; never a substitute, estimate, or invented figure. A tokens.md still reading PENDING after ship is a defect._
+_PENDING: ship replaces this section during the dossier tidy (BEFORE the dossier commit and the PR) by running `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/finalize_tokens.py --write <this file>`. That CLI reads Host: from progress.md and routes to the host parser (Claude: token_report.py; Grok: grok_token_report.py; Cursor/Copilot/Codex/unstamped/unknown: the honest unavailable sentinel plus Duration from progress.md spans). If the parse fails or the host exposes no local usage field it writes `Orchestrator: unavailable for this run`; never a substitute, estimate, invented figure, or dashboard scrape. A tokens.md still reading PENDING after ship is a defect._
 """
 
 
@@ -85,6 +91,69 @@ def parse_duration(text):
         return None
     h, mi, s = (int(g) if g else 0 for g in m.groups())
     return h * 3600 + mi * 60 + s
+
+
+def parse_host(text):
+    """Host slug from a progress.md header bullet like `- **Host:** cursor`, or None.
+
+    Casefolded. Ignores Log lines (those start with an ISO stamp, not **Host:**).
+    """
+    m = HOST_RE.search(text or "")
+    if not m:
+        return None
+    return m.group(1).strip().strip("*").casefold()
+
+
+def _iso(ts):
+    try:
+        return datetime.fromisoformat(ts.replace("Z", "+00:00"))
+    except (ValueError, AttributeError):
+        return None
+
+
+def parse_progress_spans(text):
+    """(span1_seconds, span2_seconds) from progress.md's ## Log full-ISO stamps.
+
+    span1 (research+plan) = first 'design gate opened' - first 'phase = research'
+    span2 (build+ship)    = last 'PR opened' (else last 'phase = done')
+                            - last 'design gate approved'/'design gate auto-approved'
+    Date-only stamps are ignored; a missing boundary or negative delta yields None.
+    Same boundaries as token_report.py / grok_token_report.py.
+    """
+    events = []
+    for line in text.splitlines():
+        m = STAMP_RE.match(line)
+        if not m:
+            continue
+        dt = _iso(m.group(1))
+        if dt is None or dt.tzinfo is None:
+            continue
+        events.append((dt, line.lower()))
+
+    def first(*phrases):
+        for dt, low in events:
+            if any(p in low for p in phrases):
+                return dt
+        return None
+
+    def last(*phrases):
+        hit = None
+        for dt, low in events:
+            if any(p in low for p in phrases):
+                hit = dt
+        return hit
+
+    def span(a, b):
+        if a is None or b is None:
+            return None
+        s = (b - a).total_seconds()
+        return int(s) if s >= 0 else None
+
+    research = first("phase = research")
+    gate_open = first("design gate opened")
+    gate_ok = last("design gate approved", "design gate auto-approved")
+    end = last("pr opened") or last("phase = done")
+    return span(research, gate_open), span(gate_ok, end)
 
 
 def _data_rows(text):
@@ -249,7 +318,7 @@ def verify(path):
     if not subagents_sum_filled(text):
         return "Subagents (exact) sum not filled (still '<sum>')"
     if not compute_totals_filled(text):
-        return "duration totals not filled (Σ compute / wall-clock: token_report.py --write fills them)"
+        return "duration totals not filled (Σ compute / wall-clock: finalize_tokens.py --write fills them)"
     if not orchestrator_resolved(text):
         return "Orchestrator section still PENDING / unresolved"
     # Zero integer-token rows is an honest zero-dispatch / all-unavailable ledger (Codex, Copilot,

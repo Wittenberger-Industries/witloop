@@ -14,9 +14,11 @@ Checks (from the repo root, detected automatically):
      Needs PyYAML for the full parse (`pip install pyyaml`); without it, the YAML parse is skipped
      and only delimiters + key presence are checked.
   3. Every `${CLAUDE_PLUGIN_ROOT}/<path>` reference in `.md` files resolves to a real file under the repo root.
-  4. Cross-platform portability files exist (`references/{codex,copilot,grok}-tools.md`, `AGENTS.md`),
+  4. Cross-platform portability files exist (`references/{codex,copilot,grok,cursor}-tools.md`,
+     `references/capabilities.md`, `AGENTS.md`),
      keep-alive.md carries the Grok Build model-judged /goal branch (`Grok Build` + `update_goal`), the
-     dev/research skills carry both the Copilot Autopilot handoff branch and a Grok Build handoff pointer,
+     dev/research skills cite capabilities.md (or "capability table") rather than host-name
+     Autopilot/Grok lists in the always-loaded body,
      and the baseline-c contract anchors hold (dev/brainstorm: headless-only self-answer stamps;
      integrations.md: verify absence before any fallback stamp).
   5. OKF conformance (see docs/specs/2026-06-14-okf-knowledge-format.md): every concept doc under
@@ -149,7 +151,14 @@ for md in ref_md:
         if not (ROOT / ref).exists():
             errors.append(f"{md.relative_to(ROOT)}: broken ref ${{CLAUDE_PLUGIN_ROOT}}/{ref}")
 
-for tm in ("references/codex-tools.md", "references/copilot-tools.md", "references/grok-tools.md", "AGENTS.md"):
+for tm in (
+    "references/codex-tools.md",
+    "references/copilot-tools.md",
+    "references/grok-tools.md",
+    "references/cursor-tools.md",
+    "references/capabilities.md",
+    "AGENTS.md",
+):
     if not (ROOT / tm).is_file():
         errors.append(f"missing portability file: {tm}")
 
@@ -159,10 +168,8 @@ if "Grok Build" not in ka or "update_goal" not in ka:
 
 for s in ("skills/dev/SKILL.md", "skills/research/SKILL.md"):
     body = (ROOT / s).read_text(encoding="utf-8").lower()
-    if "autopilot" not in body:
-        errors.append(f"{s}: missing Copilot Autopilot handoff branch")
-    if "grok" not in body:
-        errors.append(f"{s}: missing Grok Build handoff pointer")
+    if "capabilities.md" not in body and "capability table" not in body:
+        errors.append(f"{s}: missing cite of capabilities.md / the capability table")
 
 # Baseline-c contract anchors (#43): the interactive-brainstorm tripwire and the deterministic
 # availability rule are load-bearing clauses; a compression pass must not drop them.

@@ -1,7 +1,7 @@
 ---
 type: Readme
 title: "Witloop: a cross-platform agentic dev loop"
-description: An opinionated, low-token dev loop (scan/dev/rpa/add-issues) that runs on Claude Code, Codex CLI, Copilot CLI, and Grok Build from one source.
+description: An opinionated, low-token dev loop (scan/dev/rpa/add-issues) that runs on Claude Code, Codex CLI, Copilot CLI, Grok Build, and Cursor from one source.
 timestamp: 2026-06-14
 tags: [witloop, readme, overview]
 ---
@@ -9,7 +9,7 @@ tags: [witloop, readme, overview]
 # Witloop: a cross-platform agentic dev loop
 
 **Witloop** (`wit` for short, formerly `wi`) is an opinionated, low-token development loop that runs on **Claude Code**, **Codex CLI**,
-**GitHub Copilot CLI**, and **Grok Build** from one source. You scan a project once, then drive each feature with a single
+**GitHub Copilot CLI**, **Grok Build**, and **Cursor** from one source. You scan a project once, then drive each feature with a single
 command that talks to you twice (brainstorm and a design gate) and otherwise runs to a pull request on
 its own.
 
@@ -22,10 +22,11 @@ its own.
 
 On Claude the commands are `/wit:scan`, `/wit:dev`, `/wit:rpa`, `/wit:add-issues`; on Copilot they read
 `/wit-scan`, `/wit-dev`, `/wit-rpa`, `/wit-add-issues`, on Codex `$wit-scan`, `$wit-dev`, `$wit-rpa`,
-`$wit-add-issues`, and on Grok `/scan`, `/dev`, `/rpa`, `/add-issues` (or the `/wit-*` aliases) - flat
-aliases scan's bootstrap offers to install to `~/.agents/skills/` (the raw plugin forms `/wit dev` and
-`$dev` always work), or, on any harness, auto-trigger from natural language. Only these four entry points
-surface as commands; the phase skills are hidden (`user-invocable: false`) and run inside the loop.
+`$wit-add-issues`, on Grok `/scan`, `/dev`, `/rpa`, `/add-issues` (or the `/wit-*` aliases), and on Cursor
+plugin skills plus natural-language auto-trigger (see `references/cursor-tools.md`). Flat aliases scan's
+bootstrap offers to install to `~/.agents/skills/` (the raw plugin forms `/wit dev` and `$dev` always
+work), or, on any harness, auto-trigger from natural language. Only these four entry points surface as
+commands; the phase skills are hidden (`user-invocable: false`) and run inside the loop.
 
 ## Install
 
@@ -82,20 +83,29 @@ predicate, so treat it as Copilot-class autonomy. Handoff templates and the warn
 `references/keep-alive.md`; tool mappings and the plugin-root resolution rule in
 `references/grok-tools.md`.
 
+**Cursor**: install wit from the Cursor plugin marketplace (Settings / plugins). Do not run Claude
+`/plugin marketplace add` on this host. Installed copies live under
+`~/.cursor/plugins/cache/<publisher>/wit/<hash>/` (`skills/` + `.claude-plugin/`). A checkout of this
+repo is itself a wit root; plugin-root resolution walks up from cwd before that cache
+(`references/cursor-tools.md`). Skills load as plugin skills and auto-trigger from their descriptions.
+Keep-alive is none (the chat already persists): do not paste `/goal`, and do not treat Cursor Autopilot
+as wit persistence. Optional `/loop` may re-wake a chat after Phase is done; it is not wit keep-alive.
+
 ## Platform differences
 
-wit is one source across three harnesses; only the autonomy spine differs:
+wit is one source across five hosts; only the autonomy spine differs:
 
-| | Claude Code | Codex CLI | Copilot CLI | Grok Build |
-|---|---|---|---|---|
-| Skills | plugin (`.claude-plugin/`) | `.codex-plugin/` (+ reads `.claude-plugin/marketplace.json`) | `plugin install` (reads `.claude-plugin/`); fallback whole-repo `/skills add` | Claude-plugin discovery, zero config; enable in `~/.grok/config.toml` |
-| Keep-alive | built-in `/goal` | native `/goal` | Autopilot flags | native `/goal` (model-judged) |
-| Command namespace | `/wit:dev` | `$wit-dev` (alias) / `$dev` | `/wit-dev` (alias) / `/wit dev` | `/wit-dev` (alias) / `/dev` (bare; `/user:dev` on clash) |
-| `${CLAUDE_PLUGIN_ROOT}` | native | compat var | the installed plugin root (or the clone) | resolve to the plugin root (env var is hook-only) |
-| Subagents | Agent/Task | `spawn_agent` | `task` / `/fleet` | `spawn_subagent` (general-purpose, inline) |
+| | Claude Code | Codex CLI | Copilot CLI | Grok Build | Cursor |
+|---|---|---|---|---|---|
+| Skills | plugin (`.claude-plugin/`) | `.codex-plugin/` (+ reads `.claude-plugin/marketplace.json`) | `plugin install` (reads `.claude-plugin/`); fallback whole-repo `/skills add` | Claude-plugin discovery, zero config; enable in `~/.grok/config.toml` | Cursor marketplace; cache under `~/.cursor/plugins/cache/` |
+| Keep-alive | built-in `/goal` | native `/goal` | Autopilot flags | native `/goal` (model-judged) | none (chat persists; optional `/loop` is not wit keep-alive) |
+| Command namespace | `/wit:dev` | `$wit-dev` (alias) / `$dev` | `/wit-dev` (alias) / `/wit dev` | `/wit-dev` (alias) / `/dev` (bare; `/user:dev` on clash) | plugin skills + natural-language auto-trigger |
+| `${CLAUDE_PLUGIN_ROOT}` | native | compat var | the installed plugin root (or the clone) | resolve to the plugin root (env var is hook-only) | resolve-once (env if wit root, walk-up cwd, then cache) |
+| Subagents | Agent/Task | `spawn_agent` | `task` / `/fleet` | `spawn_subagent` (general-purpose, inline) | `Task` (`wit-*` when listed, else inline) |
 
-Tool-name mappings live in `references/codex-tools.md`, `references/copilot-tools.md`, and
-`references/grok-tools.md`; the cross-platform bootstrap is `AGENTS.md`.
+Tool-name mappings live in `references/codex-tools.md`, `references/copilot-tools.md`,
+`references/grok-tools.md`, and `references/cursor-tools.md`; the capability matrix is
+`references/capabilities.md`; the cross-platform bootstrap is `AGENTS.md`.
 
 ## How it flows
 
@@ -221,7 +231,7 @@ skill auto-triggers from natural language too.
 │   └── plugin.json        # Codex plugin manifest
 ├── skills/                # scan, dev, brainstorm, research, plan, build, ship, rpa
 ├── agents/                # task-runner, researcher, checker
-├── references/            # codex-tools.md, copilot-tools.md (tool maps); skill-aliases/ (flat /wit-* entry aliases)
+├── references/            # *-tools.md host adapters, capabilities.md; skill-aliases/ (flat /wit-* entry aliases)
 ├── scripts/validate.py    # pre-release check (frontmatter, JSON, cross-refs, OKF)
 ├── docs/                  # specs & plans
 ├── AGENTS.md              # cross-platform bootstrap (Codex + Copilot)

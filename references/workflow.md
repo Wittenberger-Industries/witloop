@@ -10,7 +10,8 @@ tags: [research, reference]
 
 The loop is one interactive phase (**brainstorm**, run by `dev`) followed by an autonomous pipeline
 (**research -> plan -> build -> ship**, sequenced by `dev`). The handoff after brainstorm is the single human
-checkpoint: the user's `/goal` paste is the go, and the run continues into research in the same turn;
+checkpoint: the go-signal is the keep-alive block matching the stamped `keep_alive` cell
+(`${CLAUDE_PLUGIN_ROOT}/references/keep-alive.md`); the run continues into research in the same turn;
 after it, the pipeline makes and records decisions on its own.
 
 ## State machine
@@ -24,7 +25,7 @@ flowchart LR
     research --> plan --> gate["DESIGN GATE (interactive*)"]
   end
   gate -- "approve / auto-approve" --> build
-  subgraph keepalive["build + ship, kept alive by /goal or Autopilot"]
+  subgraph keepalive["build + ship, keep-alive per stamped cell"]
     build --> ship
   end
   ship --> done
@@ -46,7 +47,7 @@ the design gate.
 | research | research | autonomous | brief, repo-map, constitution | research/*, .wit/adr/ADR-* (if hard-to-reverse) | approach already chosen & recorded |
 | plan | research | autonomous | brief, research, repo-map, constitution | spec, tasks, pitfalls | never |
 | design-gate | research | interactive* | adr, spec, tasks | dossier commit on main; gate outcome in progress.md | never: it is the second human gate |
-| build | post-gate loop (/goal or Autopilot keeps it alive) | autonomous | tasks, spec, constitution | source, ticked tasks | tasks already all ticked |
+| build | post-gate loop (keep-alive.md for the stamped keep_alive cell) | autonomous | tasks, spec, constitution | source, ticked tasks | tasks already all ticked |
 | ship | post-gate loop | autonomous | the diff, spec, constitution | commits, PR (remote checks verified) | never |
 
 *Design-gate re-entry guard (research:0): resuming into `design-gate` requires a fresh plan-mode
@@ -70,6 +71,10 @@ first, then the gate renders.*
 7. **Surface failures, don't hide them.** If the run can't finish (gate won't go green after bounded
    attempts; contradictory brief), stop, record the blocker + a clean partial state, open a draft PR or
    leave a tidy branch, and report. Hands-off is not silent.
+8. **The capability table.** Host behavior follows **the capability table**
+   (`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md`). Entry skills stamp cells into
+   `progress.md`; later phases read those cells and never re-guess the product. Adapters
+   fill columns; skills do not.
 
 ## Skipping & re-running
 
@@ -100,7 +105,7 @@ skills cite them as **the context budget** and **the output house rule**:
    subagent dispatch, not an orchestrator Read.
 2. **The output house rule. Never pipe unbounded command output into context.** Redirect to the
    feature's log dir and read the verdict, not the stream. Once per feature:
-   `mkdir -p .wit/features/<slug>/.logs && printf '*\n' > .wit/features/<slug>/.logs/.gitignore`
+   `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/ensure_logdir.py .wit/features/<slug>/.logs`
    (self-gitignored: the dir never enters `git status` or a dossier commit). Then per command:
    `<cmd> > .wit/features/<slug>/.logs/<name>.txt 2>&1; echo $?; tail -n 30 .wit/features/<slug>/.logs/<name>.txt`.
    On red, pull the failing lines (`grep -n -B1 -A3 -iE 'fail|error' <log>`), never the whole log;
@@ -111,9 +116,11 @@ skills cite them as **the context budget** and **the output house rule**:
 Research and build tasks run in subagents that return summaries; their transcripts never enter the
 orchestrator's context. That is what makes a hands-off, multi-file feature affordable.
 The cost and the time are also *measured* where they can be, never estimated: `tokens.md` records each
-subagent's **exact** usage and `Duration`, ship's `token_report.py` parses the session transcript for
-the real orchestrator total and derives the autonomous wall-clock from `progress.md`'s OS-clock Log
-stamps, and anything unobservable is written `unavailable`, never a fabricated number. The full
+subagent's **exact** usage and `Duration`, ship's `finalize_tokens.py` routes by stamped `Host:`
+(Claude: `token_report.py`; Grok: `grok_token_report.py`; Cursor/Copilot/Codex/unstamped: unavailable)
+for the real orchestrator total and derives the autonomous wall-clock from `progress.md`'s OS-clock Log
+stamps (`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/now.py`, not `date -Iseconds`), and
+anything unobservable is written `unavailable`, never a fabricated number. The full
 discipline (row timing, stamp format, what ship's finalize fills) is wit-directory.md's `tokens.md`
 template section; phase skills cite it as **the ledger rule**.
 

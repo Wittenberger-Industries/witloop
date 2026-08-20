@@ -127,7 +127,7 @@ version:
   `**Update**`, `**Decision**`); it stays append-order as a resumable run timeline. Stamps come
   from the **OS clock** (`date -Iseconds`, or
   `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/now.py` where that shell syntax is
-  unavailable), never a model estimate; ship's `token_report.py` derives the run's autonomous
+  unavailable), never a model estimate; ship's `finalize_tokens.py` derives the run's autonomous
   wall-clock from exactly these stamps (spans + exclusions: the `tokens.md` section below), so a
   date-only or invented stamp makes timing `unavailable`.
 - **Citations.** External sources go under a numbered `## Citations` heading at the foot of the doc.
@@ -157,6 +157,14 @@ timestamp: <YYYY-MM-DD>
 - **Flow:** dev                <!-- dev | rpa; ship keys its dossier manifest + sweep whitelist on it; a missing line means dev -->
 - **Worktree:** <path or "-">
 - **Branch:** <branch or "-">
+- **Host:** <claude | codex | copilot | grok | cursor>
+- **Plugin root (resolved):** <path>
+
+## Capabilities (resolved)
+<!-- written at seed from references/capabilities.md for Host:; later phases
+     read THIS block, not the table and not the product name. Rewrite only when
+     absent (same staleness rule as Model routing). -->
+- keep_alive=<cell> · tokens=<cell> · ask=<cell> · subagent=<cell> · shell=<cell> · skill_invoke=<cell>
 
 ## Model routing (resolved)
 <!-- written when progress.md is seeded (dev:1-2 / rpa:2) from .wit/models.md; dispatches
@@ -202,7 +210,8 @@ that returns without one (e.g. a resumed agent) records `unavailable`, never an 
 carries its **Duration**: the notification's elapsed time, or the delta between your dispatch stamp and
 the notification's arrival (OS clock); `unavailable` when neither exists, never an estimate. Name each
 row's **Source** with the same short string you pass as the dispatch's `description` (the subagent + its
-specific job, e.g. `task-runner: task 3 (@/db seam)`): ship's `token_report.py` labels each
+specific job, e.g. `task-runner: task 3 (@/db seam)`): on Claude, `token_report.py` (via
+`finalize_tokens.py`) labels each
 `## Subagent detail` row from the harness's `agent-<id>.meta.json` `description`, so a shared name makes
 the split and this ledger joinable by eye. ship
 compiles the totals at the dossier tidy and `dev` includes the table in the final report. The scaffold is written by `check_tokens.py --init` from `_ledger.TEMPLATE`
@@ -223,7 +232,7 @@ timestamp: <YYYY-MM-DD>
 | research | researcher: <topic> | <n> | 3m12s | exact (completion notification) |
 | build W1 | task-runner: task 1 | <n> | 5m48s | exact |
 | build W1 | task-runner: task 2 | <n> | unavailable | exact |
-| orchestrator | main thread, all phases | (see Orchestrator section) | n/a (see below) | parsed by token_report.py; unavailable if the parse fails - never substitute or estimate |
+| orchestrator | main thread, all phases | (see Orchestrator section) | n/a (see below) | finalized by finalize_tokens.py; unavailable if the host has no local usage field or the parse fails: never substitute or estimate |
 
 **Subagents (exact): <sum>.**
 **Σ compute: <dur> across <n> dispatches.**
@@ -233,15 +242,14 @@ timestamp: <YYYY-MM-DD>
 
 _PENDING: the ledger is scaffolded by `check_tokens.py --init` (research:0), rows appended live, and
 ship replaces this section during the dossier tidy (BEFORE the dossier commit and the PR) by running
-`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/token_report.py --write <this file>` on Claude Code
-(a non-Claude host runs the finalizer its platform tool map names - Grok Build:
-`grok_token_report.py --write`), which parses the
-session data (per-turn `usage`: output, fresh input, cache write/read) and recomputes the Subagents
-sum. That parsed figure is the **only** reliable orchestrator measure; if the parse fails it writes
-`Orchestrator: unavailable for this run`; never a substitute, estimate, or invented figure. At close-out
-`check_tokens.py <this file>` gates `Phase = done`: a tokens.md still reading PENDING (or missing rows,
-or (on this Duration-column format) missing Duration cells / unfilled duration totals; an honest
-`unavailable` always passes) is a defect that blocks the PR._
+`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/finalize_tokens.py --write <this file>`. That CLI
+reads Host: from progress.md and routes to the host parser (Claude: token_report.py; Grok:
+grok_token_report.py; Cursor/Copilot/Codex/unstamped/unknown: the honest unavailable sentinel plus
+Duration from progress.md spans). If the parse fails or the host exposes no local usage field it writes
+`Orchestrator: unavailable for this run`; never a substitute, estimate, invented figure, or dashboard
+scrape. At close-out `check_tokens.py <this file>` gates `Phase = done`: a tokens.md still reading
+PENDING (or missing rows, or (on this Duration-column format) missing Duration cells / unfilled
+duration totals; an honest `unavailable` always passes) is a defect that blocks the PR._
 ```
 
 The same `--write` also fills the two duration totals: **Σ compute** is summed from the rows' Duration

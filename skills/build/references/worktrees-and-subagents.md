@@ -75,16 +75,15 @@ Each task runs in a **fresh** subagent so context doesn't accumulate across a lo
 `wit-task-runner` agent (`agents/wit-task-runner.md`). Scope its prompt tightly: give it the task and its
 immediate context, not the whole project.
 
-The dispatch mechanism is platform-specific (see `${CLAUDE_PLUGIN_ROOT}/references/codex-tools.md` /
-`copilot-tools.md` / `grok-tools.md`): Claude uses the Agent/Task tool, Copilot uses the `task` tool and
-`/fleet` for waves, Codex uses `spawn_agent` bounded by `[agents] max_threads`, Grok Build uses
-`spawn_subagent` with the built-in `general-purpose` type and the runner prompt inline. The prompt
-**content** is inline on every
-platform: the skeleton below gives each runner its task block + context in full. The dispatch *target*
-differs: on Claude Code, dispatch the **registered `wit-task-runner` agent** (build:2's instruction: the
-plugin registers it, and tiered model routing rides the dispatch); only on platforms without reliable
-named-agent registration (Codex: named-role dispatch is unreliable across builds there) pass the prompt
-to a generic worker carrying the `agents/wit-task-runner.md` contract inline.
+The dispatch mechanism is the stamped `subagent` cell (**the capability table**,
+`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md`). Prefer a named `wit-*` type
+(`wit-task-runner`, `wit-researcher`, `wit-code-checker`) when it appears in this session's list;
+otherwise dispatch a generic worker and **inline** the matching `agents/*.md` charter. Missing named
+types are not a hard failure. Procedure for a cell lives in the host adapter
+(`${CLAUDE_PLUGIN_ROOT}/references/codex-tools.md` / `copilot-tools.md` / `grok-tools.md` /
+`cursor-tools.md`). The prompt **content** is inline on every host: the skeleton below gives each
+runner its task block + context in full. The dispatch *target* is that named-or-inline rule (session
+list wins; no `exit 1` when `wit-*` types are absent).
 
 ### Task-runner prompt skeleton
 

@@ -26,6 +26,12 @@ never loaded at runtime).
 
 ## Procedure
 
+**Host probe (once at entry).** Detect `claude` | `codex` | `copilot` | `grok` | `cursor` per **the
+capability table** (`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md` Host probe; same tells as
+`wit:dev`). Plugin root: env if a wit root → walk-up from cwd → host cache; cwd-as-wit-root beats
+marketplace cache. When the run's `progress.md` is seeded (step 2), copy that host's cells into
+`Host:`, `Plugin root (resolved):`, and `## Capabilities (resolved)`. Stamp every host including claude.
+
 1. **Bootstrap the prerequisites.** Follow `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/uipath-bootstrap.md`:
    ensure **markitdown**, the **UiPath skills** plugin, and the **.NET 8 runtime** are installed (offer to
    install if absent), and on an existing UiPath repo delegate structure discovery to UiPath's

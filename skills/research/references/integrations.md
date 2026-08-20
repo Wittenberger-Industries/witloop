@@ -17,13 +17,22 @@ standalone. `scan` offers to install the recommended set on first run (see the s
 ## How to detect an available skill
 
 A skill is "available" if it appears in the session's skills list, or its directory exists under a known
-plugin/skills path. The deterministic sources, on any harness: the Claude plugin registry
-(`~/.claude/plugins/installed_plugins.json` - each entry's `installPath`, skills under
-`<installPath>/skills/`) and the flat `~/.agents/skills/` dir; harnesses that load Claude plugins
-(Grok Build) read the same registry (the platform tool map has the concrete paths). **Never stamp a
-`(<skill> absent)` fallback from memory: verify absence against the session list AND the registry
-first.** If unsure, use `find-skills` (vercel-labs/skills) to discover/install one, or fall
-back. Never hard-fail because an optional skill is missing; degrade gracefully and say which mode you're in.
+plugin/skills path. Check sources **in this order** (union; first hit wins). The helper
+`${CLAUDE_PLUGIN_ROOT}/skills/research/scripts/discover_skills.py` implements it (session paths as
+argv or stdin, then the dirs below; `--name` prints `present`/`absent`).
+
+1. Session skills list (paths the helper reads from argv or stdin).
+2. `~/.claude/plugins/installed_plugins.json` - each entry's `installPath`, skills under
+   `<installPath>/skills/` (Claude-compat and Grok Build read this same registry).
+3. `~/.cursor/plugins/cache/**/skills` (Cursor marketplace cache; Superpowers often lives only here).
+4. Copilot install dir `~/.copilot/installed-plugins/` (and `**/skills` under it).
+5. The flat `~/.agents/skills/` dir (aliases + Codex / Copilot / Grok).
+
+**Never stamp a `(skill absent)` fallback from memory: verify absence against the session list AND every root in this union first, and never stamp it before this union
+finishes.** Searching only the Claude registry (or guessing from the session list) and then logging
+`(<skill> absent)` is a defect on Cursor: the cache in step 3 must miss too. If unsure, use
+`find-skills` (vercel-labs/skills) to discover/install one, or fall back. Never hard-fail because an
+optional skill is missing; degrade gracefully and say which mode you're in.
 
 **Delegation is mandatory when the skill is present.** The fallback column applies only when it is
 absent. Every delegating phase logs its mode to progress.md: `<phase> via <skill>` or `<phase> via wit

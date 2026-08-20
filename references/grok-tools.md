@@ -145,9 +145,9 @@ hosts)".
   (`1m25s`, never bare `121s`). **Append the wave's rows at each wave gate**: Grok completions are
   pull-based (`get_command_or_subagent_output`), so append-on-notification silently skips dispatches
   (a live run logged 5 of 17); the wave gate is the reliable append point.
-- **Finalize (ship's dossier tidy):** run
-  `python <resolved-root>/skills/ship/scripts/grok_token_report.py --write .wit/features/<slug>/tokens.md`
-  INSTEAD of `token_report.py --write`. Grok persists **exact** per-subagent figures
+- **Finalize (ship's dossier tidy):** ship:6 runs
+  `python <resolved-root>/skills/ship/scripts/finalize_tokens.py --write .wit/features/<slug>/tokens.md`
+  (Host: grok routes to `grok_token_report.py`). Do not invoke `token_report.py` yourself. Grok persists **exact** per-subagent figures
   (`subagent_finished.tokens_used` in the session's `updates.jsonl`), so the finalizer sets the
   Subagents (exact) sum from the session split, appends the per-agent split section, and fills the
   duration totals - subtracting the **measured human approval-waits** (`events.jsonl`

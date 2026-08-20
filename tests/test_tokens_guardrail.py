@@ -1,4 +1,5 @@
 import json
+import os
 import re
 import subprocess
 import sys
@@ -423,11 +424,20 @@ class TokenReportWriteTests(unittest.TestCase):
 
 class FindTranscriptTests(unittest.TestCase):
     def test_encode_drops_drive_colon_and_separators(self):
-        enc = token_report.encode_claude_project_path(Path("D:/ClaudeCowork/demo"))
-        self.assertTrue(enc.startswith("D-"))
+        # encode() resolve()s first. Path("D:/...") is a Windows drive path only
+        # on nt; on POSIX resolve() joins cwd and the D- prefix never appears.
+        if os.name == "nt":
+            path = Path("D:/ClaudeCowork/demo")
+        else:
+            path = Path("/tmp/ClaudeCowork/demo")
+        enc = token_report.encode_claude_project_path(path)
         self.assertNotIn(":", enc)
         self.assertNotIn("/", enc)
         self.assertNotIn("\\", enc)
+        if os.name == "nt":
+            self.assertTrue(enc.startswith("D-"))
+        else:
+            self.assertIn("ClaudeCowork-demo", enc)
 
     def test_scopes_to_cwd_project_ignores_newer_foreign(self):
         with tempfile.TemporaryDirectory() as home:

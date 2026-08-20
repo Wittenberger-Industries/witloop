@@ -176,6 +176,14 @@ timestamp: <YYYY-MM-DD>
 - **Publish:** none   <!-- none | feed (publish package to tenant feed) | deploy (feed + deploy/activate to a folder); approved at the design gate; prod folder needs explicit approval -->
 - **SDD ToC source:** base | project sdd.md | .wit/sdd-template.md
 - **Worktree:** <path or ->   **Branch:** <branch or ->
+- **Host:** <claude | codex | copilot | grok | cursor>
+- **Plugin root (resolved):** <path>
+
+## Capabilities (resolved)
+<!-- written at seed from references/capabilities.md for Host:; later phases
+     read THIS block, not the table and not the product name. Rewrite only when
+     absent (same staleness rule as Model routing). -->
+- keep_alive=<cell> · tokens=<cell> · ask=<cell> · subagent=<cell> · shell=<cell> · skill_invoke=<cell>
 
 ## Model routing (resolved)
 <!-- written when progress.md is seeded (dev:1-2 / rpa:2) from .wit/models.md; dispatches

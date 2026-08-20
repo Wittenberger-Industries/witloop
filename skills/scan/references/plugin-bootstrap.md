@@ -14,27 +14,49 @@ without asking; never block if the user declines.
 
 ## How to check availability
 
-A skill/plugin is available if it appears in this session's skills list, or its directory exists under a
-known plugins path. If unsure, treat it as missing and offer it. (That lenient default is for this
-install offer only. Run-time delegation checks are stricter: integrations.md "How to detect an available
-skill" - absence must be verified against the installed-plugins registry before any fallback stamp.)
+A skill/plugin is available if `discover_skills.py` (integrations.md search order) finds it: session
+list, Claude registry, Cursor plugin cache, Copilot install dir, `~/.agents/skills/`. If unsure, treat
+it as missing and offer it. (That lenient default is for this install offer only. Run-time delegation
+checks are stricter: integrations.md "How to detect an available skill" - absence must be verified
+against that full union before any fallback stamp.)
+
+Read the stamped `Host:` from `progress.md` when it exists. Scan has no feature folder yet: use the
+in-session host probe (`claude` | `codex` | `copilot` | `grok` | `cursor`) the same way.
 
 ## Recommended set
 
 | Plugin / skills | Why wit wants it | Install (official source) |
 |-----------------|-----------------|---------------------------|
-| **obra/superpowers** | brainstorming, writing-plans, subagent-driven-development, using-git-worktrees, TDD, code-review, verification, finishing-a-branch; wit delegates the heavy loop to these | `/plugin marketplace add obra/superpowers-marketplace` then `/plugin install superpowers@superpowers-marketplace` |
+| **obra/superpowers** | brainstorming, writing-plans, subagent-driven-development, using-git-worktrees, TDD, code-review, verification, finishing-a-branch; wit delegates the heavy loop to these | Cursor marketplace / installed cache, or Claude `/plugin` (host sections below) |
 | **anthropics/skills:frontend-design** | building/refining UI for `[frontend]` tasks | `npx skills add anthropics/skills` (via skills.sh) |
 | **vercel-labs/skills:find-skills** (optional) | lets wit pull a missing skill mid-run | `npx skills add vercel-labs/skills` |
 
 If you can't verify an exact marketplace slug, don't fabricate one: give the user the command shape and
-ask them to confirm the source, or point them at https://skills.sh to find it. On Grok Build, superpowers
-is available on xAI's plugin marketplace as well as via Claude-plugin compatibility.
+ask them to confirm the source, or point them at https://skills.sh to find it.
+
+## Host: cursor
+
+When Host is cursor, do not offer Claude `/plugin` marketplace or `/plugin install` commands. Point at
+the Cursor plugin marketplace and the already-installed cache under `~/.cursor/plugins/cache/`.
+Superpowers and wit often already live there; offer only what the union actually missed. `npx skills add`
+remains valid for skills.sh entries. Skip the `~/.agents/skills/` alias copy on Cursor (plugin skills
+plus natural-language auto-trigger are enough).
+
+## Other hosts (Claude `/plugin`, Grok Claude-compat, Copilot)
+
+On Grok Build, superpowers is available on xAI's plugin marketplace as well as via Claude-plugin
+compatibility.
+
+Claude `/plugin` install (not used when Host is cursor):
+
+`/plugin marketplace add obra/superpowers-marketplace` then `/plugin install superpowers@superpowers-marketplace`
 
 ## Entry-command aliases (Copilot / Codex / Grok)
 
 On Claude Code the plugin namespace already gives `/wit:scan`, `/wit:dev`, `/wit:rpa`, `/wit:add-issues`;
 skip this section.
+On Cursor, skip this section: plugin skills plus natural-language auto-trigger are enough; do not copy
+aliases into `~/.agents/skills/`.
 On Copilot CLI the plugin prefix renders the entry points as `/wit scan`, `/wit dev`, `/wit rpa`,
 `/wit add-issues`, and on Codex they invoke as `$scan`, `$dev`, `$rpa`, `$add-issues`; on Grok Build they
 invoke as bare `/scan`, `/dev`, `/rpa`, `/add-issues` (Grok qualifies clashes by **scope**, `/user:scan`,
@@ -56,8 +78,12 @@ keep working.
 
 After detecting what's missing, ask once with AskUserQuestion, e.g.:
 
-- "superpowers isn't installed; it powers wit's brainstorm/build/ship. Install it now?" → on yes, output
-  (or run, if the environment allows) the two `/plugin` commands above and confirm they registered.
+- Host: cursor: "superpowers isn't installed; it powers wit's brainstorm/build/ship. Install it now?"
+  → on yes, point at the Cursor marketplace / installed cache (Host: cursor section). Do not output
+  Claude `/plugin` commands.
+- Other hosts: "superpowers isn't installed; it powers wit's brainstorm/build/ship. Install it now?"
+  → on yes, output (or run, if the environment allows) the two `/plugin` commands in Other hosts and
+  confirm they registered.
 - Group the offer: list everything missing and let the user pick which to add (multi-select).
 
 Record the outcome in your scan report ("installed: superpowers; skipped: find-skills"). wit's phase skills

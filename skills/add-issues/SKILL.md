@@ -37,7 +37,7 @@ Design rationale for this skill lives in the wit repo's `docs/design-notes/add-i
   (see `${CLAUDE_PLUGIN_ROOT}/skills/add-issues/references/gh-metadata.md`).
 - Ensure `.wit/issues/` is self-gitignored before any draft lands (idempotent; same pattern as
   `.logs/` in workflow.md):
-  `mkdir -p .wit/issues && printf '*\n' > .wit/issues/.gitignore`
+  `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/ensure_logdir.py .wit/issues`
   Do not rely on a root `.gitignore` entry - scan only seeds that on greenfield setup. The
   directory is transient staging and should be empty (see wit-directory.md). If a draft is
   sitting there, a previous run didn't finish - offer to resume it or discard it before
@@ -87,21 +87,19 @@ Design rationale for this skill lives in the wit repo's `docs/design-notes/add-i
 ### 5. Publish and clean up
 
 - Strip the draft's OKF frontmatter into a throwaway body file (dossier metadata, not issue
-  text - same CRLF-safe awk as `${CLAUDE_PLUGIN_ROOT}/skills/ship/SKILL.md` ship:7; inlined so
-  agents that only load add-issues never publish YAML), then create the issue:
+  text; same helper as ship:7 so agents that only load add-issues never publish YAML). Write
+  UTF-8 with the CLI; do not redirect stdout with `>` (PowerShell `>` is UTF-16):
 
-  ```bash
-  body=$(mktemp)
-  awk '{sub(/\r$/,"")} NR==1&&$0=="---"{f=1;next} f&&$0=="---"{f=0;next} !f' .wit/issues/<slug>.md > "$body"
-  gh issue create --title "…" --body-file "$body" [--type … --label … --milestone … --assignee …
+  ```
+  python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/strip_frontmatter.py .wit/issues/<slug>.md .wit/issues/<slug>.body.md
+  gh issue create --title "…" --body-file .wit/issues/<slug>.body.md [--type … --label … --milestone … --assignee …
     --parent … --blocked-by …]
-  rm -f "$body"
   ```
 - If a metadata flag fails: retry without it, log `skipped <capability> (<reason>)`, and try to
   set it post-create via `gh issue edit` where supported
   (`${CLAUDE_PLUGIN_ROOT}/skills/add-issues/references/gh-metadata.md` has the fallback map).
   An issue with a missing label beats no issue - never let optional metadata block creation.
-- **On success: delete the draft.** `.wit/issues/` holds only unpublished work - the GitHub
+- **On success: delete the draft and the stripped body file.** `.wit/issues/` holds only unpublished work - the GitHub
   issue is now the single source of truth. On abort at the gate: delete it too. Only a failed
   `gh issue create` leaves the draft in place, so the next run can resume instead of
   re-interviewing.

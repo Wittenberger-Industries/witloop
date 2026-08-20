@@ -73,8 +73,9 @@ consumption at per-model rates, the successor to premium requests). What wit can
   usage statistics with the response unless `-s/--silent`; same rule. No figure in the conversation →
   `Orchestrator: unavailable for this run`; never estimate credits.
 - **`token_report.py`'s transcript parse and per-subagent split are Claude Code-only** (they read
-  `~/.claude/projects/**` and its `subagents/` sidecars). The duration totals and `progress.md`
-  wall-clock still finalize normally on Copilot: timing comes from wit's own stamps, not the platform.
+  `~/.claude/projects/**` and its `subagents/` sidecars). Do not invoke `token_report.py` yourself.
+  ship:6 runs `python <resolved-root>/skills/ship/scripts/finalize_tokens.py --write .wit/features/<slug>/tokens.md`
+  (Host: copilot writes the unavailable sentinel and fills Duration from `progress.md` stamps).
 - **Post-hoc reconciliation** (outside the run): `GET /users/{username}/settings/billing/ai_credit/usage`
   (or the `/organizations/{org}/…` variant) reports credits per day/model/user with ~30-minute lag, and
   the billing CSV itemizes per interaction, useful to attribute a run's real cost after the fact, but

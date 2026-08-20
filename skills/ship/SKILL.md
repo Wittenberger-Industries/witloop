@@ -364,7 +364,7 @@ and proceed to cleanup; the remote-checks box below passes on that recorded subs
   hold the run open: log the failures, Phase stays `ship`, keep the worktree; the keep-alive loop
   re-enters ship and resumes at this gate. Never accept red autonomously. Accepted red leaves the
   armed keep-alive condition unsatisfiable (its predicate names green checks): tell the user to clear
-  the `/goal` (or stop the Autopilot loop) themselves.
+  the `/goal` (or stop the Autopilot loop, or clear the armed keep-alive) themselves.
 - **Timeout / a check that never reports**: not green. Log
   `remote checks: pending after <timeout> (<names>)` and hold like red minus the fix loop; the next
   re-entry re-checks cheaply.
@@ -428,7 +428,8 @@ Timing (autonomous, manual waits excluded)
   Σ subagent compute:                 <tokens.md Σ-compute line>
 ```
 
-If a keep-alive loop is armed (Claude/Codex `/goal` or Copilot Autopilot), its condition holds only
+If a keep-alive loop is armed (stamped `keep_alive` from `references/keep-alive.md`: `/goal` or
+Copilot Autopilot), its condition holds only
 when the checklist **including the remote-checks box** passes: that is the state in which the loop
 clears. Exception: user-accepted red. The condition names green checks and stays unsatisfiable; the
 loop ends only when the user clears it (told at the gate above).

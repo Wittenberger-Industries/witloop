@@ -127,9 +127,14 @@ content is always inline, exactly as on Codex (`skills/build/references/worktree
 
 ## Keep-alive
 
-Grok's `/goal` is **model-judged**, not a hard predicate: see the Grok Build branch in
-`references/keep-alive.md`. Reuse the condition line as the definition of done; the unattended-run warning
-applies.
+Grok's `/goal` is **model-judged**, not a hard predicate: same `model_judged_goal` key as Cursor
+(see `references/keep-alive.md`). Reuse the condition line as the definition of done. Complete via
+`update_goal`. Cursor's tools differ (`CreateGoal` / `UpdateGoal` in `cursor-tools.md`).
+
+Use `/goal pause | resume` around auth-gate stops. Headless fallback:
+`grok -p "<prompt incl. the done-condition>" --always-approve --max-turns <N>` with `--continue` /
+session resume. `--always-approve` runs Grok unattended (prompts suppressed); use it in repos you
+trust. Do not put this CLI in the shared keep-alive print block (Cursor would emit it).
 
 ## Models & usage
 

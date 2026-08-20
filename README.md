@@ -88,8 +88,10 @@ predicate, so treat it as Copilot-class autonomy. Handoff templates and the warn
 `~/.cursor/plugins/cache/<publisher>/wit/<hash>/` (`skills/` + `.claude-plugin/`). A checkout of this
 repo is itself a wit root; plugin-root resolution walks up from cwd before that cache
 (`references/cursor-tools.md`). Skills load as plugin skills and auto-trigger from their descriptions.
-Keep-alive is none (the chat already persists): do not paste `/goal`, and do not treat Cursor Autopilot
-as wit persistence. Optional `/loop` may re-wake a chat after Phase is done; it is not wit keep-alive.
+Keep-alive is **model-judged `/goal`** (same family as Grok): paste the one-line `/goal` from
+`references/keep-alive.md`; the agent registers it with `CreateGoal` and completes with `UpdateGoal`.
+Do not treat Cursor Autopilot as wit persistence. Optional `/loop` may re-wake a chat after Phase is
+done; it is not wit keep-alive.
 
 ## Platform differences
 
@@ -98,7 +100,7 @@ wit is one source across five hosts; only the autonomy spine differs:
 | | Claude Code | Codex CLI | Copilot CLI | Grok Build | Cursor |
 |---|---|---|---|---|---|
 | Skills | plugin (`.claude-plugin/`) | `.codex-plugin/` (+ reads `.claude-plugin/marketplace.json`) | `plugin install` (reads `.claude-plugin/`); fallback whole-repo `/skills add` | Claude-plugin discovery, zero config; enable in `~/.grok/config.toml` | Cursor marketplace; cache under `~/.cursor/plugins/cache/` |
-| Keep-alive | built-in `/goal` | native `/goal` | Autopilot flags | native `/goal` (model-judged) | none (chat persists; optional `/loop` is not wit keep-alive) |
+| Keep-alive | built-in `/goal` | native `/goal` | Autopilot flags | native `/goal` (model-judged) | native `/goal` (model-judged; `CreateGoal` / `UpdateGoal`) |
 | Command namespace | `/wit:dev` | `$wit-dev` (alias) / `$dev` | `/wit-dev` (alias) / `/wit dev` | `/wit-dev` (alias) / `/dev` (bare; `/user:dev` on clash) | plugin skills + natural-language auto-trigger |
 | `${CLAUDE_PLUGIN_ROOT}` | native | compat var | the installed plugin root (or the clone) | resolve to the plugin root (env var is hook-only) | resolve-once (env if wit root, walk-up cwd, then cache) |
 | Subagents | Agent/Task | `spawn_agent` | `task` / `/fleet` | `spawn_subagent` (general-purpose, inline) | `Task` (`wit-*` when listed, else inline) |
@@ -160,8 +162,8 @@ weigh. In *result mode* (at ship) it confirms each criterion and locked decision
 when installed, wit's built-in review otherwise). It feeds the gate and the ship review.
 
 At handoff wit arms a keep-alive loop so the run continues across turns until the PR condition holds:
-Claude Code & Codex use their built-in `/goal`; Copilot uses Autopilot. wit works without it too, just less
-robustly through a stalled turn.
+Claude Code and Codex use their built-in `/goal`; Grok and Cursor use model-judged `/goal`; Copilot uses
+Autopilot. wit works without it too, just less robustly through a stalled turn.
 
 ## The `.wit/` directory
 

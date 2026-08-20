@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CAPABILITIES = ROOT / "references" / "capabilities.md"
 KEEP_ALIVE = ROOT / "references" / "keep-alive.md"
+CURSOR_TOOLS = ROOT / "references" / "cursor-tools.md"
 
 CELLS = ("predicate_goal", "model_judged_goal", "relaunch", "none")
 
@@ -72,23 +73,32 @@ class KeepAliveCapabilityTests(unittest.TestCase):
         for cell in CELLS:
             self.assertRegex(text, r"(?m)^## %s\s*$" % cell, msg=cell)
 
-    def test_cursor_selects_none_without_goal_print_or_autopilot(self):
-        self.assertEqual(keep_alive_cell_for("cursor"), "none")
-        block = print_block_for_host("cursor")
-        for line in block.splitlines():
-            self.assertFalse(
-                line.lstrip().startswith("/goal"),
-                "/goal must not be the print command on none: %r" % line,
-            )
-        self.assertNotIn("/goal", block)
-        self.assertNotIn("autopilot", block.lower())
-        self.assertIn("/loop", block)
+    def test_cursor_and_grok_share_model_judged_goal(self):
+        self.assertEqual(keep_alive_cell_for("cursor"), "model_judged_goal")
+        self.assertEqual(keep_alive_cell_for("grok"), "model_judged_goal")
+        cursor_block = print_block_for_host("cursor")
+        grok_block = print_block_for_host("grok")
+        self.assertEqual(cursor_block, grok_block)
+        self.assertTrue(cursor_block.lstrip().startswith("/goal"))
+        self.assertNotIn("autopilot", cursor_block.lower())
+        self.assertNotIn("copilot --autopilot", cursor_block)
+        self.assertNotIn("grok -p", cursor_block)
+        self.assertNotIn("--always-approve", cursor_block)
+        none_block = print_blocks(KEEP_ALIVE.read_text(encoding="utf-8"))["none"]
+        self.assertFalse(none_block.lstrip().startswith("/goal"))
+        self.assertNotEqual(keep_alive_cell_for("cursor"), "none")
+
+    def test_cursor_tools_names_create_and_update_goal(self):
+        text = CURSOR_TOOLS.read_text(encoding="utf-8")
+        self.assertIn("CreateGoal", text)
+        self.assertIn("UpdateGoal", text)
 
     def test_hosts_share_cells(self):
         self.assertEqual(keep_alive_cell_for("claude"), "predicate_goal")
         self.assertEqual(keep_alive_cell_for("codex"), "predicate_goal")
         self.assertEqual(keep_alive_cell_for("copilot"), "relaunch")
         self.assertEqual(keep_alive_cell_for("grok"), "model_judged_goal")
+        self.assertEqual(keep_alive_cell_for("cursor"), "model_judged_goal")
         self.assertEqual(
             print_block_for_host("claude"),
             print_block_for_host("codex"),

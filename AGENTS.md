@@ -41,8 +41,8 @@ order in that tool map (env if it is a wit root, walk-up from cwd, then cache).
   build, ship) carry `user-invocable: false`; hidden from slash pickers, still invoked by the
   orchestrating skill and by natural language ("ship it").
 - Persistence: wit hands off to a keep-alive loop at the end of brainstorm. Print the block for the
-  stamped `keep_alive` capability from `references/keep-alive.md` (Claude/Codex: `/goal`; Grok: model-judged
-  `/goal`; Copilot: Autopilot; Cursor: none, the chat already persists). Cursor Autopilot is not wit
+  stamped `keep_alive` capability from `references/keep-alive.md` (Claude/Codex: `/goal`; Grok and
+  Cursor: model-judged `/goal`; Copilot: Autopilot). Cursor Autopilot is not wit
   keep-alive; optional `/loop` is not either. See the host tool map. wit runs without a keep-alive too,
   just less robustly.
 - Superpowers precedence (integrations.md "Who initiates", `skills/research/references/integrations.md`):

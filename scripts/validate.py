@@ -165,6 +165,12 @@ for tm in (
 ka = (ROOT / "references/keep-alive.md").read_text(encoding="utf-8")
 if "Grok Build" not in ka or "update_goal" not in ka:
     errors.append("references/keep-alive.md: missing the Grok Build model-judged /goal branch")
+for key in ("predicate_goal", "model_judged_goal", "relaunch", "none"):
+    if key not in ka:
+        errors.append(f"references/keep-alive.md: missing keep_alive key {key}")
+ct = (ROOT / "references/cursor-tools.md").read_text(encoding="utf-8")
+if "CreateGoal" not in ct or "UpdateGoal" not in ct:
+    errors.append("references/cursor-tools.md: missing CreateGoal / UpdateGoal keep-alive mechanism")
 
 for s in ("skills/dev/SKILL.md", "skills/research/SKILL.md"):
     body = (ROOT / s).read_text(encoding="utf-8").lower()

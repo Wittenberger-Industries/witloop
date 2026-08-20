@@ -65,7 +65,7 @@ class CapabilityTableTests(unittest.TestCase):
 
     def test_cursor_keep_alive_tokens_ask(self):
         matrix = parse_matrix(CAPABILITIES.read_text(encoding="utf-8"))
-        self.assertEqual(matrix["keep_alive"]["cursor"], "none")
+        self.assertEqual(matrix["keep_alive"]["cursor"], "model_judged_goal")
         self.assertEqual(matrix["tokens"]["cursor"], "unavailable")
         self.assertEqual(matrix["ask"]["cursor"], "AskQuestion")
 
@@ -75,6 +75,10 @@ class CapabilityTableTests(unittest.TestCase):
         self.assertEqual(matrix["keep_alive"]["codex"], "predicate_goal")
         self.assertEqual(matrix["keep_alive"]["copilot"], "relaunch")
         self.assertEqual(matrix["keep_alive"]["grok"], "model_judged_goal")
+        self.assertEqual(
+            matrix["keep_alive"]["cursor"],
+            matrix["keep_alive"]["grok"],
+        )
 
     def test_claude_ask_and_unavailable_tokens(self):
         matrix = parse_matrix(CAPABILITIES.read_text(encoding="utf-8"))

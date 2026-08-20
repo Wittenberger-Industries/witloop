@@ -17,9 +17,8 @@ pick-up, into `docs/plans/`, and rides in the PR.
 
 ## Queue (in order)
 
-**The queue is empty** (2026-08-19): Cursor as a first-class host via a capability table (#89)
-shipped as **v1.14.0**. Prior: learnings lifecycle (#78-#80/#83), Reflection (#81), process-drift
-telemetry (#82), and dry-run follow-ups as v1.13.1-v1.13.4. Only #34 remains owner-postponed.
+**The queue is empty** (2026-08-20): Cursor native `/goal` (1.14.1) shipped on top of the
+capability table (#89 / **v1.14.0**). Only #34 remains owner-postponed.
 
 | Slot | Issue | What | Version | Effort · Risk | Why this order |
 |---|---|---|---|---|---|
@@ -67,11 +66,15 @@ telemetry (#82), and dry-run follow-ups as v1.13.1-v1.13.4. Only #34 remains own
 
 ## Shipped (roadmap-era)
 
+- **Cursor native `/goal`:** **v1.14.1** (2026-08-20). Cursor `keep_alive` is `model_judged_goal`
+  (shared `/goal` template with Grok). `references/cursor-tools.md` names `CreateGoal` / `UpdateGoal`.
+  `none` remains a valid unused key. Three-way manifest parity at 1.14.1.
+
 - **#89** Cursor as a first-class host via a capability table: **v1.14.0** (2026-08-19).
   Host behavior lives in `references/capabilities.md`; Cursor is the first filled row
-  (`keep_alive=none`, tokens unavailable). Adapter: `references/cursor-tools.md`. ship:6 uses
-  `finalize_tokens.py`. Cursor Autopilot is not wit persistence (keep-alive none; the chat
-  already persists). Queue remains empty except postponed #34. Three-way manifest parity at 1.14.0.
+  (then `keep_alive=none`, tokens unavailable). Adapter: `references/cursor-tools.md`. ship:6 uses
+  `finalize_tokens.py`. Cursor Autopilot is not wit persistence. Superseded for keep-alive by 1.14.1.
+  Three-way manifest parity at 1.14.0.
 
 - **Dry-run follow-ups** (token gate + transcript scope + ship:1 Reflection): **v1.13.4**
   (2026-07-19). Closes the three orthogonal findings from

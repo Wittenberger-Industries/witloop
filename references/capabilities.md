@@ -2,7 +2,7 @@
 type: Reference
 title: "The capability table"
 description: "Capability x host matrix. Skills read stamped cells in progress.md, not product-name if-trees."
-timestamp: 2026-08-19
+timestamp: 2026-08-20
 tags: [capabilities, hosts, portability, reference]
 ---
 
@@ -18,14 +18,14 @@ Do not add product-name if-trees in those bodies.
 |---|---|---|---|---|---|
 | plugin_root | native env | compat env | install or clone | resolve-once | resolve-once (env if wit root, walk-up cwd, then host cache) |
 | subagent | named Agent/Task | inline spawn_agent | task / fleet | inline spawn_subagent | Task wit-* when listed else inline agents/*.md |
-| keep_alive | predicate_goal | predicate_goal | relaunch | model_judged_goal | none |
+| keep_alive | predicate_goal | predicate_goal | relaunch | model_judged_goal | model_judged_goal |
 | tokens | token_report.py | unavailable | unavailable | grok_token_report.py | unavailable |
 | ask | AskUserQuestion | unknown | unknown | ask_user_question | AskQuestion |
 | shell | Bash + python fallback | shell | bash | run_terminal_command | Python scripts (POSIX or PowerShell) |
 | skill_invoke | plugin skills + aliases | native $skill + aliases | /wit skill + aliases | session list + Claude registry | plugin skills + natural-language auto-trigger |
 
-`keep_alive` values: `predicate_goal` (Claude/Codex `/goal`), `model_judged_goal` (Grok),
-`relaunch` (Copilot Autopilot), `none` (Cursor: chat persists; no `/goal`; no Autopilot).
+`keep_alive` values: `predicate_goal` (Claude/Codex `/goal`), `model_judged_goal` (Grok and Cursor
+`/goal`), `relaunch` (Copilot Autopilot), `none` (no current host; chat persists, no `/goal`).
 Codex/Copilot `ask` is `unknown`: those adapters have no Ask row; do not invent a tool name.
 Procedure for a cell lives in the host adapter, not here.
 

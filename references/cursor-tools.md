@@ -1,8 +1,8 @@
 ---
 type: Reference
 title: "Cursor: tool & capability mapping for wit"
-description: "Claude Code to Cursor tool-name and capability equivalents, plus plugin-root order, marketplace vs cache, named-vs-inline Task, keep-alive none, and tokens unavailable."
-timestamp: 2026-08-19
+description: "Claude Code to Cursor tool-name and capability equivalents, plus plugin-root order, marketplace vs cache, named-vs-inline Task, keep-alive model_judged_goal (CreateGoal/UpdateGoal), and tokens unavailable."
+timestamp: 2026-08-20
 tags: [cursor, tools, portability, reference]
 ---
 
@@ -73,18 +73,26 @@ generic type and **inline** the matching `agents/*.md` charter into the prompt. 
 is not a hard failure (a Cursor dry-run with no `wit-*` types still completed inline). Prompt
 skeletons stay in `skills/build/references/worktrees-and-subagents.md`.
 
-## Keep-alive: none
+## Keep-alive
 
-Capability `keep_alive` is `none`. This Cursor chat already persists until it is closed.
+Cursor `keep_alive` is `model_judged_goal` (shared family with Grok). Print the
+`model_judged_goal` block from `references/keep-alive.md`. Pasting the one-line
+`/goal` is the go. Never print Copilot Autopilot flags. Cursor Autopilot is not
+wit persistence: that skill triages an existing PR (conflicts, comments, CI) and
+does not drive research -> build -> ship. Optional `/loop` after Phase is done
+is not keep-alive.
 
-- Do **not** paste Claude `/goal`.
-- Do **not** relaunch Copilot Autopilot flags.
-- Do **not** treat **Cursor Autopilot** as wit keep-alive. That skill triages an existing PR
-  (conflicts, comments, CI); it does not drive research -> build -> ship.
+Mechanism (this adapter):
 
-Print the `none` block from `references/keep-alive.md` (capability-keyed). Optional Cursor `/loop`
-may re-wake a chat after `Phase` is done; it is a user opt-in, **not** wit keep-alive and not a
-go-signal.
+- On paste, call `CreateGoal` exactly once with the printed objective.
+  Do not create goal files by hand; do not retry creation.
+- Before self-completing, run a current-state audit against the objective
+  (files, tests, PR checks). Then call `UpdateGoal` with status `complete`.
+- Do not call `UpdateGoal` merely because the turn is ending.
+
+These two tools appear in the parent Cursor session after the user pastes `/goal`.
+They are not always-present SKILL tools. Do not invent a CreateGoal JSON schema;
+names plus `UpdateGoal` status `complete` plus exactly-once are the contract.
 
 ## Tokens: unavailable
 

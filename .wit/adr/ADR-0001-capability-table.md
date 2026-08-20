@@ -23,12 +23,12 @@ We will:
 1. Own the capability x host matrix in `references/capabilities.md`. Rows are capabilities (`plugin_root`, `subagent`, `keep_alive`, `tokens`, `ask`, `shell`, `skill_invoke`). Columns are hosts (`claude`, `codex`, `copilot`, `grok`, `cursor`). Adapters fill cells. Always-loaded SKILL bodies cite **the capability table** and then read stamped cells in `progress.md`.
 2. Probe the host once at scan/dev/rpa entry. Stamp `Host:`, `Plugin root (resolved):`, and `## Capabilities (resolved)` into `progress.md`. Later phases never re-guess. Plugin-root order: (a) `CLAUDE_PLUGIN_ROOT` if it is a wit root, (b) walk-up from cwd to `skills/` + `.claude-plugin/`, (c) host plugin cache. Cwd-as-wit-root beats marketplace cache so this source repo dogfoods itself.
 3. Make `finalize_tokens.py --write` the only ship:6 token command. It picks a parser from `Host:`. Cursor (and any host whose `tokens` cell is `unavailable`) writes `Orchestrator: unavailable for this run` and must not invoke `token_report.py`. Duration totals still fill from `progress.md`. Unstamped Host fail-safes to unavailable.
-4. Key `keep-alive.md` by `keep_alive` capability (`predicate_goal` / `model_judged_goal` / `relaunch` / `none`), not by product name. Cursor is `none`.
+4. Key `keep-alive.md` by `keep_alive` capability (`predicate_goal` / `model_judged_goal` / `relaunch` / `none`), not by product name. Cursor and Grok share `model_judged_goal` (one printable `/goal` template). Host register/complete tools live in adapters: Grok `update_goal`; Cursor `CreateGoal` then `UpdateGoal`. `none` remains a valid value for a future host; it is not Cursor's. (Amended 2026-08-20 in 0002-cursor-goal after Cursor gained native `/goal`; 1.14.0 had shipped Cursor as `none`.)
 
 Cursor is the first fully filled column and the adapter we optimize in this change (`references/cursor-tools.md`). Other hosts become rows filled from existing adapters, not new if-trees.
 
 ## Consequences
-- **Positive:** the next host is a table row plus an adapter file. Cursor stops binding Claude transcripts and stops printing the wrong keep-alive. Source-repo dogfood resolves plugin root to this tree.
+- **Positive:** the next host is a table row plus an adapter file. Cursor stops binding Claude transcripts and prints the same model-judged `/goal` family as Grok, with CreateGoal/UpdateGoal named only in the adapter. Source-repo dogfood resolves plugin root to this tree.
 - **Negative / costs:** every host must stamp `Host:` (Claude included) or token finalize fail-safes to unavailable. `validate.py` must stop requiring `autopilot`/`grok` inside SKILL bodies. Orchestrators must load `capabilities.md` once when they need a cell.
 - **Follow-ups:** Gemini/OpenCode/Factory are later rows. Worktree path under `.wit/worktrees/` stays a separate issue. Remaining POSIX (`>` UTF-16 on PowerShell) is a pitfall, not a third helper this PR.
 

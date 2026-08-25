@@ -103,9 +103,20 @@ timestamp: 2026-08-25
 - **Verify:** `python -m unittest tests.test_work_type_release && python scripts/validate.py`
 - **Depends on:** 6
 
+## Task 8: Wire on-demand investigation and bug-fix pointers  [infra]
+- **Files:** `skills/dev/SKILL.md`, `skills/dev/references/work-types.md`,
+  `tests/test_work_type_routing.py`
+- **Do:** Now that the on-demand files exist, point the read-only prelude at
+  `${CLAUDE_PLUGIN_ROOT}/skills/dev/references/investigation.md` for investigation, and point
+  feature/bug-fix continuation at `${CLAUDE_PLUGIN_ROOT}/skills/dev/references/bug-fix.md` after
+  the folder classifier for bug-fix only. Flip Task 1 tests that forbade those plugin-root paths.
+  Keep `work-types.md` as the first always-loaded pointer. Feature path and folder classifier stay.
+- **Verify:** `python -m unittest tests.test_work_type_routing tests.test_investigation_route tests.test_bug_fix_route && python scripts/validate.py`
+- **Depends on:** 2, 3
+
 ## Waves  (derived from Depends on + Files: what build runs concurrently)
 - Wave 1: task 1
 - Wave 2: tasks 2, 3, 5
-- Wave 3: task 4
+- Wave 3: tasks 4, 8
 - Wave 4: task 6
 - Wave 5: task 7

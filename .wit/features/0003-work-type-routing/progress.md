@@ -59,11 +59,13 @@ timestamp: 2026-08-25
 - 2026-08-25T19:22:00+00:00 **Update** Wave 2 dispatched: tasks 2, 3, 5
 - 2026-08-25T19:30:45+00:00 **Update** Task 2 done: read-only investigation exit
 - 2026-08-25T19:30:45+00:00 **Update** Task 2 tokens unavailable Duration unavailable
+- 2026-08-25T19:30:45+00:00 **Update** Task 3 done: reproduce-first bug-fix overlay
+- 2026-08-25T19:30:45+00:00 **Update** Task 3 tokens unavailable Duration unavailable
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Add the work-type routing foundation
 - [x] 2. Add the read-only investigation exit
-- [ ] 3. Overlay the reproduce-first bug-fix lifecycle
+- [x] 3. Overlay the reproduce-first bug-fix lifecycle
 - [ ] 4. Enforce bug-fix proof in checker and ship
 - [ ] 5. Keep timing reports compatible with gate bypass
 - [ ] 6. Document work-type routing

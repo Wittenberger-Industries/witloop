@@ -37,6 +37,17 @@ doc, never loaded at runtime).
 - **Borrow.** Detect installed skills and hand off:
   `${CLAUDE_PLUGIN_ROOT}/skills/research/references/integrations.md`.
 
+## Bug-fix overlay
+
+When Work type is bug-fix, follow `${CLAUDE_PLUGIN_ROOT}/skills/dev/references/bug-fix.md`; before approach fan-out, run `systematic-debugging` (or the inline fallback) as the evidence step; stamp
+`debug via superpowers:systematic-debugging` or `debug via wit fallback (systematic-debugging absent)`.
+Plan and the plan-mode checker always run. Always stamp `design gate opened` first. If the narrow-fix
+predicate holds, write `## Gate bypass` and
+`- <ts> **Update** design gate bypassed (narrow-fix): <one-line reason>, phase = build`.
+`--auto` stays separate: NEVER reuse `design gate auto-approved (--auto)` for a narrow-fix.
+If the predicate fails under `--auto`, keep today's auto-approve path.
+missing Work type = feature; never consult Gate bypass.
+
 ## Pipeline
 
 ### 0 - Engage & resume
@@ -150,20 +161,26 @@ Full detail: .wit/features/<slug>/ (spec.md, tasks.md, pitfalls.md, verification
 No ADR (nothing hard to reverse)? Render the line as **Approach:** <the decision>
 *(no ADR: nothing hard to reverse)* and drop the ADR path from the footer line.
 
-Then check **Gate mode** in `progress.md`:
-- **interactive** (default): ask with the stamped `ask` tool (**the capability table**; Claude verb
+Then check **Gate mode** in `progress.md`. For bug-fix, evaluate the narrow-fix predicate after
+`design gate opened` (already stamped in research:2) and before asking:
+- **narrow-fix bypass** (Work type is bug-fix and every conjunct holds): do not ask; write `## Gate bypass`
+  and log `- <ts> **Update** design gate bypassed (narrow-fix): <one-line reason>, phase = build`.
+  NEVER reuse `design gate auto-approved (--auto)`.
+- **interactive** (default, including bug-fix when the predicate fails): ask with the stamped `ask` tool (**the capability table**; Claude verb
   AskUserQuestion, mapped via the host tool map): **approve** / **amend the approach** (loop to
   research with the feedback) / **amend scope or spec** (loop to plan) / **stop**. Record the outcome;
   an approve is stamped `- <ts> **Update** design gate approved, phase = build` (this wording restarts
   the autonomous clock).
 - **auto-approve** (`/wit:dev --auto`): skip the question; write the same rendered summary into
   `progress.md` and log `- <ts> **Update** design gate auto-approved (--auto), phase = build`.
+  If the predicate fails under `--auto`, keep today's auto-approve path. `--auto` stays separate from
+  a recorded narrow-fix bypass.
 
 **Re-opened mid-build** (a post-gate amend loops back here while the feature worktree exists): the
 worktree's `.wit/features/<slug>/` is canonical: read and render the summary from that copy, not
 main's, and say in the summary which copy it was rendered from.
 
-Only an explicit approve (or auto-approve) advances to implementation.
+Only an explicit approve (or auto-approve, or a recorded narrow-fix bypass) advances to implementation.
 
 ### 4 - Hand off to implementation
 **Interactive gate only:** if persistence wasn't armed at handoff, print the ready-made keep-alive
@@ -173,7 +190,7 @@ again (the user is present; they just approved), **verbatim from
 paste `/goal`; `relaunch` → paste the Autopilot command; `none` → user confirmation (the chat
 continues; never `/goal`). When the signal registers, continue into build **in the same turn**; don't
 end the turn waiting for another prompt. Under **auto-approve** skip the re-print: arming is the user's
-act, never wit's.
+act, never wit's. A recorded narrow-fix bypass is treated like `--auto` here (no second paste).
 
 Then proceed: **build** (`wit:build`), worktree + parallel waves, then **ship** (`wit:ship`), which ends
 with the PR and the final report (token table included). No questions from here on.

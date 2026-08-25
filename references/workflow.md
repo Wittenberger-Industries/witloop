@@ -32,7 +32,8 @@ flowchart LR
 ```
 
 \* the design gate is interactive by default; `/wit:dev --auto` auto-approves it (the same summary is
-still recorded in progress.md).
+still recorded in progress.md). Feature never bypasses. missing Work type is feature. Bug-fix may
+record a narrow-fix bypass only when the predicate and audit stamp are recorded.
 
 `progress.md`'s Phase field names the state. Resume = read it and re-enter that phase (design-gate
 re-entry has one guard; see the contracts note below). After the handoff, the only user interaction is
@@ -46,7 +47,7 @@ the design gate.
 | brainstorm | dev | interactive | request, repo-map, constitution | brief.md | brief exists & intent unchanged |
 | research | research | autonomous | brief, repo-map, constitution | research/*, .wit/adr/ADR-* (if hard-to-reverse) | approach already chosen & recorded |
 | plan | research | autonomous | brief, research, repo-map, constitution | spec, tasks, pitfalls | never |
-| design-gate | research | interactive* | adr, spec, tasks | dossier commit on main; gate outcome in progress.md | never: it is the second human gate |
+| design-gate | research | interactive* | adr, spec, tasks | dossier commit on main; gate outcome in progress.md | never for feature; bug-fix only when the narrow-fix predicate and audit stamp are recorded |
 | build | post-gate loop (keep-alive.md for the stamped keep_alive cell) | autonomous | tasks, spec, constitution | source, ticked tasks | tasks already all ticked |
 | ship | post-gate loop | autonomous | the diff, spec, constitution | commits, PR (remote checks verified) | never |
 
@@ -59,7 +60,9 @@ first, then the gate renders.*
 1. **Inputs before phase.** No research without a brief; no build without tasks. `dev` and the phase skills enforce order.
 2. **Two gates, both deliberate.** The brainstorm handoff sets scope; the design gate confirms the
    architecture + design before any code (auto-approvable via `/wit:dev --auto`, always recorded).
-   There is no third checkpoint.
+   There is no third checkpoint. Rule 2 stays for feature: Feature never bypasses. For bug-fix,
+   brainstorm remains the scope gate and either the design gate or the recorded narrow-fix bypass is
+   the second control. missing Work type is feature.
 3. **No questions outside the gates** (the **no-questions rule** the phase skills cite). Between
    handoff and design gate, and after design-ok, decisions
    are made on best evidence and recorded (ADR / spec / progress.md), never deferred to the user.

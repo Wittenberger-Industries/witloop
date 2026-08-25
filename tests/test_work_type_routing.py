@@ -131,18 +131,37 @@ class WorkTypesReferenceTests(unittest.TestCase):
         self.assertIn("--kind", text)
         self.assertIn("missing Work type: stamp means feature", text)
 
+    def test_after_announce_points_to_plugin_root_routes(self):
+        text = WORK_TYPES.read_text(encoding="utf-8")
+        after = text[text.index("## After announce") :]
+        self.assertIn("load `%s` and exit" % PLUGIN_INVESTIGATION, after)
+        self.assertRegex(after, r"(?i)after the folder classifier")
+        self.assertIn("load `%s`" % PLUGIN_BUG_FIX, after)
+        self.assertRegex(after, r"(?i)do not load.{0,80}bug-fix\.md")
+        self.assertNotIn("classify_work_type.py", text)
+
 
 class DevSkillPreludeTests(unittest.TestCase):
     def test_prelude_before_host_probe_loads_work_types_only(self):
         text = DEV_SKILL.read_text(encoding="utf-8")
         head = prelude(text)
         self.assertIn(PLUGIN_WORK_TYPES, head)
+        self.assertIn(PLUGIN_INVESTIGATION, head)
+        self.assertLess(
+            head.index(PLUGIN_WORK_TYPES),
+            head.index(PLUGIN_INVESTIGATION),
+        )
         self.assertIn(ANNOUNCE, head)
         self.assertIn("--kind", head)
         self.assertIn("--auto", head)
-        self.assertNotIn(PLUGIN_INVESTIGATION, text)
-        self.assertNotIn(PLUGIN_BUG_FIX, text)
-        self.assertIn("investigation route will load and exit", head)
+        self.assertIn("load `%s` and exit" % PLUGIN_INVESTIGATION, head)
+        self.assertIn(PLUGIN_INVESTIGATION, text)
+        self.assertIn(PLUGIN_BUG_FIX, text)
+        self.assertNotIn(PLUGIN_BUG_FIX, head)
+        self.assertIn(FOLDER_CLASSES, text)
+        self.assertLess(text.index(FOLDER_CLASSES), text.index(PLUGIN_BUG_FIX))
+        self.assertIn("Work type is bug-fix", text)
+        self.assertRegex(text, r"(?i)do not load.{0,80}bug-fix\.md")
         self.assertNotIn("classify_work_type.py", text)
 
     def test_folder_classifier_and_auto_parse_still_present(self):

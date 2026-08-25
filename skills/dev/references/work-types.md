@@ -47,8 +47,10 @@ wins. A missing Work type: stamp means feature.
 
 ## After announce
 
-- **investigation:** the investigation route will load and exit. No host probe, scan, models, or
-  feature-folder writes. Procedure lives in the on-demand investigation/bug-fix references (not
-  loaded from this file via `${CLAUDE_PLUGIN_ROOT}`).
-- **feature** and **bug-fix:** continue through host probe, scan, models, and the folder classifier
-  (`new / resume / in-flight-overlap / done-collision / roadmap-row`).
+- **investigation:** load `${CLAUDE_PLUGIN_ROOT}/skills/dev/references/investigation.md` and exit.
+  No host probe, scan, models, or feature-folder writes.
+- **bug-fix:** continue through host probe, scan, models, and the folder classifier
+  (`new / resume / in-flight-overlap / done-collision / roadmap-row`). After the folder classifier,
+  load `${CLAUDE_PLUGIN_ROOT}/skills/dev/references/bug-fix.md`.
+- **feature:** continue through host probe, scan, models, and the folder classifier
+  (`new / resume / in-flight-overlap / done-collision / roadmap-row`). Do not load bug-fix.md.

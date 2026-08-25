@@ -67,6 +67,8 @@ timestamp: 2026-08-25
 - 2026-08-25T19:30:45+00:00 **Update** added Task 8 to wire plugin-root pointers; Wave 3 is tasks 4 and 8
 - 2026-08-25T19:35:00+00:00 **Update** Task 4 done: bug-fix checker and ship proof
 - 2026-08-25T19:35:00+00:00 **Update** Task 4 tokens unavailable Duration unavailable
+- 2026-08-25T19:35:00+00:00 **Update** Task 8 done: wire investigation and bug-fix plugin-root pointers
+- 2026-08-25T19:35:00+00:00 **Update** Task 8 tokens unavailable Duration unavailable
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Add the work-type routing foundation
@@ -76,7 +78,7 @@ timestamp: 2026-08-25
 - [x] 5. Keep timing reports compatible with gate bypass
 - [ ] 6. Document work-type routing
 - [ ] 7. Update source memory and release 1.15.0
-- [ ] 8. Wire on-demand investigation and bug-fix pointers
+- [x] 8. Wire on-demand investigation and bug-fix pointers
 
 ## Decisions / blockers
 - Roadmap seed: route `feature | bug-fix | investigation`; preserve the two-gate feature contract, four advertised commands, cross-host adapters, and the single `wit-code-checker` review contract.

@@ -35,8 +35,8 @@ defaults to `feature`. Never ask. Never route silently. Always print exactly:
 `Work type: <type> (<source>). Override: --kind feature|bug-fix|investigation`
 (source is `kind`, `inferred`, or `ambiguous-default`). On resume, honor a stamped `Work type:`
 without re-deduction unless `--kind` is present; the override wins. A missing stamp means `feature`.
-If the work type is `investigation`, the investigation route will load and exit (no host probe, scan,
-models, or feature-folder writes). Feature and bug-fix continue at step 1.
+If the work type is `investigation`, load `${CLAUDE_PLUGIN_ROOT}/skills/dev/references/investigation.md` and exit
+(no host probe, scan, models, or feature-folder writes). Feature and bug-fix continue at step 1.
 
 1. **Host probe (once), then ensure the project is scanned, and current.** Detect the running harness
    (`claude` | `codex` | `copilot` | `grok` | `cursor`). Tells: **cursor** when AskQuestion is on
@@ -72,7 +72,8 @@ models, or feature-folder writes). Feature and bug-fix continue at step 1.
    and seed `progress.md` (template in the research skill's `wit-directory.md`). Every Log line, the
    `**Created**` seed included, opens with a full ISO-8601 timestamp from the OS clock
    (`date -Iseconds`, or `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/now.py`); never a date-only
-   or guessed stamp.
+   or guessed stamp. When Work type is bug-fix, load
+   `${CLAUDE_PLUGIN_ROOT}/skills/dev/references/bug-fix.md`. Feature: do not load bug-fix.md.
 3. **Brainstorm** (skill `wit:brainstorm`): the dialogue about desired behavior, scope, constraints.
    Writes `brief.md`. **Interactive and never skipped**: `--auto` does not collapse it, and a detailed
    idea or a matching roadmap row **seeds** the dialogue, never replaces it. The only sanctioned

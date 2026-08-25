@@ -1,8 +1,8 @@
 ---
 type: Design Notes
 title: "wit-code-checker: design rationale (maintainer notes)"
-description: The "why" behind agents/wit-code-checker.md's rules, relocated out of the loaded charter by #41 (the charter rides into every checker dispatch and carries rules only); each entry is anchored to the charter section it explains.
-timestamp: 2026-07-11
+description: The "why" behind agents/wit-code-checker.md's rules, relocated out of the loaded charter by #41 (the charter rides into every checker dispatch and carries rules only); the runtime never reads this file; each entry is anchored to the charter section it explains.
+timestamp: 2026-08-25
 tags: [wit-code-checker, agents, design-notes, context-budget]
 ---
 
@@ -10,8 +10,9 @@ tags: [wit-code-checker, agents, design-notes, context-budget]
 
 `agents/wit-code-checker.md` is the checker's dispatch charter. It is loaded into every checker dispatch
 (plan mode, result mode, and every MoA proposer and aggregator instance), so it carries rules only; the
-rationale lives here, anchored by section. When editing the charter, keep this file in sync: a rule whose
-"why" is deleted instead of relocated loses its guard against future "simplification".
+rationale lives here, anchored by section. The runtime never reads this file. When editing the charter,
+keep this file in sync: a rule whose "why" is deleted instead of relocated loses its guard against
+future "simplification".
 
 ## Frontmatter
 
@@ -93,3 +94,17 @@ rationale lives here, anchored by section. When editing the charter, keep this f
   review-point section) is canonical: the charter is the one file every dispatched instance actually
   reads, so an instance tempted to "fix" the design by proposing a second reviewer agent meets the guard
   in its own charter.
+
+## Additive bug-fix matrix rows
+
+Runtime rules live in `agents/wit-code-checker.md`. This file is not loaded at runtime; it is why
+those rows exist.
+
+- **Why additive, work-type-gated rows:** a bug-fix must prove repro surface, root cause, same-surface
+  fail-then-pass, smallest fix, and a regression test or explicit impracticality. Feature runs should
+  not pay for those rows. Skip when Work type is missing or `feature`. An omission is a BLOCKER in
+  the named pass. Extra "might help" work stays the existing over-build hunt (WARNING).
+- **Why markers and tools stay unchanged:** the charter is the single review-agent contract. Changing
+  `## CHECK PASSED` / `## ISSUES FOUND`, the tools list, or the 2-round cap would break orchestrator
+  detection and every host dispatch. Bug-fix coverage is extra matrix rows, not a second agent or a
+  new severity.

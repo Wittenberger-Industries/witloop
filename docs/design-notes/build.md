@@ -2,7 +2,7 @@
 type: Design Notes
 title: "build: design rationale (maintainer notes)"
 description: The "why" behind build/SKILL.md's rules, relocated out of the loaded skill by #41 pass 2 (v1.9.1); the runtime never reads this file. Each entry is anchored to the section it explains.
-timestamp: 2026-07-11
+timestamp: 2026-08-25
 tags: [build, design-notes, context-budget]
 ---
 
@@ -73,3 +73,18 @@ against future "simplification".
 - **Why:** scope creep hidden inside a task is how builds drift from their spec. Routing in-scope gaps
   to `tasks.md` and out-of-scope ideas to `.wit/roadmap.md` keeps every scope change visible and
   decided, never accidental.
+
+## Bug-fix build precondition and reopen
+
+Runtime rules live in `skills/build/SKILL.md` (and the bug-fix overlay it cites). This file is not
+loaded at runtime; it is why those rules exist.
+
+- **Why the bypass stamp satisfies the build precondition:** build already requires a recorded gate
+  outcome so a hands-off run cannot start implementing an unapproved design. A recorded
+  `design gate bypassed (narrow-fix)` plus `## Gate bypass` Status `narrow-fix` and Work type
+  bug-fix is that outcome for a justified skip. Interactive approve and `--auto` stay valid.
+- **Why a mid-build architecture change reopens the gate:** the bypass was justified as narrow. An
+  architecture or public-contract change is no longer narrow; keeping the skip would hide a design
+  decision from the user. Revoke and reuse the existing mid-run amend / design-gate reopen.
+- **Why missing Work type = feature:** older dossiers have no Work type line. Treating missing as
+  `feature` preserves today's loop and refuses bypass (never consult a Gate bypass block).

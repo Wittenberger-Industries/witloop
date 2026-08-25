@@ -69,6 +69,8 @@ timestamp: 2026-08-25
 - 2026-08-25T19:35:00+00:00 **Update** Task 4 tokens unavailable Duration unavailable
 - 2026-08-25T19:35:00+00:00 **Update** Task 8 done: wire investigation and bug-fix plugin-root pointers
 - 2026-08-25T19:35:00+00:00 **Update** Task 8 tokens unavailable Duration unavailable
+- 2026-08-25T19:40:00+00:00 **Update** Task 6 done: document work-type routing
+- 2026-08-25T19:40:00+00:00 **Update** Task 6 tokens unavailable Duration unavailable
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Add the work-type routing foundation
@@ -76,7 +78,7 @@ timestamp: 2026-08-25
 - [x] 3. Overlay the reproduce-first bug-fix lifecycle
 - [x] 4. Enforce bug-fix proof in checker and ship
 - [x] 5. Keep timing reports compatible with gate bypass
-- [ ] 6. Document work-type routing
+- [x] 6. Document work-type routing
 - [ ] 7. Update source memory and release 1.15.0
 - [x] 8. Wire on-demand investigation and bug-fix pointers
 

@@ -18,6 +18,8 @@ elapsed time or the orchestrator's own dispatch/arrival stamps (OS clock); write
 | research | Research classification seam | unavailable | unavailable | Cursor completion exposed no usage or elapsed time |
 | research | Research investigation route | unavailable | unavailable | Cursor completion exposed no usage or elapsed time |
 | research | Research bug-fix route | unavailable | unavailable | Cursor completion exposed no usage or elapsed time |
+| plan check R1 | Check work-type plan | unavailable | unavailable | Cursor completion exposed no usage or elapsed time |
+| plan check R2 | Recheck work-type plan | unavailable | unavailable | Cursor completion exposed no usage or elapsed time |
 | orchestrator | main thread, all phases | (see Orchestrator section) | n/a (see below) | finalized by finalize_tokens.py; unavailable if the host has no local usage field or the parse fails: never substitute or estimate |
 
 **Subagents (exact): <sum>.**

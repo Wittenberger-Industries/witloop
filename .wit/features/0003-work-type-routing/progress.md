@@ -3,7 +3,7 @@ type: Feature Progress
 title: Work-type routing for bug fixes and investigations
 description: Route bug-fix and read-only investigation requests through purpose-built Witloop paths.
 feature: 0003-work-type-routing
-status: plan
+status: design-gate
 timestamp: 2026-08-25
 ---
 
@@ -11,7 +11,7 @@ timestamp: 2026-08-25
 
 - **Slug:** 0003-work-type-routing
 - **Created:** 2026-08-25
-- **Phase:** plan
+- **Phase:** design-gate
 - **Gate mode:** interactive
 - **Flow:** dev
 - **Worktree:** -
@@ -45,8 +45,21 @@ timestamp: 2026-08-25
 - 2026-08-25T18:21:15+00:00 **Update** applicable learnings: none
 - 2026-08-25T18:27:56+00:00 **Decision** approach = ADR-0002 semantic work-type router with read-only investigation and bug-fix phase overlays
 - 2026-08-25T18:27:56+00:00 **Update** phase = plan
+- 2026-08-25T18:29:58+00:00 **Update** plan via superpowers:writing-plans
+- 2026-08-25T18:29:58+00:00 **Update** spec.md, tasks.md, and pitfalls.md written; plan self-review passed
+- 2026-08-25T18:37:48+00:00 **Reflection** plan-mode checker found unmapped always-announce, resume, and investigation capture-exception decisions - earlier catch: plan
+- 2026-08-25T18:37:48+00:00 **Update** plan checker round 1: 3 BLOCKERs fixed; warning pins folded into tasks
+- 2026-08-25T18:41:23+00:00 **Update** plan checker round 2: no BLOCKER; one validate warning fixed in Task 2
+- 2026-08-25T18:41:23+00:00 **Update** design gate opened
 
 ## Tasks (mirrored from tasks.md once planned)
+- [ ] 1. Add the work-type routing foundation
+- [ ] 2. Add the read-only investigation exit
+- [ ] 3. Overlay the reproduce-first bug-fix lifecycle
+- [ ] 4. Enforce bug-fix proof in checker and ship
+- [ ] 5. Keep timing reports compatible with gate bypass
+- [ ] 6. Document work-type routing
+- [ ] 7. Update source memory and release 1.15.0
 
 ## Decisions / blockers
 - Roadmap seed: route `feature | bug-fix | investigation`; preserve the two-gate feature contract, four advertised commands, cross-host adapters, and the single `wit-code-checker` review contract.

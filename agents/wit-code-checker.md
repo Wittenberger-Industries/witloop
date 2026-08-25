@@ -97,6 +97,19 @@ generated REFramework project.
    constitution rule, the existing constitution row makes it a **BLOCKER** - no new severity logic.
    (Prohibitive constitution rules, the Simplicity constraints, don't map to a task; they're verified
    in (4), not here.) Put the matrix in your report.
+   When **Work type is bug-fix**, also cover these rows (skip when Work type is missing or
+   `feature`). An omission is a **BLOCKER** in the named pass:
+
+   | Item | Plan mode | Result mode | Severity if missing |
+   |---|---|---|---|
+   | Repro contract / named surface | task Verify names it | diff + logs use it | BLOCKER |
+   | Root cause recorded | spec / repro note | PR names it | BLOCKER |
+   | Same-surface fail-then-pass | tasks include the verify | both stamps + matching surface; after-run exists | BLOCKER |
+   | Smallest justified fix | planned change is the evidence-backed minimum | PR names it | BLOCKER |
+   | Regression test or impractical rationale | a task or an explicit out | test present or rationale still in spec/PR | BLOCKER if neither |
+
+   Extra "might help" work stays the existing over-build hunt in (4): **WARNING**, not a new
+   severity.
 3. **Hunt silent scope-reduction.** Scan the tasks / diff for
    "v1 / simplified / static for now / stub / mock / wire later / TODO" against the locked decisions. A
    decision quietly downgraded to a stub is a **BLOCKER**, never a soft note.

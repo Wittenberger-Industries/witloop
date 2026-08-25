@@ -24,6 +24,7 @@ elapsed time or the orchestrator's own dispatch/arrival stamps (OS clock); write
 | build | Task 2 investigation exit | unavailable | unavailable | Cursor completion exposed no usage or elapsed time |
 | build | Task 3 bug-fix overlay | unavailable | unavailable | Cursor completion exposed no usage or elapsed time |
 | build | Task 5 timing bypass stamp | unavailable | unavailable | Cursor completion exposed no usage or elapsed time |
+| build | Task 4 bug-fix checker | unavailable | unavailable | Cursor completion exposed no usage or elapsed time |
 | orchestrator | main thread, all phases | (see Orchestrator section) | n/a (see below) | finalized by finalize_tokens.py; unavailable if the host has no local usage field or the parse fails: never substitute or estimate |
 
 **Subagents (exact): <sum>.**

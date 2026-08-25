@@ -65,12 +65,14 @@ timestamp: 2026-08-25
 - 2026-08-25T19:30:45+00:00 **Update** Task 5 tokens unavailable Duration unavailable
 - 2026-08-25T19:30:45+00:00 **Reflection** Tasks 2 and 3 omitted SKILL.md pointers so they could run in parallel - earlier catch: plan
 - 2026-08-25T19:30:45+00:00 **Update** added Task 8 to wire plugin-root pointers; Wave 3 is tasks 4 and 8
+- 2026-08-25T19:35:00+00:00 **Update** Task 4 done: bug-fix checker and ship proof
+- 2026-08-25T19:35:00+00:00 **Update** Task 4 tokens unavailable Duration unavailable
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Add the work-type routing foundation
 - [x] 2. Add the read-only investigation exit
 - [x] 3. Overlay the reproduce-first bug-fix lifecycle
-- [ ] 4. Enforce bug-fix proof in checker and ship
+- [x] 4. Enforce bug-fix proof in checker and ship
 - [x] 5. Keep timing reports compatible with gate bypass
 - [ ] 6. Document work-type routing
 - [ ] 7. Update source memory and release 1.15.0

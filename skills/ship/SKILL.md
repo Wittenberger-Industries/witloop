@@ -207,6 +207,13 @@ PR can be opened this run: it is what `gh pr create --body-file` consumes, and w
 create the PR by hand. Its OKF frontmatter (`type: PR Description`) is dossier metadata, not PR text:
 the PR **body** is everything *below* the frontmatter, stripped before feeding `gh` (ship:7). Template:
 
+When Work type is bug-fix, Summary names the root cause and the smallest fix; Testing pastes fail then
+pass on the same named surface; Verification carries the result-mode matrix.
+
+CONDITIONAL `## Rules inventory`: include that section only when the diff changes rule text (skills,
+agents, references that agents load). Do not require it for every PR. Constitution: before/after
+inventory; each touched file must still decide correctly if loaded alone.
+
 ```markdown
 ---
 type: PR Description
@@ -219,7 +226,8 @@ timestamp: <YYYY-MM-DD>
 ## <type>: <feature title>
 
 ### Summary
-<2-4 sentences: what changed and why. Pulled from spec.md Summary.>
+<2-4 sentences: what changed and why. Pulled from spec.md Summary. When Work type is bug-fix: name the
+root cause and the smallest fix.>
 
 ### Acceptance criteria
 - [x] <criterion 1>  (verified by <test/command>)
@@ -230,18 +238,25 @@ timestamp: <YYYY-MM-DD>
 - <key change 2>
 
 ### Testing
-<what was run and the result: test suite, lint, typecheck. Note new tests added.>
+<what was run and the result: test suite, lint, typecheck. Note new tests added. When Work type is
+bug-fix: paste fail then pass on the same named surface.>
 
 ### Verification
 <checker result-mode verdict: every acceptance criterion + locked decision delivered and wired; any
 waived/deferred findings with severity AND a pointer (roadmap.md line or issue #). Distilled from
-verification.md; the dossier tidy (ship:6) then prunes it.>
+verification.md; the dossier tidy (ship:6) then prunes it. When Work type is bug-fix: carry the
+result-mode matrix.>
 
 ### Risk & rollout
 <feature flag? migration order? back-out plan. From spec.md Rollout.>
 
 ### Decisions
 <link any ADRs: .wit/adr/ADR-NNNN-*.md>
+
+## Rules inventory
+<CONDITIONAL: omit this entire section unless the diff changes rule text (skills, agents, or
+references that agents load). Do not require it for every PR. Constitution: before/after inventory;
+each touched file must still decide correctly if loaded alone.>
 ```
 
 ## 6 · Tidy the history & the feature dossier

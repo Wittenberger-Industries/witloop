@@ -33,6 +33,7 @@ timestamp: 2026-08-25
 - 2026-08-25T18:00:59+00:00 **Decision** roadmap slug = work-type-routing; no feature dependencies
 - 2026-08-25T18:06:05+00:00 **Decision** scope includes both bug-fix and read-only investigation routes
 - 2026-08-25T18:06:54+00:00 **Decision** routes auto-detect from intent and accept an explicit override
+- 2026-08-25T18:08:26+00:00 **Decision** investigations return a cited answer with no dossier, gates, or PR
 
 ## Tasks (mirrored from tasks.md once planned)
 
@@ -40,3 +41,4 @@ timestamp: 2026-08-25
 - Roadmap seed: route `feature | bug-fix | investigation`; preserve the two-gate feature contract, four advertised commands, cross-host adapters, and the single `wit-code-checker` review contract.
 - User selected both routes for the first release; additional work types remain out of scope.
 - Route selection is automatic by default, with an explicit user override for ambiguous requests.
+- Investigation is a read-only exit: no `.wit/` feature dossier, brainstorm, design gate, build, or PR.

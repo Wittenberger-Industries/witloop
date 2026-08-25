@@ -8,28 +8,27 @@ tags: [pstack, roadmap, feature-candidates]
 
 # Roadmap: pstack-derived feature candidates
 
-This backlog comes from pstack 0.14.3 and the current Witloop source. It favors methods that close a
-real gap. It does not treat every pstack skill as a feature Witloop needs.
+This backlog compares pstack 0.14.3 with current Witloop and keeps only methods that close a real gap.
 
 Standing fit rules: preserve brainstorm and the design gate; keep the four advertised commands unless
-the owner chooses otherwise; keep host mechanics in adapters; keep state in committed `.wit/`; require
-no MCP; keep one feature per PR; keep `wit-code-checker` as the single review-agent contract.
+the owner chooses otherwise; keep host mechanics in adapters and state in committed `.wit/`; require no
+MCP; keep one feature per PR; keep `wit-code-checker` as the single review-agent contract.
 
 Horizons are recommendations, not approval to build. `docs/roadmap.md` remains the published GitHub
-issue queue. A picked row becomes one `/wit:dev` run and receives the next feature ordinal.
+issue queue. Picking a row makes it `planned`; `/wit:dev` uses its slug and assigns the next ordinal.
 
-| # | Candidate | Proposed form | Horizon | Status | Depends on |
-|---|-----------|---------------|---------|--------|------------|
-| 1 | Work-type routing: bug fix and investigation | workflow + references | Now | candidate | - |
-| 2 | Project-local verification map | generated skill + project memory | Now | candidate | - |
-| 3 | On-demand subsystem walkthrough | delegated skill capability | Now | candidate | 1 |
-| 4 | Blast-radius safety-fact proof | ship evidence step | Now | candidate | - |
-| 5 | GitHub-native PR babysitting | hidden workflow | Next | candidate | - |
-| 6 | Evidence-linked decision trail | feature memory | Next | candidate | - |
-| 7 | Thin named-principle index | reference | Next | candidate | - |
-| 8 | Verification-map maintenance | maintenance skill | Later | candidate | 2 |
-| 9 | Performance and runtime forensics | work-type references | Later | candidate | 1 |
-| 10 | Detect-only `why` archaeology | delegated skill capability | Later | candidate | 3 |
+| # | Candidate | Slug | Proposed form | Horizon | Status | Depends on |
+|---|-----------|------|---------------|---------|--------|------------|
+| 1 | Work-type routing: bug fix and investigation | `work-type-routing` | workflow + references | Now | candidate | - |
+| 2 | Project-local verification map | `verification-map` | generated skill + project memory | Now | candidate | - |
+| 3 | On-demand subsystem walkthrough | `understand` | delegated skill capability | Now | candidate | 1 |
+| 4 | Blast-radius safety-fact proof | `blast-radius-proof` | ship evidence step | Now | candidate | - |
+| 5 | GitHub-native PR babysitting | `github-pr-babysit` | hidden workflow | Next | candidate | - |
+| 6 | Evidence-linked decision trail | `decision-trail` | feature memory | Next | candidate | - |
+| 7 | Thin named-principle index | `principle-index` | reference | Next | candidate | - |
+| 8 | Verification-map maintenance | `verification-map-maintenance` | maintenance skill | Later | candidate | 2 |
+| 9 | Performance and runtime forensics | `runtime-forensics` | work-type references | Later | candidate | 1 |
+| 10 | Detect-only `why` archaeology | `why-detect-only` | delegated skill capability | Later | candidate | 3 |
 
 ## Now
 
@@ -42,8 +41,8 @@ issue queue. A picked row becomes one `/wit:dev` run and receives the next featu
   from a reproduced symptom, uses runtime hypotheses, and ships the smallest proven fix. A read-only
   investigation returns a cited walkthrough and stops without a PR. Keep the design gate for
   non-trivial behavior changes; any bypass needs an explicit product decision.
-- **Why it fits:** it reuses the dossier, task-runner, checker, and ship machinery instead of copying
-  pstack's 22-playbook router.
+- **Why it fits:** bug fixes reuse the dossier, task-runner, checker, and ship machinery.
+  Investigations add one explicit read-only exit instead of copying pstack's 22-playbook router.
 - **Acceptance signal:** a bug request records failing-then-passing evidence on the same surface; a
   "how does X work?" request leaves product files and git state unchanged.
 
@@ -52,9 +51,10 @@ issue queue. A picked row becomes one `/wit:dev` run and receives the next featu
 - **pstack source:** `skills/create-verification-skill/SKILL.md`.
 - **Witloop gap:** `repo-map.md` records test and run commands, and ship runs them, but neither records
   how an agent launches, drives, observes, and cleans up the real user path.
-- **Adopt:** generate a host-neutral project verification skill and a 3-5 item user-feature map.
-  Extend `wit-directory.md` first, then store it as project-level `.wit/` memory. Prefer an installed
-  verification generator through `integrations.md`; provide a light fallback.
+- **Adopt:** define a host-neutral format, extend `wit-directory.md`, then generate a project
+  verification skill and 3-5 item user-feature map as project-level `.wit/` memory. Reuse pstack's
+  interview and proof method. Its Cursor generator may sit behind the Cursor adapter, never as the
+  cross-host source of truth.
 - **Risks:** never publish an unexecuted cookbook, disturb a shared app instance, or assume
   Cursor-only `control-ui` / `control-cli`.
 - **Acceptance signal:** the generated instructions launch the app, pass a doctor check, drive one
@@ -103,7 +103,8 @@ issue queue. A picked row becomes one `/wit:dev` run and receives the next featu
 - **Witloop gap:** `progress.md` records phase state and decisions, but unattended forks and reversals
   may lack evidence pointers.
 - **Adopt:** strengthen `progress.md` Decisions for `--auto` and keep-alive runs before adding a TSV.
-  Record only forks, pivots, reverts, gates, and their evidence.
+  Record only forks, pivots, reverts, gates, and their evidence. Do not copy transcript scraping or
+  pstack's mandatory second-model trail review.
 - **Acceptance signal:** a reviewer can reconstruct an unattended run's meaningful choices without
   reading the chat transcript.
 
@@ -113,8 +114,8 @@ issue queue. A picked row becomes one `/wit:dev` run and receives the next featu
   `skills/poteto-mode/SKILL.md`.
 - **Witloop gap:** the constitution has the rules, but not a short vocabulary for methods such as
   "prove it works", "fix root causes", and "encode lessons in structure".
-- **Adopt:** one on-demand reference with 6-8 names, triggers, and one rule each. Cite a principle only
-  when it changed a decision. Do not create 21 always-loaded skills.
+- **Adopt:** one on-demand `references/principles.md` with 6-8 names, triggers, and one rule each.
+  Cite a principle only when it changed a decision. Do not create 21 always-loaded skills.
 - **Acceptance signal:** a phase can point to one named method and the concrete choice it changed,
   while a default `/wit:dev` run does not load the index.
 
@@ -124,7 +125,7 @@ issue queue. A picked row becomes one `/wit:dev` run and receives the next featu
 |-----------|-----------------------------|-----------|
 | Verification-map maintenance | `skills/maintain-verification-skill/SKILL.md`: source scan plus one live pass | Needs candidate 2 to prove useful first. |
 | Performance and runtime forensics | `perf-issue.md`, `hillclimb.md`, `runtime-forensics.md`, `trace-forensics.md` | Add as work types only after candidate 1 settles routing. |
-| Detect-only `why` archaeology | `skills/why/SKILL.md`: evidence-category search | Delegate when sources exist; never require seven MCP categories. |
+| Detect-only `why` archaeology | `skills/why/SKILL.md`: evidence-category search | Delegate when sources exist; never require every category. |
 
 ## Do not copy
 
@@ -134,16 +135,15 @@ issue queue. A picked row becomes one `/wit:dev` run and receives the next featu
 | `/architect` as the plan | Conflicts with `spec.md`, `tasks.md`, and the design gate. |
 | Default arena, interrogate, or swarm panels | Duplicates optional MoA and build waves at a large token cost. |
 | Twenty-one standalone principle skills | Reverses Witloop's always-loaded compression work; candidate 7 keeps the useful part. |
-| Required seven-MCP `why` | Violates the no-required-MCP contract; candidate 10 is detect-only. |
+| Full seven-category `why` as a core dependency | Most categories need optional MCPs; candidate 10 is detect-only. |
 | Graphite shipping, `watch-pr`, and autopilot playbooks | Vendor-specific and incompatible with one feature per PR and no autonomous merge. |
 | Transcript recall | Cursor-path-specific; `progress.md` is Witloop's portable resume record. |
 | `poteto-agent`, Comment Sicko, and TypeScript rules in core | Extra agent contracts or stack-specific policy; existing agents and target constitutions own these jobs. |
 | Benny Slack automations | Useful but host-, tracker-, and Slack-specific; keep outside Witloop core. |
 
-## Evidence
+## Citations
 
-1. pstack 0.14.3: `README.md`, `skills/poteto-mode/SKILL.md`, the source files named per candidate,
-   and `agents/`.
+1. pstack 0.14.3: `README.md`, `skills/poteto-mode/SKILL.md`, the named candidate sources, and `agents/`.
 2. Witloop: `skills/dev/SKILL.md`, `skills/scan/SKILL.md`, `skills/ship/SKILL.md`,
    `skills/research/references/integrations.md`, `skills/research/references/wit-directory.md`,
    `agents/wit-code-checker.md`, `references/moa.md`, and `docs/roadmap.md`.

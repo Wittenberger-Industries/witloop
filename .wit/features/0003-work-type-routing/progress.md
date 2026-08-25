@@ -3,7 +3,7 @@ type: Feature Progress
 title: Work-type routing for bug fixes and investigations
 description: Route bug-fix and read-only investigation requests through purpose-built Witloop paths.
 feature: 0003-work-type-routing
-status: design-gate
+status: build
 timestamp: 2026-08-25
 ---
 
@@ -11,11 +11,11 @@ timestamp: 2026-08-25
 
 - **Slug:** 0003-work-type-routing
 - **Created:** 2026-08-25
-- **Phase:** design-gate
+- **Phase:** build
 - **Gate mode:** interactive
 - **Flow:** dev
-- **Worktree:** -
-- **Branch:** -
+- **Worktree:** /workspace
+- **Branch:** cursor/pstack-feature-roadmap-e671
 - **Host:** cursor
 - **Plugin root (resolved):** /workspace
 
@@ -51,6 +51,9 @@ timestamp: 2026-08-25
 - 2026-08-25T18:37:48+00:00 **Update** plan checker round 1: 3 BLOCKERs fixed; warning pins folded into tasks
 - 2026-08-25T18:41:23+00:00 **Update** plan checker round 2: no BLOCKER; one validate warning fixed in Task 2
 - 2026-08-25T18:41:23+00:00 **Update** design gate opened
+- 2026-08-25T19:10:32+00:00 **Update** design gate approved, phase = build
+- 2026-08-25T19:10:32+00:00 **Update** build engine engaged (wit 1.14.1)
+- 2026-08-25T19:10:32+00:00 **Update** worktree via superpowers: using-git-worktrees; Cloud Agent checkout already isolated on PR branch, so no second worktree
 
 ## Tasks (mirrored from tasks.md once planned)
 - [ ] 1. Add the work-type routing foundation

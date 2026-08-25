@@ -3,15 +3,15 @@ type: ADR
 title: Route dev work by intent with read-only and bug-fix overlays
 description: Deduce work type before dev writes state, then early-exit investigations or overlay the existing feature loop.
 feature: 0003-work-type-routing
-status: proposed
+status: accepted
 timestamp: 2026-08-25
 ---
 
 # ADR-0002: Route dev work by intent with read-only and bug-fix overlays
 
-- **Status:** proposed
+- **Status:** accepted
 - **Date:** 2026-08-25
-- **Deciders:** wit research (autonomous); awaiting design gate
+- **Deciders:** wit research (autonomous); design gate approved 2026-08-25
 - **Feature:** 0003-work-type-routing
 
 ## Context

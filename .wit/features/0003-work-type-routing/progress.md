@@ -3,7 +3,7 @@ type: Feature Progress
 title: Work-type routing for bug fixes and investigations
 description: Route bug-fix and read-only investigation requests through purpose-built Witloop paths.
 feature: 0003-work-type-routing
-status: brainstorm
+status: plan
 timestamp: 2026-08-25
 ---
 
@@ -11,7 +11,7 @@ timestamp: 2026-08-25
 
 - **Slug:** 0003-work-type-routing
 - **Created:** 2026-08-25
-- **Phase:** brainstorm
+- **Phase:** plan
 - **Gate mode:** interactive
 - **Flow:** dev
 - **Worktree:** -
@@ -40,6 +40,11 @@ timestamp: 2026-08-25
 - 2026-08-25T18:15:21+00:00 **Decision** ambiguous intent defaults to announced `feature` classification with override guidance
 - 2026-08-25T18:18:19+00:00 **Decision** classifier deduces all three work types from intent; no constraints beyond roadmap defaults
 - 2026-08-25T18:19:33+00:00 **Update** brief.md written and confirmed; glossary updated; awaiting handoff
+- 2026-08-25T18:21:15+00:00 **Update** phase = research
+- 2026-08-25T18:21:15+00:00 **Update** research engine engaged (wit 1.14.1)
+- 2026-08-25T18:21:15+00:00 **Update** applicable learnings: none
+- 2026-08-25T18:27:56+00:00 **Decision** approach = ADR-0002 semantic work-type router with read-only investigation and bug-fix phase overlays
+- 2026-08-25T18:27:56+00:00 **Update** phase = plan
 
 ## Tasks (mirrored from tasks.md once planned)
 
@@ -54,3 +59,4 @@ timestamp: 2026-08-25
 - Ambiguous requests default to `feature`; Witloop announces the classification and the `--kind` override instead of asking or choosing silently.
 - Intent deduction covers `feature`, `bug-fix`, and `investigation`. Hard constraints remain five-host compatibility, no fifth command, no required MCP, one checker agent, and unchanged feature behavior.
 - Canonical term: **Work type**. The selected work type precedes feature-folder classification.
+- Research chose semantic intent deduction over a keyword-only helper. Investigation exits before write-capable setup; bug fixes reuse all existing phases with a fail-closed narrow-fix bypass.

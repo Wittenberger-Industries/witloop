@@ -155,6 +155,7 @@ timestamp: <YYYY-MM-DD>
 - **Phase:** brainstorm        <!-- brainstorm | research | plan | design-gate | build | ship | done -->
 - **Gate mode:** interactive   <!-- interactive | auto-approve (set by /wit:dev --auto) -->
 - **Flow:** dev                <!-- dev | rpa; ship keys its dossier manifest + sweep whitelist on it; a missing line means dev -->
+- **Work type:** feature        <!-- feature | bug-fix; optional; a missing line means feature. Investigation never seeds this folder. -->
 - **Worktree:** <path or "-">
 - **Branch:** <branch or "-">
 - **Host:** <claude | codex | copilot | grok | cursor>

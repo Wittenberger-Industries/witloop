@@ -2,7 +2,7 @@
 type: Design Notes
 title: "research - design rationale (maintainer notes)"
 description: The "why" behind research/SKILL.md's rules, relocated out of the loaded skill by #41 pass 2; the runtime never reads this file, and each entry is anchored to the section it explains.
-timestamp: 2026-07-11
+timestamp: 2026-08-25
 tags: [research, design-notes, context-budget]
 ---
 
@@ -99,3 +99,21 @@ rationale lives here, anchored by section. When editing the skill, keep this fil
   arm persistence itself, and arming is the user's act, never wit's.
 - **Framing that moved out of the skill:** the keep-alive loop (`/goal` or Autopilot) is the
   persistence wrapper; build/ship are the method. The skill keeps only the operative sequence.
+
+## Bug-fix overlay (plan, checker, gate)
+
+Runtime rules live in `skills/research/SKILL.md` and `skills/dev/references/bug-fix.md`. This file
+is not loaded at runtime; it is why those rules exist.
+
+- **Why bug-fix always plans and runs the plan-mode checker:** build refuses to start without
+  `tasks.md` plus a recorded gate outcome. Skipping plan or the plan-mode checker would break that
+  precondition or weaken coverage for non-narrow fixes. The checker still feeds the gate; it does
+  not replace it.
+- **Why bypass is fail-closed and distinct from `--auto`:** `--auto` is a user-chosen hands-off skip
+  of the human ask. Narrow-fix is an evidence predicate (work type bug-fix, failing repro and root
+  cause, unchanged public behavior and architecture, named blast radius, no checker BLOCKER,
+  smallest evidence-backed fix). Missing any conjunct refuses bypass. Never reuse
+  `design gate auto-approved (--auto)`; the stamp is `design gate bypassed (narrow-fix)`.
+- **Why `design gate opened` still stamps:** timing parsers close span1 on that exact phrase. A
+  bypass that omits it makes the autonomous wall-clock `unavailable`. The bypass skips the human
+  ask and gate-summary render, not the timing stamp.

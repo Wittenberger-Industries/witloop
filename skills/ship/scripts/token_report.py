@@ -178,7 +178,8 @@ def parse_progress_spans(text):
 
     span1 (research+plan) = first 'design gate opened' - first 'phase = research'
     span2 (build+ship)    = last 'PR opened' (else last 'phase = done')
-                            - last 'design gate approved'/'design gate auto-approved'
+                            - last 'design gate approved'/'design gate auto-approved'/
+                              'design gate bypassed'
     Date-only stamps are ignored; a missing boundary or negative delta yields None.
     """
     events = []
@@ -212,7 +213,8 @@ def parse_progress_spans(text):
 
     research = first("phase = research")
     gate_open = first("design gate opened")
-    gate_ok = last("design gate approved", "design gate auto-approved")
+    gate_ok = last("design gate approved", "design gate auto-approved",
+                   "design gate bypassed")
     end = last("pr opened") or last("phase = done")
     return span(research, gate_open), span(gate_ok, end)
 

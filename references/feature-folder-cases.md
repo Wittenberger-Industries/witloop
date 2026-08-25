@@ -24,7 +24,9 @@ Scan `.wit/features/*/progress.md` for Phase ≠ `done`. One matches this idea (
 that reads as the same feature)? Then this is a **resume, not a new feature**: re-read its progress.md,
 announce the phase and what's left (ticked tasks, recorded decisions), and re-enter that phase;
 research/build/ship all re-enter from progress.md (workflow.md). Never seed a second folder for the same
-feature; never overwrite an existing dossier. A resumed feature keeps its number.
+feature; never overwrite an existing dossier. A resumed feature keeps its number. Honor a stamped
+`Work type:` without re-deduction unless this invocation carries `--kind`; the override wins. A
+missing Work type: line means feature.
 
 ## In-flight overlap
 

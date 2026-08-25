@@ -2,7 +2,7 @@
 type: Design Notes
 title: "ship: design rationale (maintainer notes)"
 description: The "why" behind ship/SKILL.md's rules, relocated out of the loaded skill by #41 pass 1 (v1.9.1); the runtime never reads this file; each entry is anchored to the step it explains.
-timestamp: 2026-07-11
+timestamp: 2026-08-25
 tags: [ship, design-notes, context-budget]
 ---
 
@@ -57,6 +57,19 @@ rationale lives here, anchored by step. When editing the skill, keep this file i
 - **Why a file, not console output:** the feature's artifacts were made for exactly this; a committed
   `PR.md` survives the run, is consumable by `gh pr create --body-file`, and lets a human open the PR
   by hand if the run couldn't. The dossier is the durable record of the feature.
+
+## Bug-fix PR evidence and conditional Rules inventory
+
+Runtime rules live in `skills/ship/SKILL.md`. This file is not loaded at runtime; it is why those
+rules exist.
+
+- **Why bug-fix PR evidence:** raw repro logs and research notes are pruned at tidy. The PR is the
+  durable record a reviewer sees: Summary names the root cause and the smallest fix; Testing pastes
+  fail then pass on the same named surface; Verification carries the result-mode matrix.
+- **Why Rules inventory is conditional:** constitution wants a before/after inventory when rule text
+  changes so each touched file still decides correctly if loaded alone. Requiring it on every PR
+  (a one-line product fix) is noise. Include `## Rules inventory` only when the diff changes skills,
+  agents, or references that agents load.
 
 ## ship:6 (tidy)
 

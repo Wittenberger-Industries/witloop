@@ -2,16 +2,16 @@
 type: Repo Map
 title: Repo map - Witloop
 description: Stack, exact verified commands, and conventions scan recorded for this repo.
-timestamp: 2026-08-19
+timestamp: 2026-08-25
 ---
 
-# Repo map  (scanned 2026-08-19)
+# Repo map  (scanned 2026-08-19; work-type routing 2026-08-25)
 
 - **Kind:** existing
 - **Languages:** Markdown (skills, agents, references) + Python 3.13 (scripts/tests; CI is Python 3.x)
 - **Package manager:** none (no pyproject/lockfile). Optional: `pip install pyyaml` so `validate.py` runs its YAML-parse checks
 - **Frontend / backend:** neither - Claude/Codex/Copilot/Grok/Cursor plugin, not an app
-- **Layout:** plugin root. `skills/` (scan, dev, brainstorm, research, plan, build, ship, rpa, add-issues), `agents/`, `references/` (capability table + host tool maps + workflow), `scripts/validate.py`, `tests/`, `docs/` (plans, specs, design-notes, roadmap), `.claude-plugin/`, `.codex-plugin/`
+- **Layout:** plugin root. `skills/` (scan, dev, brainstorm, research, plan, build, ship, rpa, add-issues), `skills/dev/references/work-types.md`, `skills/dev/references/investigation.md`, `skills/dev/references/bug-fix.md`, `agents/`, `references/` (capability table + host tool maps + workflow), `scripts/validate.py`, `tests/`, `docs/` (plans, specs, design-notes, roadmap), `.claude-plugin/`, `.codex-plugin/`
 - **Architecture:** see `architecture.md` (mermaid module/dependency diagram)
 
 ## Commands  (verified runnable)
@@ -33,8 +33,8 @@ timestamp: 2026-08-19
 - **Gitignore:** whitelist (`*` then `!/path`). New top-level dirs need a `!/` line or they vanish. `.wit/` is whitelisted so dogfood scan/dev artifacts can commit
 
 ## Entry points
-- Skills: `/wit:scan`, `/wit:dev`, `/wit:rpa`, `/wit:add-issues` (host aliases in `references/skill-aliases/` and `AGENTS.md`)
-- Manifests: `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.codex-plugin/plugin.json` (version parity required)
+- Skills: `/wit:scan`, `/wit:dev`, `/wit:rpa`, `/wit:add-issues` (host aliases in `references/skill-aliases/` and `AGENTS.md`). `/wit:dev` accepts `--kind feature|bug-fix|investigation`
+- Manifests: `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.codex-plugin/plugin.json` (version parity required; three-manifest lockstep)
 - Python: `scripts/validate.py`; ship token dispatcher `finalize_tokens.py` under `skills/ship/scripts/`; POSIX helpers `ensure_logdir.py` / `strip_frontmatter.py`; skill discovery `skills/research/scripts/discover_skills.py`
 
 ## Unknowns

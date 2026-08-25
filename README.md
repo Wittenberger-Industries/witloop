@@ -16,9 +16,9 @@ its own.
 | Command | What it does |
 |---------|--------------|
 | **`/wit:scan`** | Documents an existing project (incl. a mermaid architecture diagram) and bootstraps wit (constitution + optional plugin installs). |
-| **`/wit:dev "idea"`** | Brainstorms a feature with you, designs, confirms architecture + design at one gate, then builds and ships hands-off to an open PR. Add `--auto` to auto-approve the gate. |
+| **`/wit:dev "idea"`** | Routes work type `feature`, `bug-fix`, or `investigation`. Features brainstorm, design, confirm at one gate, then build and ship to an open PR. Add `--auto` to auto-approve the design gate. Add `--kind feature|bug-fix|investigation` to override the deduced work type. |
 | **`/wit:rpa "pdd"`** | Parses a PDD (markitdown), refines the TO-BE, writes an SDD + architecture + assumptions, then builds a REFramework or Maestro solution via the UiPath skills (XAML-only or coded, your choice at the design gate) to a PR. One run per PDD (1..N processes); `--auto` supported. |
-| **`/wit:add-issues`** | Files a well-formed GitHub issue (Bug / Feature / Task) with typed body, labels, and relationships. |
+| **`/wit:add-issues`** | Files a well-formed GitHub issue (Bug / Feature / Task) with typed body, labels, and relationships. To file a bug as an issue, use this command, not `/wit:dev`. |
 
 On Claude the commands are `/wit:scan`, `/wit:dev`, `/wit:rpa`, `/wit:add-issues`; on Copilot they read
 `/wit-scan`, `/wit-dev`, `/wit-rpa`, `/wit-add-issues`, on Codex `$wit-scan`, `$wit-dev`, `$wit-rpa`,
@@ -27,6 +27,21 @@ plugin skills plus natural-language auto-trigger (see `references/cursor-tools.m
 bootstrap offers to install to `~/.agents/skills/` (the raw plugin forms `/wit dev` and `$dev` always
 work), or, on any harness, auto-trigger from natural language. Only these four entry points surface as
 commands; the phase skills are hidden (`user-invocable: false`) and run inside the loop.
+
+## Work types
+
+`/wit:dev` is still one of those four commands (not a fifth). It deduces a **work type**
+(`feature | bug-fix | investigation`) from intent before any write-capable setup.
+`--kind feature|bug-fix|investigation` overrides. Mixed or unclear intent is an announced `feature`.
+
+- **feature** (default): today's brainstorm, design gate, build, and ship loop.
+- **investigation**: a read-only cited answer this turn. No dossier, design gate, keep-alive, or PR.
+- **bug-fix**: repro-first. The same named surface must fail then pass (same-surface fail-then-pass).
+  A fail-closed narrow-fix may skip the human design-gate ask with the distinct stamp
+  `design gate bypassed (narrow-fix)`, which is distinct from `--auto` (design-gate auto-approve).
+
+Runtime procedure lives in `skills/dev/SKILL.md`, `skills/dev/references/work-types.md`,
+`investigation.md`, and `bug-fix.md`. This README is the user surface.
 
 ## Install
 
@@ -113,8 +128,10 @@ Tool-name mappings live in `references/codex-tools.md`, `references/copilot-tool
 
 ```
 /wit:scan                  once per project: documents it, bootstraps wit
-/wit:dev "idea"         -> brainstorm (you) -> research -> plan -> check -> DESIGN GATE (you) -> build -> check -> ship -> PR
-/wit:dev "idea" --auto  -> same, gate auto-approved & recorded, fully hands-off
+/wit:dev "idea"         -> work type (feature default) -> brainstorm (you) -> research -> plan -> check -> DESIGN GATE (you) -> build -> check -> ship -> PR
+/wit:dev "idea" --auto  -> same, design gate auto-approved & recorded, fully hands-off
+/wit:dev "idea" --kind investigation -> read-only cited answer; no dossier, gate, keep-alive, or PR
+/wit:dev "idea" --kind bug-fix -> repro-first; same-surface fail then pass; narrow-fix may stamp design gate bypassed (narrow-fix)
 /wit:rpa "PDD.docx"     -> ingest(markitdown) -> refine TO-BE (you) -> SDD -> check -> DESIGN GATE (you) -> REFramework/Maestro build -> check -> PR
 /wit:add-issues         -> classify -> draft (.wit/issues/) -> confirm -> gh issue create -> delete draft
 ```
@@ -199,9 +216,9 @@ title / description / timestamp), so each phase (and `validate.py`) can parse th
 | Skill | Invoke (Claude) | Role |
 |-------|-----------------|------|
 | `scan` | `/wit:scan` | Document an existing project and bootstrap wit; `--refresh` = drift check + learnings consolidation |
-| `dev` | `/wit:dev "idea"` | The interactive entry: brainstorm, then hand off |
+| `dev` | `/wit:dev "idea"` | The interactive entry: work type `feature`, `bug-fix`, or `investigation`; `--kind` override |
 | `rpa` | `/wit:rpa "pdd"` | RPA entry: ingest PDD -> refine TO-BE -> SDD -> REFramework/Maestro build via UiPath skills -> PR |
-| `add-issues` | `/wit:add-issues` | File a well-formed GitHub issue (Bug / Feature / Task) via gh |
+| `add-issues` | `/wit:add-issues` | File a well-formed GitHub issue (Bug / Feature / Task) via gh; "file a bug" stays here |
 | `brainstorm` | via `dev` | The requirements dialogue (the one interactive phase) + glossary upkeep |
 | `research` | via `dev` | The design half: research -> plan -> design gate (your confirmation) |
 | `plan` | via `research` | spec + tasks + pitfalls (+ ADR) |

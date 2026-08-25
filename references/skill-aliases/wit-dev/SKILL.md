@@ -4,7 +4,9 @@ name: wit-dev
 description: >
   Alias of wit's dev skill for flat-skill installs (Copilot CLI /wit-dev, Codex CLI $wit-dev, Grok Build
   /wit-dev); forwards to the wit plugin's dev entry point: brainstorm a feature, design it, confirm at the
-  design gate, then build and ship hands-off to an open PR. Supports "--auto" to auto-approve the gate.
+  design gate, then build and ship hands-off to an open PR. Also forwards "fix this bug", "why does X fail",
+  "how does X work", and "explain this architecture". Supports "--auto" to auto-approve the gate and
+  "--kind feature|bug-fix|investigation" to override work type.
 ---
 
 # /wit-dev: alias of wit's `dev` skill
@@ -17,7 +19,7 @@ inside the wit plugin; this file contains no loop logic of its own.
    `agents/`, and `.claude-plugin/` (Copilot: under `~/.copilot/installed-plugins/…`; Grok: the active
    wit entry's installPath in `~/.claude/plugins/installed_plugins.json`).
 2. Read `AGENTS.md` at that root (the cross-platform bootstrap), then follow `skills/dev/SKILL.md` with
-   the user's arguments as the feature idea, passing `--auto` through if given.
+   the user's arguments as the feature idea, passing `--auto` and `--kind` through if given.
 
 If no wit plugin root exists, say so and point the user at
 `https://github.com/Wittenberger-Industries/witloop`; do not improvise the loop from this alias.

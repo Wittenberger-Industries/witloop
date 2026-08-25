@@ -2,7 +2,7 @@
 type: Design Notes
 title: "dev: design rationale (maintainer notes)"
 description: "The \"why\" behind dev/SKILL.md's rules, relocated out of the loaded skill by #41 (v1.9.1); the runtime never reads this file; each entry is anchored to the step it explains."
-timestamp: 2026-07-11
+timestamp: 2026-08-25
 tags: [dev, design-notes, context-budget]
 ---
 
@@ -97,3 +97,24 @@ against future "simplification".
 - **Why "keep dev thin":** dev stays loaded for the entire run, so logic concentrated here is paid
   for on every turn; sequencing lives in dev, work lives in the phase skills, and persistence lives
   in the keep-alive loop.
+
+## Work type prelude (before write-capable setup)
+
+Runtime rules live in `skills/dev/SKILL.md` and `skills/dev/references/work-types.md` plus on-demand
+`investigation.md` / `bug-fix.md`. This file is not loaded at runtime; it is why those rules exist.
+
+- **Why work type is deduced before write-capable setup:** an investigation classified after scan,
+  models, or a feature folder would already have written `.wit/` state, so the read-only contract
+  would be broken before the exit. The prelude parses `--auto` and `--kind` in memory, loads
+  `work-types.md`, announces, and only then continues to host probe / scan / folder.
+- **Why investigation exits:** it is an answer, not a loop. No dossier, design gate, keep-alive, or
+  PR. Loading `investigation.md` and stopping keeps the four advertised commands (no `/wit:how`).
+  Investigation exits here so later steps never run.
+- **Why semantic judgment, not a keyword classifier:** the orchestrator already has the user's
+  request; a keyword-only helper is language-bound and weaker than intent. Mixed intent defaults to
+  an announced `feature` plus `--kind`. Do not add `classify_work_type.py`.
+- **Why a new prelude, not a rewrite of the folder classifier:** work type
+  (`feature | bug-fix | investigation`) is intent. Folder class
+  (`new / resume / in-flight-overlap / done-collision / roadmap-row`) is whether a dossier already
+  exists. Investigation never seeds a folder. Feature and bug-fix still run the existing five-class
+  folder classifier. Combining the two questions would change the feature path.

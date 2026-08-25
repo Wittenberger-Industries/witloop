@@ -43,6 +43,10 @@ by wit's own pipeline (dev owns the handoff; research/plan fire in their phases:
 invokes writing-plans there). Where the delegate's checklist demands those steps, satisfy them with the wit
 equivalents and move on.
 
+When Work type is bug-fix, follow `${CLAUDE_PLUGIN_ROOT}/skills/dev/references/bug-fix.md` repro contract
+(keep the four must-asks; reinterpret them; persist `## Repro contract` in `brief.md`). Brainstorm is
+never skipped. Delegation to `superpowers:brainstorming` is unchanged. Feature path unchanged: missing Work type or Work type `feature` uses today's must-asks; never consult Gate bypass.
+
 ## Must-ask before handoff (interactive, never skipped)
 
 Whoever runs the dialogue (superpowers or the fallback), the brief isn't done until the user has answered:

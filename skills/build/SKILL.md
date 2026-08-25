@@ -16,8 +16,10 @@ that returns only a summary. You orchestrate; you do not implement every task in
 Design rationale for this skill lives in the wit repo's `docs/design-notes/build.md` (maintainer doc,
 never loaded at runtime).
 
-Precondition: a plan exists (`tasks.md`) **and the design gate passed**: approved interactively or
-`auto-approve (--auto)`, recorded in `progress.md`. Refuse to build without it; route to the research
+Precondition: a plan exists (`tasks.md`) **and the design gate passed**: an interactive approve stamp
+or `auto-approve (--auto)` stamp, **or** (Work type bug-fix AND `## Gate bypass` Status narrow-fix AND
+a `design gate bypassed (narrow-fix)` log line), recorded in `progress.md`. missing Work type = feature
+(refuse bypass; never consult a Gate bypass block). Refuse to build without it; route to the research
 skill instead. First act once engaged: append `build engine engaged (wit <version>)` to progress.md's
 Log, <version> read from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`, never guessed. From here
 build runs autonomously.
@@ -100,13 +102,20 @@ cross-provider diff review** (the layer on top of wit-code-checker) over the wav
 that runner keeps full TDD (watch-fail / watch-pass); only multi-test waves switch to authored-not-run +
 orchestrator serial Verify.
 
+When Work type is bug-fix, after the fix task run the **same** Surface command again (redirected to
+`.logs/repro-after.txt`) and stamp `repro passed on <surface>` using that same surface string. Wrong
+surface or inconclusive is not a pass. If build discovers an architecture or public-contract change,
+revoke the bypass and reopen the existing design gate.
+
 ## 3 · When a task fails
 
 Don't thrash. Give the subagent a bounded number of attempts (≈3) to get its task green. If it's still
 stuck, switch to a debugging pass (`superpowers:systematic-debugging` if installed): reproduce,
 isolate, hypothesize, test. If the failure reveals the **plan** was wrong, stop and amend: append a stamped Reflection line to
 `progress.md` (`- <ts> **Reflection** <check that failed>: <what went wrong, one clause> - earlier catch: plan`),
-update `spec.md`/`tasks.md`, and continue; never let code silently drift from the spec.
+update `spec.md`/`tasks.md`, and continue; never let code silently drift from the spec. If that amend is
+an architecture or public-contract change on a bug-fix that used a narrow-fix bypass, revoke the bypass
+and reopen the existing design gate.
 
 ## 4 · Keep scope honest
 

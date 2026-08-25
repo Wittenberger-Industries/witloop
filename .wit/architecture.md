@@ -2,11 +2,11 @@
 type: Architecture
 title: Architecture - Witloop
 description: Mermaid module/dependency diagram of the real architecture.
-timestamp: 2026-08-19
+timestamp: 2026-08-25
 ---
 
 # Architecture - Witloop
-_Diagrammed 2026-08-19; updated for the capability table (ADR-0001)._
+_Diagrammed 2026-08-19; updated for the capability table (ADR-0001) and work-type routing (1.15.0)._
 
 ```mermaid
 flowchart TD
@@ -45,7 +45,15 @@ flowchart TD
     constitution["constitution / repo-map"]
     featuredir["features slug dossier"]
   end
+  subgraph ondemand["On-demand from dev"]
+    worktypes_md["work-types.md"]
+    investigation_md["investigation.md"]
+    bugfix_md["bug-fix.md"]
+  end
   scan_sk --> constitution
+  dev_sk --> worktypes_md
+  dev_sk -.-> investigation_md
+  dev_sk -.-> bugfix_md
   dev_sk --> brainstorm_sk
   brainstorm_sk --> research_sk
   research_sk --> plan_sk
@@ -66,4 +74,4 @@ flowchart TD
   constitution --> featuredir
 ```
 
-Legend: solid arrows are the `/wit:dev` sequence and script calls; dashed arrows are host-adapter lookups the skills read rather than own. `capabilities.md` is the capability x host matrix; `cursor-tools.md` is one of the tool maps. Entry skills stamp cells into `progress.md`; later phases read that stamp.
+Legend: solid arrows are the `/wit:dev` sequence and script calls; dashed arrows are host-adapter lookups the skills read rather than own. `dev` loads `work-types.md` on every run; `investigation.md` and `bug-fix.md` are on-demand (investigation exits read-only; bug-fix overlays phases). Four entry skills; one named review agent (`wit-code-checker`). `capabilities.md` is the capability x host matrix; `cursor-tools.md` is one of the tool maps. Entry skills stamp cells into `progress.md`; later phases read that stamp.

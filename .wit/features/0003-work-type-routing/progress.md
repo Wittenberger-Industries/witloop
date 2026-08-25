@@ -3,7 +3,7 @@ type: Feature Progress
 title: Work-type routing for bug fixes and investigations
 description: Route bug-fix and read-only investigation requests through purpose-built Witloop paths.
 feature: 0003-work-type-routing
-status: build
+status: ship
 timestamp: 2026-08-25
 ---
 
@@ -11,9 +11,10 @@ timestamp: 2026-08-25
 
 - **Slug:** 0003-work-type-routing
 - **Created:** 2026-08-25
-- **Phase:** build
+- **Phase:** ship
 - **Gate mode:** interactive
 - **Flow:** dev
+- **Work type:** feature
 - **Worktree:** /workspace
 - **Branch:** cursor/pstack-feature-roadmap-e671
 - **Host:** cursor
@@ -73,6 +74,9 @@ timestamp: 2026-08-25
 - 2026-08-25T19:40:00+00:00 **Update** Task 6 tokens unavailable Duration unavailable
 - 2026-08-25T19:45:00+00:00 **Update** Task 7 done: source memory and release 1.15.0
 - 2026-08-25T19:45:00+00:00 **Update** Task 7 tokens unavailable Duration unavailable
+- 2026-08-25T19:49:22+00:00 **Update** phase = ship (ship engine engaged (wit 1.15.0))
+- 2026-08-25T19:49:22+00:00 **Update** review via wit-code-checker + superpowers:requesting-code-review[inline]
+- 2026-08-25T20:00:03+00:00 **Update** PR opened https://github.com/Wittenberger-Industries/witloop/pull/92
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Add the work-type routing foundation

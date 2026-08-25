@@ -5,8 +5,10 @@ description: >
   The main entry point for building a feature with wit. Use this skill when the user types
   "/wit:dev <idea>", or says "build me <feature>", "I want a feature that <does X>", "add <capability> to
   this project", or otherwise asks to design-and-build something, including re-running an idea whose feature
-  is already in flight (dev detects it and resumes instead of duplicating). Supports "/wit:dev <idea>
-  --auto" to auto-approve the design gate for a fully hands-off run.
+  is already in flight (dev detects it and resumes instead of duplicating). Also use it for "fix this bug"
+  or "why does X fail" (bug-fix) and "how does X work" or "explain this architecture" (investigation).
+  Supports "/wit:dev <idea> --auto" to auto-approve the design gate, and "--kind feature|bug-fix|investigation"
+  to override the deduced work type.
 ---
 
 # /wit:dev "<feature idea>": brainstorm with me, then build it hands-off
@@ -23,6 +25,18 @@ Design rationale for this skill lives in the wit repo's `docs/design-notes/dev.m
 never loaded at runtime).
 
 ## Procedure
+
+**Work type first (read-only prelude).** Before the host probe, scan, models, or any other
+write-capable setup: parse `--auto` and `--kind` in memory (do not write yet). Valid `--kind` values
+are `feature|bug-fix|investigation`; an invalid value **stops** with that set (no silent infer). Load
+`${CLAUDE_PLUGIN_ROOT}/skills/dev/references/work-types.md` and deduce by semantic orchestrator
+judgment of the user's intent (not a keyword-only runtime classifier). Mixed or unclear intent
+defaults to `feature`. Never ask. Never route silently. Always print exactly:
+`Work type: <type> (<source>). Override: --kind feature|bug-fix|investigation`
+(source is `kind`, `inferred`, or `ambiguous-default`). On resume, honor a stamped `Work type:`
+without re-deduction unless `--kind` is present; the override wins. A missing stamp means `feature`.
+If the work type is `investigation`, the investigation route will load and exit (no host probe, scan,
+models, or feature-folder writes). Feature and bug-fix continue at step 1.
 
 1. **Host probe (once), then ensure the project is scanned, and current.** Detect the running harness
    (`claude` | `codex` | `copilot` | `grok` | `cursor`). Tells: **cursor** when AskQuestion is on

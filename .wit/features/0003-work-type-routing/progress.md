@@ -54,9 +54,11 @@ timestamp: 2026-08-25
 - 2026-08-25T19:10:32+00:00 **Update** design gate approved, phase = build
 - 2026-08-25T19:10:32+00:00 **Update** build engine engaged (wit 1.14.1)
 - 2026-08-25T19:10:32+00:00 **Update** worktree via superpowers: using-git-worktrees; Cloud Agent checkout already isolated on PR branch, so no second worktree
+- 2026-08-25T19:20:16+00:00 **Update** Task 1 done: work-type routing foundation
+- 2026-08-25T19:20:16+00:00 **Update** Task 1 tokens unavailable Duration unavailable
 
 ## Tasks (mirrored from tasks.md once planned)
-- [ ] 1. Add the work-type routing foundation
+- [x] 1. Add the work-type routing foundation
 - [ ] 2. Add the read-only investigation exit
 - [ ] 3. Overlay the reproduce-first bug-fix lifecycle
 - [ ] 4. Enforce bug-fix proof in checker and ship

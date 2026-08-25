@@ -185,6 +185,11 @@ if "only sanctioned" not in bs or "self-answered (headless)" not in bs:
 dv = (ROOT / "skills/dev/SKILL.md").read_text(encoding="utf-8")
 if "self-answered (headless)" not in dv or "fails this check" not in dv:
     errors.append("skills/dev/SKILL.md: missing the headless-only self-answer preflight clause")
+ANNOUNCE = "Work type: <type> (<source>). Override: --kind feature|bug-fix|investigation"
+if ANNOUNCE not in dv:
+    errors.append("skills/dev/SKILL.md: missing the work-type always-announce string")
+if not (ROOT / "skills/dev/references/work-types.md").is_file():
+    errors.append("skills/dev/references/work-types.md: missing work-type reference")
 ig = (ROOT / "skills/research/references/integrations.md").read_text(encoding="utf-8")
 if "verify absence" not in ig.lower():
     errors.append("skills/research/references/integrations.md: missing the verify-absence-before-fallback rule")

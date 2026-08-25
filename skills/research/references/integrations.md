@@ -58,12 +58,17 @@ nothing else: the pointer protocol, the charters, and the plan format are unchan
 | build | `superpowers:using-git-worktrees`, `test-driven-development`, `subagent-driven-development`, `dispatching-parallel-agents` | wit, build:1 (worktree) and build:2 (waves + runners) | worktree/branch + task commits | build skill + `agents/wit-task-runner.md` |
 | ship | `superpowers:verification-before-completion` + `finishing-a-development-branch`; `requesting-code-review` runs **inline in wit-code-checker result mode** (its template passed into the dispatch), logged `review via wit-code-checker + superpowers:requesting-code-review[inline]` | wit, ship:1 (verification), ship:2 (checker dispatch carrying the line review), ship:7 (close-out) | `verification.md` + `PR.md` | ship's verification gate + the checker's built-in line review, logged `review via wit-code-checker (wit line review; superpowers absent)`, ship's variant of the generic fallback line |
 | debug (any phase) | `superpowers:systematic-debugging` | wit, the failing phase (e.g. build:3) | `progress.md` log entry | inline hypothesis-and-test |
+| debug (bug-fix research, pre-fix) | `superpowers:systematic-debugging` | wit, research after brief, before a fix is planned | research evidence + progress stamps | inline hypothesis-and-test |
 
 When you delegate, wit still owns the artifacts: capture the external skill's result into the matching
 `.wit/` file (e.g. a superpowers plan -> `tasks.md` in Witloop's format) so the rest of the loop and a resumed
 run can read it. The external skill does the thinking; `.wit/` keeps the memory. The same rule applies to any equivalent
 skill an environment happens to provide (a code-review or architecture suite, etc.): detect, delegate,
 capture into `.wit/`, but wit only *offers to install* things with a known, verifiable slug.
+
+**Exception: investigation is chat-only.** An investigation does NOT capture into `.wit/`. The chat
+reply is the only artifact. Do not seed a dossier, stamp progress.md, or write scan/model state for
+that route.
 
 ### Who initiates: wit does
 
@@ -72,11 +77,22 @@ During an active wit run (`dev`, `rpa`, or any phase skill in flight), superpowe
 skill description matching the current moment ("before touching code", "starting feature work", "before
 merging") is **not** a trigger; self-invocation outside the matrix bypasses wit's phase logging and
 artifact contract. If one fires anyway, capture its output into the matching `.wit/` artifact and log the
-deviation in progress.md. wit's artifact formats always win: a plan lands in `tasks.md`, never
-`docs/plans/`; a review lands in `verification.md`. Phases dispatched as subagents (research
-investigation, build tasks, checker passes) are structurally immune (superpowers disables itself inside
+deviation in progress.md (except investigation, which stays chat-only). wit's artifact formats always win: a plan lands in `tasks.md`, never
+`docs/plans/`; a review lands in `verification.md`. Phases dispatched as subagents (researcher
+subagents, build tasks, checker passes) are structurally immune (superpowers disables itself inside
 subagents), so this rule is what protects the inline phases: the brainstorm dialogue, plan writing, the
 design gate, and ship orchestration.
+
+## Understand (investigation)
+
+Not a loop phase. After work type is `investigation`, wit initiates `understand` (description-match
+is not a trigger). `how` is REQUIRED when installed. `why` is OPTIONAL and only for motivational
+questions.
+
+| wit capability | preferred skill | initiator | artifact | fallback when absent |
+|----------------|-----------------|-----------|----------|----------------------|
+| understand | `how` (REQUIRED when installed) | `/wit:dev` after work type `investigation` | chat reply only | on-demand investigation reference |
+| understand (motivation) | `why` (OPTIONAL extra) | same, only if the question is motivational and `why` is present | chat reply only | git/gh/in-repo docs; never a required MCP sweep |
 
 ## Frontend work
 

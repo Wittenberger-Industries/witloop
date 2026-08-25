@@ -34,6 +34,7 @@ timestamp: 2026-08-25
 - 2026-08-25T18:06:05+00:00 **Decision** scope includes both bug-fix and read-only investigation routes
 - 2026-08-25T18:06:54+00:00 **Decision** routes auto-detect from intent and accept an explicit override
 - 2026-08-25T18:08:26+00:00 **Decision** investigations return a cited answer with no dossier, gates, or PR
+- 2026-08-25T18:09:47+00:00 **Decision** narrow bug fixes may skip the design gate after a repro-focused brainstorm
 
 ## Tasks (mirrored from tasks.md once planned)
 
@@ -42,3 +43,4 @@ timestamp: 2026-08-25
 - User selected both routes for the first release; additional work types remain out of scope.
 - Route selection is automatic by default, with an explicit user override for ambiguous requests.
 - Investigation is a read-only exit: no `.wit/` feature dossier, brainstorm, design gate, build, or PR.
+- Bug fixes always run a repro-focused brainstorm. A narrow fix with no public behavior or architecture change may skip the design gate when the reason is recorded; all other fixes keep it.

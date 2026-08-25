@@ -1,167 +1,119 @@
 ---
 type: Verification
 title: Verification - Work-type routing for bug fixes and investigations (plan mode)
-description: Plan underspecifies resume, always-announce, and the investigation capture exception; remaining gaps are wave-safety and verify pins.
+description: Round 2 - F1-F3 and prior warning pins are mapped; one residual wave-2 validate gap remains.
 feature: 0003-work-type-routing
 status: issues-found
 timestamp: 2026-08-25
 ---
 
-# Verification: 0003-work-type-routing (plan mode)
+# Verification: 0003-work-type-routing (plan mode, round 2)
 
 **Question:** will this plan, built exactly as written, deliver the feature?
-**Verdict:** no. Three locked decisions have no covering Do/Files evidence in Task 1. Several wave-safety and verification pins are incomplete.
+**Verdict:** yes on locked decisions F1-F3 and the round-1 warning pins, with one residual wave-safety WARNING.
 
 Applicable learnings: none (progress.md `applicable learnings: none`).
+
+## Round-1 disposition
+
+| ID | Round-1 issue | Now | Evidence |
+|----|---------------|-----|----------|
+| F1 | Always-announce missing from Task 1 Do | **fixed** | tasks.md:22-24 exact announce line; contract-test inferred/override/default |
+| F2 | Resume does not re-deduce unless `--kind` | **fixed** | tasks.md:17 `feature-folder-cases.md`; tasks.md:25-26 stamp honor + override wins; contract-test resume |
+| F3 | Investigation capture-into-`.wit/` exception unowned | **fixed** | tasks.md:26-28 `understand` + pre-fix debug + chat-only exception; independently loaded integrations tests |
+| W1 | Wave 1 dangling `${CLAUDE_PLUGIN_ROOT}` + Verify omitted `validate.py` | **mostly fixed** | tasks.md:24 point only at `work-types.md`; Task 1 Verify includes `validate.py`. Residual: Task 2 still omits it (W1r) |
+| W2 | `design gate opened` then bypass; workflow skip cell; mid-build reopen | **fixed** | tasks.md:53-59 exact stamp after opened; skip never/feature vs recorded narrow-fix; revoke and reopen; test reopen path |
+| W3 | Description/alias tells and `--kind` pass-through | **fixed** | tasks.md:28-29 conservative fix/investigation tells; "file a bug" stays add-issues; `--kind` beside `--auto` |
+| W4 | `1.15.0` and rules inventory not runnable | **fixed** | Task 4 inventory heading + tests (tasks.md:68-71); Task 7 pins exactly `1.15.0` (tasks.md:99-103); spec AC11 verify line names both new modules |
+| W5 | Task 6 was 13 files | **fixed** | split Task 6 docs vs Task 7 memory+release. Task 1 is 8 files at the ceiling (I2) |
+| W6 | Semantic tests could accept a keyword table | **fixed** | tasks.md:30-31 orchestrator judgment, not a keyword-only runtime classifier |
+| I2 | AC8 verify omitted `test_bug_fix_checker` | **fixed** | spec.md:68 both modules |
 
 ## Coverage matrix
 
 | Item | Source | Covering task | Evidence | Status |
 |------|--------|---------------|----------|--------|
-| AC1 semantic deduce `feature\|bug-fix\|investigation`; `--kind` wins; invalid stops; mixed → announced `feature` | spec.md:39-41 | Task 1 | Do names semantic deduction, `--kind`, invalid stop, mixed/unclear → announced `feature`; Verify `tests.test_work_type_routing` | PARTIAL — see F1 (always-announce) |
-| AC2 resolve before scan/model/folder writes; investigation exits; feature/bug-fix continue folder classifier | spec.md:42-44 | Tasks 1, 2 | Task 1 Do "before write-capable dev setup" + hook-order tests; Task 2 deny-list + early exit | COVERED |
-| AC3 stamp `Work type:`; missing = `feature`; resume does not re-deduce unless `--kind` | spec.md:45-47 | Task 1 | Do stamps optional `Work type:` and missing=`feature`. Resume/no-re-deduce is not in any Do; `feature-folder-cases.md` not in Files | **GAP** F2 |
-| AC4 investigation: no `.wit/` state/branch/commit/keep-alive/PR; `how`/`why` optional; 2-explorer fallback; citations + `## Sources` | spec.md:48-52 | Task 2 (+ Task 1 integrations) | Task 2 Do names exit, delegation, cap, citations, deny-list. Standing `integrations.md` capture-into-`.wit/` rule is not excepted | **GAP** F3 |
-| AC5 bug-fix brainstorm repro contract; research systematic-debugging or fallback; root cause recorded | spec.md:53-56 | Task 3 | Do: repro-contract brainstorm, pre-plan systematic-debugging, root-cause evidence; Files include brainstorm + research SKILL.md | COVERED |
-| AC6 plan + plan-mode checker always; narrow-fix bypass only when every conjunct is recorded | spec.md:57-61 | Task 3 | Do: mandatory plan/checker path, fail-closed predicate, "test every predicate conjunct", bypass refusal | COVERED |
-| AC7 distinct `design gate bypassed (narrow-fix)` stamp + audit block; fail closed; `--auto` separate; feature never bypasses | spec.md:62-64 | Tasks 3, 5 | Task 3: structured Gate bypass block, stamp distinction, `--auto`/feature unchanged. Full stamp string lives in spec, not Task 3 Do | COVERED (see W2) |
-| AC8 same-surface fail-then-pass; PR names root cause + smallest fix; regression or impracticality; result-mode omission = BLOCKER | spec.md:65-68 | Tasks 3, 4 | Task 3 same-surface + regression-or-rationale; Task 4 additive checker rows + ship PR evidence + charter markers preserved | COVERED |
-| AC9 all three timing parsers count bypass as build/ship span start; approved/auto-approved unchanged | spec.md:69-71 | Task 5 | Do: allow-list in `_ledger.py`, `token_report.py`, `grok_token_report.py`; failing bypass fixture first; existing spans unchanged | COVERED (see W2) |
-| AC10 four commands; five-host table; feature default; agent markers; seven-file dossier | spec.md:72-74 | Tasks 1, 4, 6 | Task 1 four-command + feature behavior; Task 4 marker/tool/caps pin; Task 6 four-command/five-host wording. No task Verify runs `unittest discover` | COVERED (see I2) |
-| AC11 version `1.15.0` lockstep; user docs; source memory; rules inventory in `PR.md` | spec.md:75-77 | Task 6 | Do: bump 1.14.1→1.15.0, docs, inventory "prepare". Verify is only `validate.py` (parity, not the number or inventory) | PARTIAL — see W4 |
-| Brief: always announce selected work type + `--kind` override; never ask; never route silently | brief.md:17-18 | Task 1 | Do announces only the ambiguous-`feature` default | **GAP** F1 |
-| Brief: `--kind feature\|bug-fix\|investigation` wins | brief.md:14-15 | Task 1 | Do parse `--kind` | COVERED |
-| Brief: investigation read-only, no dossier/gate/build/PR | brief.md:20-21 | Task 2 | Do + deny-list | COVERED (F3 for integrations capture) |
-| Brief: bug-fix names root cause + smallest fix; same-surface fail then pass; regression when practical | brief.md:35-37 | Tasks 3, 4 | Do + checker/ship | COVERED |
-| Brief: existing feature brainstorm/design/build/ship preserved | brief.md:38 | Tasks 1, 3 | missing-Work-type=`feature`; unchanged-feature tests | COVERED |
-| Brief: no fifth command, no new review agent, no required MCP, no RPA/add-issues change | brief.md:44-46 | Tasks 1, 2, 4, 6 | four-command tests; checker additive-only; no rpa/add-issues Files | COVERED |
-| Brief: five-host via capability table/adapters | brief.md:50 | Tasks 1, 6 | alias `--kind` pass-through; five-host wording. NL description tells not tasked | COVERED (see W3) |
-| ADR-0002.1 semantic deduce before write-capable setup; `--kind`; invalid stop; mixed → announced feature | ADR-0002:32-34 | Task 1 | Do matches, minus always-announce | PARTIAL F1 |
-| ADR-0002.2 investigation on-demand; installed `how` else portable fallback; chat-only; no scan write/dossier/gate/keep-alive/PR | ADR-0002:35-37 | Tasks 1, 2 | Task 1 hook before writes; Task 2 route | PARTIAL F3 |
-| ADR-0002.3 stamp `Work type:`; missing=`feature`; procedure on-demand not in always-loaded body | ADR-0002:38-40 | Task 1 | work-types.md + thin SKILL prelude | COVERED (resume still F2) |
-| ADR-0002.4 overlay existing phases; reproduce + isolate root cause before plan; same surface fail then pass | ADR-0002:41-43 | Task 3 | overlay Do; Files brainstorm/research/build/workflow | COVERED |
-| ADR-0002.5 distinct bypass stamp; fail-closed; not `--auto` | ADR-0002:44-47 | Tasks 3, 5 | predicate + distinct stamp + parser allow-list | COVERED |
-| ADR-0002.6 single `wit-code-checker`; additive rows only; preserve markers/caps/modes/tools | ADR-0002:48-49 | Task 4 | Do additive-only + contract-test preserved markers | COVERED |
-| ADR rejected: keyword-only classifier helper | ADR-0002:64 | Task 1 (honor) | Plan does **not** add `classify_work_type.py`. Do says semantic. Tests name "examples", not an anti-keyword pin | honored (see I1) |
-| Glossary **Work type** (not task type / route kind) | glossary.md:22-23 | Task 1 | stamp `Work type:`; flag remains `--kind` | COVERED |
-| Constitution: TDD, tests in `tests/test_*.py` | constitution.md:32-35 | all tasks | header + per-task Verify | COVERED |
-| Constitution: no new dep unless ladder + spec | constitution.md:25-28, 37-39 | spec.md:105 | Dependencies none; no new helper script in tasks | COVERED |
-| Constitution: agent charters additive only | constitution.md:41 | Task 4 | explicit preserve tools/modes/caps/markers | COVERED |
-| Constitution: hotspots serial | constitution.md:42 | waves | Task 1 `dev/SKILL.md`; Task 3 `build/SKILL.md`+`workflow.md`; Task 4 `ship/SKILL.md`; not parallel | COVERED |
-| Constitution: behavior change = minor lockstep | constitution.md:48 | Task 6 | 1.14.1→1.15.0 three manifests | COVERED (W4 pin) |
-| Constitution: rule-text PR inventory | constitution.md:51 | Task 6 | "Prepare … for ship's `PR.md`"; ship:5 template has no inventory section | PARTIAL W4 |
-| Simplicity (prohibitive): no extra abstraction/dep | constitution.md:24-30 | (4) over-build | Three on-demand refs match spec Design. No keyword helper, no `check_narrow_fix.py`. Task 6 file count is the AC11 doc surface | PASS |
+| AC1 semantic deduce; `--kind` wins; invalid stops; mixed → announced `feature` | spec.md:39-41 | Task 1 | Do: semantic deduction, `--kind`, invalid stop, mixed→`feature`, always-announce | COVERED |
+| AC2 resolve before writes; investigation exits; others folder-classify | spec.md:42-44 | Tasks 1, 2 | Task 1 before write-capable + hook order; Task 2 deny-list/exit | COVERED |
+| AC3 stamp `Work type:`; missing=`feature`; resume no re-deduce unless `--kind` | spec.md:45-47 | Task 1 | stamp, missing default, resume honor, override wins; Files include `feature-folder-cases.md` | COVERED |
+| AC4 investigation: no `.wit/` state; `how`/`why`; 2-explorer fallback; citations | spec.md:48-52 | Tasks 1, 2 | Task 2 route + deny-list; Task 1 chat-only capture exception so integrations.md cannot order a dossier write | COVERED |
+| AC5 repro-contract brainstorm; systematic-debugging; root cause | spec.md:53-56 | Task 3 | Do + brainstorm/research Files | COVERED |
+| AC6 plan+checker always; fail-closed conjuncts | spec.md:57-61 | Task 3 | mandatory plan/checker; every conjunct tested | COVERED |
+| AC7 distinct `design gate bypassed (narrow-fix)`; fail closed; `--auto` separate; feature never bypasses | spec.md:62-64 | Tasks 3, 5 | exact stamp after `design gate opened`; workflow skip wording; `--auto` separate | COVERED |
+| AC8 same-surface; PR root cause+smallest fix; regression or rationale; result-mode BLOCKER | spec.md:65-68 | Tasks 3, 4 | overlay + additive checker rows + ship PR evidence; both test modules | COVERED |
+| AC9 three parsers count bypass as span2 start; approved/auto-approved unchanged | spec.md:69-71 | Task 5 | all three parser Files; failing bypass fixture first | COVERED |
+| AC10 four commands; five-host table; feature default; markers; seven-file dossier | spec.md:72-74 | Tasks 1, 4, 6, 7 | four-command tests; checker markers; docs wording; release pin | COVERED |
+| AC11 `1.15.0` lockstep; user docs; source memory; rules inventory in `PR.md` | spec.md:75-77 | Tasks 4, 6, 7 | heading in ship template; docs tests; version+parity pin; ship fills inventory from diff | COVERED |
+| Brief always-announce + override; never silent | brief.md:17-18 | Task 1 | exact announce sentence; never ask or route silently | COVERED |
+| Brief `--kind` wins | brief.md:14-15 | Task 1 | parse `--kind` | COVERED |
+| Brief investigation read-only | brief.md:20-21 | Task 2 | deny-list | COVERED |
+| Brief bug-fix proof | brief.md:35-37 | Tasks 3, 4 | same-surface + checker/ship | COVERED |
+| Brief existing feature path preserved | brief.md:38 | Tasks 1, 3 | missing stamp=`feature`; feature compatibility tests | COVERED |
+| Brief no fifth command / new agent / required MCP / RPA/add-issues | brief.md:44-46 | Tasks 1, 2, 4, 6 | four-command; checker additive-only; no rpa/add-issues Files | COVERED |
+| Brief five-host via capability table | brief.md:50 | Tasks 1, 6 | alias `--kind`; description tells; five-host wording | COVERED |
+| ADR-0002.1 semantic deduce before writes | ADR-0002:32-34 | Task 1 | Do matches including announce | COVERED |
+| ADR-0002.2 investigation chat-only; no scan write | ADR-0002:35-37 | Tasks 1, 2 | hook + deny-list + capture exception | COVERED |
+| ADR-0002.3 stamp; missing=`feature`; on-demand procedure | ADR-0002:38-40 | Task 1 | work-types.md; SKILL body points only there | COVERED |
+| ADR-0002.4 overlay; root cause before plan; same surface | ADR-0002:41-43 | Task 3 | overlay Do | COVERED |
+| ADR-0002.5 fail-closed distinct bypass; not `--auto` | ADR-0002:44-47 | Tasks 3, 5 | predicate + exact stamp + parsers | COVERED |
+| ADR-0002.6 single checker; additive rows; preserve markers/caps/tools | ADR-0002:48-49 | Task 4 | additive-only + marker tests | COVERED |
+| ADR rejected keyword-only helper | ADR-0002:64 | Task 1 | no helper script; contract-test against keyword-only classifier | COVERED |
+| Glossary **Work type** | glossary.md:22-23 | Task 1 | stamp `Work type:`; flag remains `--kind` | COVERED |
+| Constitution TDD / tests in `tests/test_*.py` | constitution.md:32-35 | all | header + per-task Verify | COVERED |
+| Constitution no new dep | constitution.md:25-28, 37-39 | spec.md:105 | none | COVERED |
+| Constitution agent charters additive | constitution.md:41 | Task 4 | preserve tools/modes/caps/markers | COVERED |
+| Constitution hotspots serial | constitution.md:42 | waves | `dev` W1; `build`+`workflow` W2 Task 3; `ship` W3 | COVERED |
+| Constitution minor lockstep | constitution.md:48 | Task 7 | exactly `1.15.0` three manifests | COVERED |
+| Constitution rule-text inventory | constitution.md:51 | Tasks 4, 7 | template heading + ship fills from diff | COVERED |
+| Simplicity (prohibitive) | constitution.md:24-30 | (4) | no extra runtime/agent/command; Task 6/7 split is the AC11 surface | PASS |
 | Pitfall: classified after a write | pitfalls.md:11-13 | Tasks 1, 2 | hook-order + deny-list | COVERED |
-| Pitfall: mixed intent exits read-only | pitfalls.md:14-16 | Task 1 | mixed → announced `feature` | COVERED |
-| Pitfall: "file a bug" stolen by bug-fix | pitfalls.md:17-19 | Task 1 | trigger examples + four-command tests | COVERED |
-| Pitfall: feature path regresses | pitfalls.md:19-21 | Tasks 1, 3 | missing-Work-type + unchanged-feature tests | COVERED |
-| Pitfall: optional skill required | pitfalls.md:22-24 | Task 2 | fallback + no-install; `plugin-bootstrap.md` not in Files (omission preserves current set) | COVERED |
-| Pitfall: read-only depends on host flag | pitfalls.md:25-27 | Task 2 | portable deny-list + exit-state check | COVERED |
-| Pitfall: false narrow-fix bypass | pitfalls.md:28-30 | Task 3 | conjunctive record + BLOCKER veto. **Mid-build reopen not in Task 3 Do** | PARTIAL W2 |
-| Pitfall: `--auto` confused with bypass | pitfalls.md:31-33 | Tasks 3, 5 | distinct-stamp tests | COVERED |
-| Pitfall: timing parser drift | pitfalls.md:34-36 | Task 5 | three implementations + shared fixture intent | COVERED |
-| Pitfall: raw repro pruned | pitfalls.md:37-39 | Tasks 3, 4 | durable stamps, spec, checker, PR | COVERED |
+| Pitfall: mixed intent → investigation | pitfalls.md:14-16 | Task 1 | mixed → announced `feature` | COVERED |
+| Pitfall: "file a bug" stolen | pitfalls.md:17-19 | Task 1 | tells + four-command; add-issues verbs kept | COVERED |
+| Pitfall: feature path regresses | pitfalls.md:19-21 | Tasks 1, 3 | missing stamp + compatibility | COVERED |
+| Pitfall: optional skill required | pitfalls.md:22-24 | Task 2 | fallback; bootstrap omission keeps current install set | COVERED |
+| Pitfall: host readonly flag | pitfalls.md:25-27 | Task 2 | portable deny-list | COVERED |
+| Pitfall: false narrow-fix bypass | pitfalls.md:28-30 | Task 3 | conjuncts + BLOCKER veto + mid-build reopen now in Do | COVERED |
+| Pitfall: `--auto` vs bypass | pitfalls.md:31-33 | Tasks 3, 5 | distinct stamps | COVERED |
+| Pitfall: parser drift | pitfalls.md:34-36 | Task 5 | three implementations | COVERED |
+| Pitfall: raw repro pruned | pitfalls.md:37-39 | Tasks 3, 4 | durable stamps/PR | COVERED |
 | Pitfall: checker charter damaged | pitfalls.md:40-42 | Task 4 | additive-only marker tests | COVERED |
-| Pitfall: manifest/docs mismatch | pitfalls.md:43-45 | Tasks 1, 6 | alias tests + 1.15.0 bump | COVERED (W4) |
+| Pitfall: manifest/docs mismatch | pitfalls.md:43-45 | Tasks 1, 6, 7 | alias tests; docs tests; `1.15.0` pin (pitfall still says "task 6" for the bump — I1) | COVERED |
 | Learning: none applicable | progress.md:45 | — | no hook to honor | n/a |
 
 ## Findings
 
-### F1 — BLOCKER — Always-announce is not in any task Do
+### W1r — WARNING — Task 2 Verify still omits `validate.py`
 
 **Mode:** plan
-**Evidence:** brief.md:17-18 (announce selected work type + override; never ask; never route silently); spec.md:82-83 (prelude "deduces and announces"); tasks.md:20-25 (Task 1 Do announces only mixed/unclear → `feature`).
+**Evidence:** Task 2 Files create `skills/dev/references/investigation.md` (tasks.md:37-38); Verify is only `python -m unittest tests.test_investigation_route` (tasks.md:44). `scripts/validate.py` OKF/fence/trailing-newline checks glob `skills/**/*.md`. Wave 2 runs Task 2 in parallel with Task 3 (which does run `validate.py`), so Task 3 may not see Task 2's new file. A truncated or type-less `investigation.md` can leave wave 2 green until Task 7.
 
-Built exactly as written, inferred `bug-fix` / `investigation` / plain `feature` may route with no one-line announcement. That is silent routing, which the brief forbids.
+**Plan edit:** Task 2 Verify → `python -m unittest tests.test_investigation_route && python scripts/validate.py`. Name the investigation/bug-fix files in `work-types.md` as repo paths without `${CLAUDE_PLUGIN_ROOT}` so Task 1's validator stays green (Task 1 already forbids those env-var pointers from `SKILL.md`).
 
-**Plan edit (Task 1 Do):** after resolve, always print `Work type: <type> (<source>). Override: --kind feature|bug-fix|investigation`. Never ask which type. Never continue without that line. Contract-test inferred, `--kind`, and ambiguous-default cases.
-
-### F2 — BLOCKER — AC3 resume does not re-deduce unless `--kind`
-
-**Mode:** plan
-**Evidence:** spec.md:45-47; ADR-0002:38-39; classification-seam resume rule (load-bearing); tasks.md:20-25 (stamp + missing=`feature` only); `references/feature-folder-cases.md` resume (lines 19-27) is not in any Files list.
-
-Today resume re-enters from `progress.md` with no Work type field (`feature-folder-cases.md:23-27`). Task 1 never says: detect in-flight match, honor stamped `Work type:`, skip deduction unless this invocation has `--kind`. A task-runner can re-classify every entry. An in-flight bug-fix can become `feature` or `investigation` on resume.
-
-**Plan edit (Task 1 Do + Files):** add stamp and resume rules to `skills/dev/references/work-types.md`. On in-flight match, do not re-deduce unless `--kind` is present; `--kind` wins over the stamp. If that detection stays in `references/feature-folder-cases.md`, add that file to Task 1 Files and a one-line "do not re-deduce Work type" rule. Contract-test: stamped `bug-fix` resume without `--kind` stays `bug-fix`; `--kind feature` on resume wins; missing stamp stays `feature`.
-
-### F3 — BLOCKER — Investigation capture-into-`.wit/` exception is not tasked
-
-**Mode:** plan
-**Evidence:** spec.md:48-50 (no `.wit/` state); ADR-0002:35-37; `skills/research/references/integrations.md:62-66` (standing rule: capture every delegate result into `.wit/`); Task 1 Do "Add shared integrations rows" (tasks.md:22) does not name the exception; Task 2 Files are only `investigation.md` + `tests/test_investigation_route.py` (tasks.md:30-31).
-
-Independently loaded integrations.md will still order a dossier write after `how`/`why`. Task 2's deny-list cannot amend a file it does not own. That breaks AC4 even if investigation.md is perfect.
-
-**Plan edit (Task 1 Do, same Files):** add an `understand` capability row (`how` required when installed; `why` optional for motivational questions; artifact = chat reply) **and** an explicit investigation exception to capture-into-`.wit/`. Contract-test that integrations.md loaded alone does not order `.wit/` writes for this route. Do not give Task 2 `integrations.md` (wave-1 ownership already).
+No BLOCKERs. Prior F1-F3 and W2-W6 are mapped with named files, TDD order, dependencies, and runnable Verify.
 
 ## Wave safety
 
 | Wave | Tasks | Shared Files | Intermediate green? |
 |------|-------|----------------|---------------------|
-| 1 | 1 | — | At risk: see W1 |
-| 2 | 2, 3, 5 | none | File-disjoint. Stamp string is shared via spec AC7 (`design gate bypassed (narrow-fix)`); Task 5 allow-list substring `design gate bypassed` matches. |
+| 1 | 1 | — | Yes if `work-types.md` does not `${CLAUDE_PLUGIN_ROOT}`-point at not-yet-created route files (Task 1 Verify includes `validate.py`, so a dangling env-var path fails the task). |
+| 2 | 2, 3, 5 | none | File-disjoint. Stamp shared via spec AC7 / Task 3 exact string; Task 5 substring `design gate bypassed` matches. Task 2 OKF not gated (W1r). |
 | 3 | 4 | — | Depends on 3. OK |
-| 4 | 6 | — | Depends on 2, 4, 5 (3 transitive via 4). OK |
+| 4 | 6 | — | Depends on 2, 4, 5 (3 via 4). OK |
+| 5 | 7 | — | Depends on 6. Pins `1.15.0` + `validate.py`. OK |
 
-Hotspot serial rule holds: `dev/SKILL.md` (wave 1), `build/SKILL.md`+`workflow.md` (wave 2 Task 3), `ship/SKILL.md` (wave 3).
-
-### W1 — WARNING — Wave 1 can fail `validate.py`; dangling route pointers
-
-**Mode:** plan
-**Evidence:** spec.md:81-88 (prelude points at `investigation.md` and `bug-fix.md`); Task 1 Do "point to route references" (tasks.md:21); those files are created in Tasks 2 and 3; `scripts/validate.py:140-150` requires every `${CLAUDE_PLUGIN_ROOT}/…` path to exist; Task 1 also rewrites `skills/dev/SKILL.md`, whose load-bearing strings `self-answered (headless)` and `fails this check` are gated at `scripts/validate.py:185-187`; Task 1 Verify is only `tests.test_work_type_routing` (tasks.md:26); `scripts/validate.py` is in Task 1 Files with no Do item.
-
-**Plan edit:** Task 1 points only at `work-types.md` (created in-task). Tasks 2 and 3 add the `${CLAUDE_PLUGIN_ROOT}` pointers when those files exist. Name the `validate.py` anchors in Task 1 Do or drop it from Files. Add `python scripts/validate.py` to Task 1 and Task 3 Verify (Task 3 edits `skills/brainstorm/SKILL.md`, same headless-only anchors at validate.py:182-184).
-
-### W2 — WARNING — Narrow-fix overlay omits three fail-closed details
-
-**Mode:** plan
-**Evidence:**
-- pitfalls.md:28-30 claims "mid-build gate reopen"; Task 3 Do (tasks.md:45-49) does not mention revoke-and-reopen.
-- `references/workflow.md:49` `May skip when` is `never`; Task 3 Do "Keep `--auto` and normal feature gates unchanged" can be read as leaving that cell untouched, so independently loaded workflow.md still forbids bypass.
-- bug-fix research: still emit `design gate opened` so span1 closes; Task 3 does not require it; Task 5 then treats missing `opened` as existing None (test_timing_report.py:61-65). Narrow-fix research+plan wall-clock becomes `unavailable`.
-
-**Plan edit (Task 3 Do):** (1) quote the stamp `design gate bypassed (narrow-fix)` and still emit `design gate opened` first; (2) set workflow.md design-gate `May skip when` to never for feature, recorded narrow-fix only for bug-fix; (3) if build finds architecture/public-contract change, revoke bypass and re-open the gate (existing mid-run amend).
-
-### W3 — WARNING — Cross-host auto-trigger phrases are not tasked
-
-**Mode:** plan
-**Evidence:** `skills/dev/SKILL.md:4-8` description is feature-shaped only; `references/skill-aliases/wit-dev/SKILL.md:4-7,19-20` forwards `--auto` only; Task 1 tests "description cap" and "alias pass-through" but does not require adding bug-fix/investigation NL tells. Cursor loads from `description`; Copilot/Grok/Codex from the alias.
-
-`--kind` pass-through is implied by "alias pass-through" and should be spelled as `--auto` and `--kind`. Without description tells, "fix this crash" / "how does X work" may never load `/wit:dev` on description-driven hosts (add-issues or pstack `how` win).
-
-**Plan edit (Task 1 Do):** expand `dev` + `wit-dev` descriptions with conservative bug-fix and investigation tells under the 1024-char cap; alias sentence passes `--kind` next to `--auto`; keep "file a bug" on add-issues.
-
-### W4 — WARNING — AC11 inventory and `1.15.0` are not runnable Verify
-
-**Mode:** plan
-**Evidence:** spec.md:75-77; Task 6 Verify `python scripts/validate.py` (tasks.md:84) checks three-way parity, not the number `1.15.0`; ship:5 template (`skills/ship/SKILL.md:210-245`) has no rules-inventory section; Task 6 Do "Prepare" does not name an in-repo artifact; Task 4 owns `skills/ship/SKILL.md` and does not mention inventory.
-
-**Plan edit:** Task 6 Verify asserts all three manifests equal `1.15.0` and that README/AGENTS mention `--kind` and the investigation exit. Either Task 4 extends the ship:5 template with a rules-inventory heading for rule-text PRs, or Task 6 Verify asserts a committed inventory draft the ship phase will paste.
-
-### W5 — WARNING — Task-unit ceilings
-
-**Mode:** plan
-**Evidence:** Task 1 = 7 files (routing + alias + template + integrations + validate.py + tests) — at the 5-8 ceiling, multi-concern. Task 3 = 6 files across brainstorm, research, build, and workflow — sprawling multi-phase overlay. Task 6 = 13 files (tasks.md:74-79).
-
-**Plan edit:** split Task 6 into docs/source-memory vs manifest bump+inventory pin. Consider splitting Task 3's workflow/build precondition from the brainstorm/research overlay if a runner cannot hold both.
-
-### W6 — WARNING — Semantic deduction tests may accept a keyword table
-
-**Mode:** plan
-**Evidence:** ADR-0002:64 rejects a keyword-only helper; spec.md:34 non-goal; Task 1 Do says "semantic" (tasks.md:20) but Verify list is "precedence, examples, hook order…" (tasks.md:23-24). Protocol tests of example mappings can go green on an exclusive-tell table, which is the rejected helper in markdown form.
-
-**Plan edit (Task 1 Verify):** assert independently loaded `work-types.md` + the prelude instruct semantic intent deduction, name all three classes, and do not present a keyword-only runtime classifier. Keep conservative examples as illustrations, not as the classifier.
+Hotspots stay serial: `dev/SKILL.md` wave 1; `build/SKILL.md`+`workflow.md` wave 2 Task 3; `ship/SKILL.md` wave 3.
 
 ## Over-build (Simplicity)
 
-No extra runtime, agent, command, or dependency. The omitted `classify_work_type.py` / `check_narrow_fix.py` helpers match ADR + spec. No finding.
+No extra runtime, agent, command, or dependency. Keyword helper still omitted. Task 6/7 split is the previous 13-file docs task, not new scope.
 
 ## Pre-mortem
 
-If the build stalls: Task 1 rewrites `dev:1-2`, drops validate.py headless-only strings, and stays green because Verify never runs `validate.py` (W1). Task 3 ships bypass in `bug-fix.md` while workflow.md still says design-gate may skip `never` (W2). Resume re-deduces and an in-flight bug-fix exits investigation (F2). Investigation delegates to `how` and integrations.md captures into `.wit/` (F3).
+If the build stalls: Task 2 writes `investigation.md` without OKF `type:` and stays green (W1r). Everything else now fails closed inside its own Verify (`validate.py` on Tasks 1, 3, 7; semantic/resume/announce/capture tests on Task 1; stamp+reopen on Task 3; version pin on Task 7).
 
 ## Info
 
-- **I1.** `research/classification-seam.md` still recommends a stdlib tell-table helper and classify at the start of current `dev:2` (after scan). ADR-0002, chosen-approach.md, spec.md, and Task 1 Do supersede that. Task-runners must not rebuild from that note.
-- **I2.** spec AC8 `verified by` names `tests.test_bug_fix_route`; Task 4 adds `tests.test_bug_fix_checker.py`. Point AC8 at both modules.
-- **I3.** Learnings: none applicable; no honor/ignore finding.
+- **I1.** pitfalls.md:43-45 still attributes the `1.15.0` bump to task 6; the bump lives in task 7. Prevention still holds.
+- **I2.** Task 1 is 8 files (ceiling ~5-8), now including `feature-folder-cases.md` required by F2. Task 3 remains a 6-file phase overlay. Acceptable; do not split unless a runner fails to hold it.
+- **I3.** `research/classification-seam.md` still recommends a tell-table helper and classify-after-scan. Task-runners follow ADR-0002 + tasks.md, not that note.
+- **I4.** Learnings: none applicable.

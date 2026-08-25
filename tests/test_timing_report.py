@@ -12,6 +12,7 @@ SCRIPTS = ROOT / "skills" / "ship" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 import _ledger  # noqa: E402
+import grok_token_report  # noqa: E402
 import token_report  # noqa: E402
 
 NOW = SCRIPTS / "now.py"
@@ -44,8 +45,28 @@ timestamp: 2026-07-05
 - 2026-07-05T15:58:14+02:00 **Update** PR opened, phase = done
 """
 
+# Same timestamps as PROGRESS_FIXTURE; span2 starts on the bypass line, not a
+# substring of "approved".
+BYPASS_FIXTURE = PROGRESS_FIXTURE.replace(
+    "**Update** design gate approved, phase = build",
+    "**Update** design gate bypassed (narrow-fix): restore contract, phase = build",
+)
+
+SPAN_PARSERS = (
+    _ledger.parse_progress_spans,
+    token_report.parse_progress_spans,
+    grok_token_report.parse_progress_spans,
+)
+
 
 class ProgressSpanTests(unittest.TestCase):
+    def test_bypassed_variant_counts_as_gate_approval(self):
+        for parse in SPAN_PARSERS:
+            with self.subTest(parser=parse.__module__):
+                s1, s2 = parse(BYPASS_FIXTURE)
+                self.assertEqual(s1, 1971)
+                self.assertEqual(s2, 3012)
+
     def test_spans_from_full_timestamps(self):
         s1, s2 = token_report.parse_progress_spans(PROGRESS_FIXTURE)
         self.assertEqual(s1, 1971)   # 14:19:47 -> 14:52:38
@@ -73,6 +94,35 @@ class ProgressSpanTests(unittest.TestCase):
         skewed = PROGRESS_FIXTURE.replace("2026-07-05T14:52:38+02:00", "2026-07-05T13:00:00+02:00")
         s1, _ = token_report.parse_progress_spans(skewed)
         self.assertIsNone(s1)
+
+    def test_all_parsers_agree_on_approved_auto_missing_negative(self):
+        auto = PROGRESS_FIXTURE.replace(
+            "**Update** design gate approved, phase = build",
+            "**Update** design gate auto-approved (--auto), phase = build")
+        no_gate = "\n".join(
+            l for l in PROGRESS_FIXTURE.splitlines() if "design gate opened" not in l)
+        skewed = PROGRESS_FIXTURE.replace(
+            "2026-07-05T14:52:38+02:00", "2026-07-05T13:00:00+02:00")
+        cases = (
+            (PROGRESS_FIXTURE, (1971, 3012)),
+            (auto, (1971, 3012)),
+            (no_gate, (None, 3012)),
+            (skewed, (None, 3012)),
+        )
+        for parse in SPAN_PARSERS:
+            for text, expected in cases:
+                with self.subTest(parser=parse.__module__, expected=expected):
+                    self.assertEqual(parse(text), expected)
+
+    def test_opened_does_not_count_as_bypass_or_approved(self):
+        text = "\n".join(
+            l for l in PROGRESS_FIXTURE.splitlines()
+            if "design gate approved" not in l)
+        for parse in SPAN_PARSERS:
+            with self.subTest(parser=parse.__module__):
+                s1, s2 = parse(text)
+                self.assertEqual(s1, 1971)
+                self.assertIsNone(s2)
 
 
 class CostTests(unittest.TestCase):

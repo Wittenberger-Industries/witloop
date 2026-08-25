@@ -61,13 +61,15 @@ timestamp: 2026-08-25
 - 2026-08-25T19:30:45+00:00 **Update** Task 2 tokens unavailable Duration unavailable
 - 2026-08-25T19:30:45+00:00 **Update** Task 3 done: reproduce-first bug-fix overlay
 - 2026-08-25T19:30:45+00:00 **Update** Task 3 tokens unavailable Duration unavailable
+- 2026-08-25T19:30:45+00:00 **Update** Task 5 done: timing parsers accept gate bypass
+- 2026-08-25T19:30:45+00:00 **Update** Task 5 tokens unavailable Duration unavailable
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Add the work-type routing foundation
 - [x] 2. Add the read-only investigation exit
 - [x] 3. Overlay the reproduce-first bug-fix lifecycle
 - [ ] 4. Enforce bug-fix proof in checker and ship
-- [ ] 5. Keep timing reports compatible with gate bypass
+- [x] 5. Keep timing reports compatible with gate bypass
 - [ ] 6. Document work-type routing
 - [ ] 7. Update source memory and release 1.15.0
 

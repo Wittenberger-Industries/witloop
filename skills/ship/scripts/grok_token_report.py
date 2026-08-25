@@ -307,7 +307,8 @@ def _progress_marks(text):
         return hit
 
     return (first("phase = research"), first("design gate opened"),
-            last("design gate approved", "design gate auto-approved"),
+            last("design gate approved", "design gate auto-approved",
+                 "design gate bypassed"),
             last("pr opened") or last("phase = done"))
 
 

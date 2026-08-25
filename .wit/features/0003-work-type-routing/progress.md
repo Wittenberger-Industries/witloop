@@ -38,6 +38,7 @@ timestamp: 2026-08-25
 - 2026-08-25T18:12:15+00:00 **Decision** bug fixes require failing-then-passing same-surface evidence and practical regression coverage
 - 2026-08-25T18:13:48+00:00 **Decision** explicit route override = `--kind feature|bug-fix|investigation`
 - 2026-08-25T18:15:21+00:00 **Decision** ambiguous intent defaults to announced `feature` classification with override guidance
+- 2026-08-25T18:18:19+00:00 **Decision** classifier deduces all three work types from intent; no constraints beyond roadmap defaults
 
 ## Tasks (mirrored from tasks.md once planned)
 
@@ -50,3 +51,4 @@ timestamp: 2026-08-25
 - Every bug-fix result names the root cause and smallest justified fix, shows the original repro fail and then pass on the same surface, and adds an automated regression test when practical.
 - `/wit:dev` accepts one extensible `--kind` flag; the default remains intent classification.
 - Ambiguous requests default to `feature`; Witloop announces the classification and the `--kind` override instead of asking or choosing silently.
+- Intent deduction covers `feature`, `bug-fix`, and `investigation`. Hard constraints remain five-host compatibility, no fifth command, no required MCP, one checker agent, and unchanged feature behavior.

@@ -19,7 +19,7 @@ issue queue. Picking a row makes it `planned`; `/wit:dev` uses its slug and assi
 
 | # | Candidate | Slug | Proposed form | Horizon | Status | Depends on |
 |---|-----------|------|---------------|---------|--------|------------|
-| 1 | Work-type routing: bug fix and investigation | `work-type-routing` | workflow + references | Now | candidate | - |
+| 1 | Work-type routing: bug fix and investigation | `work-type-routing` | workflow + references | Now | in-progress | - |
 | 2 | Project-local verification map | `verification-map` | generated skill + project memory | Now | candidate | - |
 | 3 | On-demand subsystem walkthrough | `understand` | delegated skill capability | Now | candidate | 1 |
 | 4 | Blast-radius safety-fact proof | `blast-radius-proof` | ship evidence step | Now | candidate | - |

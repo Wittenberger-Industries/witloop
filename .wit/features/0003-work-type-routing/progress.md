@@ -31,8 +31,10 @@ timestamp: 2026-08-25
 - 2026-08-25T18:00:59+00:00 **Created** feature from roadmap row 1, phase = brainstorm
 - 2026-08-25T18:00:59+00:00 **Update** brainstorm via superpowers:brainstorming, dialogue
 - 2026-08-25T18:00:59+00:00 **Decision** roadmap slug = work-type-routing; no feature dependencies
+- 2026-08-25T18:06:05+00:00 **Decision** scope includes both bug-fix and read-only investigation routes
 
 ## Tasks (mirrored from tasks.md once planned)
 
 ## Decisions / blockers
 - Roadmap seed: route `feature | bug-fix | investigation`; preserve the two-gate feature contract, four advertised commands, cross-host adapters, and the single `wit-code-checker` review contract.
+- User selected both routes for the first release; additional work types remain out of scope.

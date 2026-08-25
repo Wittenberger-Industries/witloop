@@ -37,6 +37,7 @@ timestamp: 2026-08-25
 - 2026-08-25T18:09:47+00:00 **Decision** narrow bug fixes may skip the design gate after a repro-focused brainstorm
 - 2026-08-25T18:12:15+00:00 **Decision** bug fixes require failing-then-passing same-surface evidence and practical regression coverage
 - 2026-08-25T18:13:48+00:00 **Decision** explicit route override = `--kind feature|bug-fix|investigation`
+- 2026-08-25T18:15:21+00:00 **Decision** ambiguous intent defaults to announced `feature` classification with override guidance
 
 ## Tasks (mirrored from tasks.md once planned)
 
@@ -48,3 +49,4 @@ timestamp: 2026-08-25
 - Bug fixes always run a repro-focused brainstorm. A narrow fix with no public behavior or architecture change may skip the design gate when the reason is recorded; all other fixes keep it.
 - Every bug-fix result names the root cause and smallest justified fix, shows the original repro fail and then pass on the same surface, and adds an automated regression test when practical.
 - `/wit:dev` accepts one extensible `--kind` flag; the default remains intent classification.
+- Ambiguous requests default to `feature`; Witloop announces the classification and the `--kind` override instead of asking or choosing silently.

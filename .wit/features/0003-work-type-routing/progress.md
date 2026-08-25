@@ -39,6 +39,7 @@ timestamp: 2026-08-25
 - 2026-08-25T18:13:48+00:00 **Decision** explicit route override = `--kind feature|bug-fix|investigation`
 - 2026-08-25T18:15:21+00:00 **Decision** ambiguous intent defaults to announced `feature` classification with override guidance
 - 2026-08-25T18:18:19+00:00 **Decision** classifier deduces all three work types from intent; no constraints beyond roadmap defaults
+- 2026-08-25T18:19:33+00:00 **Update** brief.md written and confirmed; glossary updated; awaiting handoff
 
 ## Tasks (mirrored from tasks.md once planned)
 
@@ -52,3 +53,4 @@ timestamp: 2026-08-25
 - `/wit:dev` accepts one extensible `--kind` flag; the default remains intent classification.
 - Ambiguous requests default to `feature`; Witloop announces the classification and the `--kind` override instead of asking or choosing silently.
 - Intent deduction covers `feature`, `bug-fix`, and `investigation`. Hard constraints remain five-host compatibility, no fifth command, no required MCP, one checker agent, and unchanged feature behavior.
+- Canonical term: **Work type**. The selected work type precedes feature-folder classification.

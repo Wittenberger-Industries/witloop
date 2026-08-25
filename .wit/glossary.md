@@ -2,7 +2,7 @@
 type: Glossary
 title: "Glossary: Witloop"
 description: Canonical project domain terms and the aliases to avoid.
-timestamp: 2026-08-20
+timestamp: 2026-08-25
 ---
 
 # Glossary: Witloop
@@ -18,3 +18,6 @@ _Avoid_: Cursor Autopilot
 
 **Model-judged /goal:** The `keep_alive` family for Grok Build and Cursor: user pastes a one-line `/goal`; the agent registers it and self-completes after judging the done-condition (`update_goal` on Grok; `CreateGoal` then `UpdateGoal` on Cursor). Not Claude/Codex's hard predicate.
 _Avoid_: Cursor Autopilot, keep-alive none on Cursor
+
+**Work type:** The intent class `feature`, `bug-fix`, or `investigation` that selects a Witloop execution path before feature-folder classification.
+_Avoid_: task type, route kind

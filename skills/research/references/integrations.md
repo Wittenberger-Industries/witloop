@@ -11,7 +11,7 @@ tags: [research, reference]
 wit is deliberately thin. Where a good skill already exists, wit **detects it and hands off**, adding only
 its own opinions (the `.wit/` artifacts, the brainstorm-as-gate, the worktree discipline, the autonomous
 pipeline). When nothing is installed, wit falls back to a light built-in version so it always works
-standalone. `scan` offers to install the recommended set on first run (see the scan skill's
+standalone. `setup` offers to install the recommended set on first run (see
 `plugin-bootstrap.md`).
 
 ## How to detect an available skill
@@ -96,7 +96,7 @@ questions.
 
 ## Frontend work
 
-When `scan` flags a frontend (React/Vue/Svelte/Next, a UI framework in `package.json`, a `components/`
+When `setup` flags a frontend (React/Vue/Svelte/Next, a UI framework in `package.json`, a `components/`
 tree), route `[frontend]` tasks to a design skill instead of writing markup blind:
 
 - `anthropics/skills:frontend-design`: primary, for building/refining UI.
@@ -118,7 +118,7 @@ single feature can mix both (tasks are tagged).
 The skills directory has no strong Python-backend skill, so wit encodes Python conventions itself in
 `constitution.md` defaults (uv - pytest - ruff - mypy - src layout). Treat those as the opinionated
 baseline; the constitution is where a project overrides them. Other stacks (Node/Go/Rust/...) are handled
-generically from whatever `scan` recorded in `repo-map.md`.
+generically from whatever `setup` recorded in `repo-map.md`.
 
 ## Sibling commands
 

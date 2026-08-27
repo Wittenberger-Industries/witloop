@@ -18,7 +18,7 @@ after it, the pipeline makes and records decisions on its own.
 
 ```mermaid
 flowchart LR
-  scan["scan (once, project-level)"] -.-> dev["/wit:dev"]
+  setup["setup (once, project-level)"] -.-> scan["scan (refresh)"] -.-> dev["/wit:dev"]
   dev --> bstorm["brainstorm (interactive)"]
   bstorm -- "handoff" --> research
   subgraph rskill["research skill"]
@@ -43,7 +43,8 @@ the design gate.
 
 | Phase | Run by | Mode | Reads | Writes | May skip when |
 |-------|--------|------|-------|--------|----------------|
-| scan | scan | one-time | the repo | repo-map, overview, constitution | repo-map exists & current |
+| setup | setup | one-time | the repo | repo-map, overview, constitution | repo-map exists |
+| scan | scan | refresh | repo-map | drifted facts, learnings | repo-map missing (run setup); else when current |
 | brainstorm | dev | interactive | request, repo-map, constitution | brief.md | brief exists & intent unchanged |
 | research | research | autonomous | brief, repo-map, constitution | research/*, .wit/adr/ADR-* (if hard-to-reverse) | approach already chosen & recorded |
 | plan | research | autonomous | brief, research, repo-map, constitution | spec, tasks, pitfalls | never |
@@ -82,7 +83,7 @@ first, then the gate renders.*
 ## Skipping & re-running
 
 - A phase whose outputs exist and whose inputs are unchanged is a no-op: read its output.
-- `scan` is project-level; re-run only when the stack/layout changed or a recorded command proved wrong.
+- `setup` is the one-time first-run; `scan` is refresh-only (bare invoke is silent `--refresh`). Missing `repo-map.md` runs setup.
 
 ## Parallelism
 

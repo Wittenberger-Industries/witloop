@@ -47,7 +47,7 @@ timestamp: 2026-08-27
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Setup skill plus five-command lockstep
-- [ ] 2. Scan is refresh-only
+- [x] 2. Scan is refresh-only
 - [ ] 3. Alias and bootstrap copy list
 - [ ] 4. Dev/rpa invoke setup; models first-run moves
 - [ ] 5. Honor ledger skip

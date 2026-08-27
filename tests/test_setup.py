@@ -13,7 +13,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SETUP = ROOT / "skills" / "setup" / "SKILL.md"
 SETUP_NOTES = ROOT / "docs" / "design-notes" / "setup.md"
+SCAN = ROOT / "skills" / "scan" / "SKILL.md"
+SCAN_NOTES = ROOT / "docs" / "design-notes" / "scan.md"
 CAPABILITIES = ROOT / "references" / "capabilities.md"
+WORKFLOW = ROOT / "references" / "workflow.md"
+INTEGRATIONS = ROOT / "skills" / "research" / "references" / "integrations.md"
+ADD_ISSUES = ROOT / "skills" / "add-issues" / "SKILL.md"
 ARCHITECTURE = ROOT / ".wit" / "architecture.md"
 EM_DASH = "\u2014"
 RUNTIME_NEVER = re.compile(
@@ -22,6 +27,14 @@ RUNTIME_NEVER = re.compile(
 )
 
 OWNED = (SETUP, SETUP_NOTES)
+SCAN_OWNED = (
+    SCAN,
+    SCAN_NOTES,
+    WORKFLOW,
+    CAPABILITIES,
+    INTEGRATIONS,
+    ADD_ISSUES,
+)
 
 
 def load(path: Path) -> str:
@@ -123,6 +136,84 @@ class ImportGuardTests(unittest.TestCase):
         this = Path(__file__).read_text(encoding="utf-8")
         self.assertNotRegex(this, r"(?m)^(?:import validate|from validate import)")
         self.assertIn("Does not import", this)
+
+
+class ScanRefreshTests(unittest.TestCase):
+    def test_description_is_refresh_only_not_from_scratch_bootstrap(self):
+        fm = frontmatter(load(SCAN))
+        self.assertIn("/wit:scan", fm)
+        self.assertIn("--refresh", fm)
+        self.assertNotIn("bootstrap", fm.lower())
+        self.assertNotIn("from scratch", fm.lower())
+        self.assertNotIn("set up wit here", fm)
+        self.assertNotIn("document this codebase", fm)
+
+    def test_bare_invoke_is_silent_refresh_abc(self):
+        text = load(SCAN)
+        self.assertRegex(text, r"silent `--refresh`")
+        self.assertIn("### A", text)
+        self.assertIn("### B", text)
+        self.assertIn("### C", text)
+        self.assertIn("chore(wit): scan refresh", text)
+
+    def test_missing_repo_map_runs_setup_no_tell_redoc_or_chain(self):
+        text = load(SCAN)
+        self.assertRegex(text, r"(?i)\*\*run setup\*\*")
+        self.assertRegex(text, r"(?i)do not merely tell")
+        self.assertRegex(text, r"(?i)do not re-document")
+        self.assertRegex(text, r"(?i)do not chain a refresh")
+        self.assertNotIn("this IS a first scan", text)
+        self.assertNotIn("run the full procedure", text)
+        self.assertNotIn("Two jobs", text)
+        self.assertNotIn("## `repo-map.md` template", text)
+        self.assertNotIn("## `overview.md` template", text)
+        self.assertNotIn("## `architecture.md` template", text)
+
+    def test_mermaid_traps_live_in_refresh_body(self):
+        text = load(SCAN)
+        self.assertNotIn("rules above", text)
+        self.assertIn("check_mermaid.py", text)
+        self.assertIn("never use a mermaid reserved word as an ID", text)
+        self.assertIn("graph", text)
+        self.assertIn("subgraph", text)
+
+    def test_design_notes_are_refresh_not_first_run(self):
+        text = load(SCAN_NOTES)
+        self.assertRegex(text, RUNTIME_NEVER)
+        self.assertIn("skills/scan/SKILL.md", text)
+        self.assertNotIn("one-time groundwork so `/wit:dev`", text)
+        self.assertIn("silent `--refresh`", text)
+        self.assertRegex(text, r"(?i)run setup")
+
+    def test_workflow_retargets_scan_off_first_run(self):
+        text = load(WORKFLOW)
+        self.assertNotIn("scan (once, project-level)", text)
+        self.assertNotRegex(text, r"\| scan \| scan \| one-time \|")
+        self.assertIn("setup (once, project-level)", text)
+        self.assertIn("scan (refresh)", text)
+
+    def test_capabilities_entry_includes_setup(self):
+        text = load(CAPABILITIES)
+        self.assertIn("setup / scan / dev / rpa", text)
+        self.assertIn("skills/scan/SKILL.md", text)
+        self.assertNotIn("skills/setup/SKILL.md", text)
+
+    def test_integrations_and_add_issues_retarget_bootstrap_off_scan(self):
+        integ = load(INTEGRATIONS)
+        self.assertNotRegex(integ, r"(?i)`scan` offers to install")
+        self.assertRegex(integ, r"(?i)`setup` offers to install")
+        self.assertNotRegex(integ, r"(?i)When `scan` flags a frontend")
+        self.assertRegex(integ, r"(?i)When `setup` flags a frontend")
+        self.assertNotRegex(integ, r"whatever `scan` recorded")
+        self.assertRegex(integ, r"whatever `setup` recorded")
+        issues = load(ADD_ISSUES)
+        self.assertNotIn("scan only seeds that on greenfield", issues)
+        self.assertIn("setup only seeds that on greenfield", issues)
+
+    def test_no_em_dashes_in_owned_files(self):
+        for path in SCAN_OWNED:
+            text = load(path)
+            self.assertNotIn(EM_DASH, text, path)
 
 
 if __name__ == "__main__":

@@ -14,6 +14,9 @@ Ship must name one safety fact on every behavior PR: a command run this session 
 the claim is false, or the word `unproven`. Extra named non-gate checks that were not run are listed
 `unproven`, never omitted. Docs-only PRs use `n/a` with a reason. The checker treats a missing or
 writeup-only row as BLOCKER. Honest `unproven` and valid `n/a` are INFO. Version lockstep 1.16.1.
+Task-runners never wait on the user: architecture is `## TASK BLOCKED` with the question in Notes;
+every generation ends on a last-line marker; a failed Verify is another implement pass or BLOCKED.
+Build continues the DAG in the same turn (no backgrounded runners, no wrap-up while tasks remain).
 
 pstack contributed the one-fact-plus-real-run. D3 contributed unknown-never-silent-PASS. Witloop
 keeps BLOCKER / WARNING / INFO and does not adopt PASS / CONCERNS / FAIL / WAIVED.
@@ -24,6 +27,7 @@ keeps BLOCKER / WARNING / INFO and does not adopt PASS / CONCERNS / FAIL / WAIVE
 - A green test suite does not replace the safety-fact row.
 - Repo-map (and RPA) gate commands still run; `unproven` cannot skip them.
 - Contract tests pin the charter and template without a live checker dispatch.
+- Runners never yield to the user; the build parent continues the DAG in the same turn.
 
 ## Non-goals
 
@@ -34,6 +38,8 @@ keeps BLOCKER / WARNING / INFO and does not adopt PASS / CONCERNS / FAIL / WAIVE
 - Roadmap row 2 (verification-map) or inventing unnamed visual/perf rows on every PR.
 - A fourth work type for docs-only.
 - Reordering ship:2 (checker) after ship:5 (`PR.md`).
+- One runner eating the rest of the plan (still one task per runner).
+- Making Cursor `/goal` a scheduler (it stays a done-lock).
 
 ## Acceptance criteria  (each must be testable)
 
@@ -54,6 +60,17 @@ keeps BLOCKER / WARNING / INFO and does not adopt PASS / CONCERNS / FAIL / WAIVE
 6. Manifests, `RELEASE`, and overview lockstep at 1.16.1. Marketplace catalog stays 0.2.0.
    Architecture keeps the historical 1.16.0 PLUGIN_ROOT caption.  →  verified by:
    `python -m unittest tests.test_work_type_release`
+7. Task-runner charter: no `STOP and ask` human wait; architecture is `## TASK BLOCKED` with the
+   question in Notes; every generation ends on exactly one of `## TASK COMPLETE` / `## TASK BLOCKED` /
+   `## TASK AUTH-GATE`; if Verify has not run this generation only BLOCKED or AUTH-GATE is legal; a
+   failed Verify is not a user prompt; `## TASK AUTH-GATE` stays the only human pause. Tools, ~15-line
+   report, Self-Check, no-commit, no `progress.md` writes, 3-attempt cap, and git landmines stay.
+   →  verified by: `python -m unittest tests.test_task_runner_no_yield`
+8. Build skill: after a runner returns, this same turn ticks, commits, and dispatches the next ready
+   set; no user-facing wrap-up; no backgrounded `wit-task-runner`; no ended parent turn while
+   `tasks.md` has unticked items except AUTH-GATE or a real design-gate AskQuestion; Host grok pulls
+   at the wave gate. Skeleton matches. Cursor adapter forbids `run_in_background` on a runner.
+   →  verified by: `python -m unittest tests.test_task_runner_no_yield`
 
 ## Design
 
@@ -67,6 +84,13 @@ No new always-loaded file (avoids a serial PLUGIN_ROOT wiring task). Edit:
 - `docs/design-notes/ship.md` and `docs/design-notes/wit-code-checker.md` - rationale
 - `tests/test_ship_safety_fact.py` - new contract tests
 - `tests/test_work_type_release.py` `RELEASE = "1.16.1"` plus three manifests, overview, README
+- `agents/wit-task-runner.md` - no user yield; last-line marker every generation
+- `skills/build/SKILL.md` - no yield while the DAG has work
+- `skills/build/references/worktrees-and-subagents.md` - skeleton last-line markers
+- `references/grok-tools.md` / `references/cursor-tools.md` - pull / no background
+- `docs/design-notes/wit-task-runner.md` / `docs/design-notes/build.md` - why
+- `tests/test_task_runner_no_yield.py` - contract pins
+- `references/models.md` - escalation cites `## TASK BLOCKED`
 
 **Docs-only tell:** `n/a` is valid only when Proof is `n/a` plus a reason **and** `git diff --stat`
 does not touch `skills/`, `agents/`, `scripts/`, `tests/`, `references/`, `.claude-plugin/`,
@@ -88,7 +112,8 @@ row into `### Safety fact`. Re-entry with an existing `PR.md` requires the headi
 ## Test plan
 
 - **Level rule:** unittest string/table pins; never a live Task.
-- **Unit:** `tests/test_ship_safety_fact.py` plus existing `test_work_type_release.py` RELEASE bump.
+- **Unit:** `tests/test_ship_safety_fact.py`, `tests/test_task_runner_no_yield.py`, plus
+  `test_work_type_release.py` RELEASE bump.
 - **Integration / e2e:** none
 - **Edge cases:** first-pass absent `PR.md`; `n/a` on a skill diff; Testing `n/a - not configured`
   vs Safety fact `n/a`; do not `assertNotIn("PASS")` globally on RPA text; do not put a new

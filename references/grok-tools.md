@@ -91,6 +91,10 @@ colors; if an agent is missing from `grok inspect`, check `color` first.
 The named `agents/*.md` files are never edited and never assumed to register as Grok agents; the prompt
 content is always inline, exactly as on Codex (`skills/build/references/worktrees-and-subagents.md`).
 
+Do not spawn a `wit-task-runner` with `background: true`. Completions are pull-based: at each
+wave gate, call `get_command_or_subagent_output` for every dispatched runner in that wave. Do
+not rely on a completion notification to continue the DAG.
+
 ## Worktrees (three mechanisms, one canonical)
 
 - **wit feature worktree** (`git worktree add -b wit/<slug> ...`) is canonical; the orchestrator is the sole

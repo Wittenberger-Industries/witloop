@@ -85,6 +85,14 @@ run it as wide as the DAG allows. Repeat until every task is ticked:
    A runner whose last line is **`## TASK AUTH-GATE`** (status `auth-gate`: a `401` / `run <x> login` /
    missing `ENV` wall) is **not** a failure to retry: don't commit it, record the exact unblock steps in
    `progress.md`, and let the keep-alive loop pause cleanly; it resumes once the human clears the gate.
+   **No yield while the DAG has work.** After a runner returns, in this same turn: honor Self-Check,
+   tick, commit, recompute the ready set, and dispatch the next ready set.
+   Do not write a user-facing wrap-up.
+   Do not background a `wit-task-runner`.
+   Do not end the parent turn while `tasks.md` still has unticked items,
+   except `## TASK AUTH-GATE` (keep-alive pause) or a real design-gate AskQuestion
+   (architecture / public-contract reopen). On Host grok, **pull** each runner's output at the wave gate
+   (`get_command_or_subagent_output`); do not wait on a completion notification.
 
 Escalations (two ready tasks that must touch the same file, or tests that can't run concurrently) are in
 the reference (per-task worktrees; serial verify as a last resort). Sequential execution is the fallback

@@ -64,6 +64,9 @@ generic type and **inline** the matching `agents/*.md` charter into the prompt. 
 is not a hard failure (a Cursor dry-run with no `wit-*` types still completed inline). Prompt
 skeletons stay in `skills/build/references/worktrees-and-subagents.md`.
 
+Do not set `run_in_background` on a `wit-task-runner` Task. Stay in the parent turn until
+reports return (build:2 no-yield). Cursor `/goal` is a done-lock, not a scheduler.
+
 ## Keep-alive
 
 Cursor `keep_alive` is `model_judged_goal` (shared family with Grok). Print the

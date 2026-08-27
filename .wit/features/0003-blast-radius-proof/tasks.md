@@ -67,7 +67,36 @@ timestamp: 2026-08-27
 - **Verify:** `python -m unittest tests.test_work_type_release tests.test_work_type_docs`
 - **Depends on:** -
 
+## Task 5: Runner never yields   [backend]
+- **Files:** `tests/test_task_runner_no_yield.py`, `agents/wit-task-runner.md`,
+  `docs/design-notes/wit-task-runner.md`, `references/models.md`
+- **Do:** Create `tests/test_task_runner_no_yield.py` (failing asserts first; no `import validate`).
+  Charter: retire `STOP and ask`; architecture is `## TASK BLOCKED` with the question in Notes;
+  never address the user; every generation ends on exactly one last-line marker; if Verify has not
+  run this generation only BLOCKED or AUTH-GATE is legal; a failed Verify is not a user prompt;
+  AUTH-GATE stays the only human pause. Do not change tools, ~15-line report, Self-Check, no-commit,
+  no `progress.md` writes, 3-attempt cap, or git landmines. Sync design notes. models.md cites
+  `## TASK BLOCKED`. `assertNotIn` em dash on files this task edits.
+- **Verify:** `python -m unittest tests.test_task_runner_no_yield.RunnerPreservedContractTests tests.test_task_runner_no_yield.RunnerNoYieldTests tests.test_task_runner_no_yield.DesignNotesNoYieldTests`
+- **Depends on:** -
+
+## Task 6: Build continues the DAG same turn   [backend]
+- **Files:** `tests/test_task_runner_no_yield.py`, `skills/build/SKILL.md`,
+  `skills/build/references/worktrees-and-subagents.md`, `docs/design-notes/build.md`,
+  `references/grok-tools.md`, `references/cursor-tools.md`
+- **Do:** Append build/skeleton/host classes to the existing test module (failing asserts first).
+  Build:2 no-yield: after a runner returns, this same turn tick + commit + dispatch the next ready
+  set; no user-facing wrap-up; do not background a `wit-task-runner`; do not end the parent turn
+  while `tasks.md` has unticked items except AUTH-GATE or a real design-gate AskQuestion; Host grok
+  pulls `get_command_or_subagent_output` at the wave gate. Skeleton last-line markers. Grok: no
+  `background: true` on a runner. Cursor: no `run_in_background` on a runner. Sync design notes.
+  `assertNotIn` em dash on files this task edits.
+- **Verify:** `python -m unittest tests.test_task_runner_no_yield`
+- **Depends on:** 5
+
 ## Waves  (derived from Depends on + Files: what build runs concurrently)
 - Wave 1: tasks 1, 4
 - Wave 2: task 2
 - Wave 3: task 3
+- Wave 4: task 5
+- Wave 5: task 6

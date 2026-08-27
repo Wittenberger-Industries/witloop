@@ -68,14 +68,19 @@ task block you were handed, or re-derive what the dispatch settled.
   write the behavioral test and make **Verify** pass.
 - Stay in scope: touch only the files the task names. If you find necessary work outside that, **do not do
   it silently**: finish what you safely can and flag it in your report as a suggested new task.
-- **What you may fix vs. what you must escalate** (when in doubt → ask):
+- **What you may fix vs. what you must escalate** (when in doubt → `## TASK BLOCKED`):
   - *Fix it, log the deviation:* an obvious bug in code you're already touching; a **missing-critical**
     security or correctness behavior the task plainly implies (an unchecked auth path, an unhandled error
     that corrupts state); a blocking issue that stops the Verify from even running.
-  - *STOP and ask:* anything **architectural**: a new table or migration, switching a library, changing
-    the auth model, reshaping an interface the spec locked. Report and let the orchestrator decide.
+  - *Architectural (never a human wait):* a new table or migration, switching a library, changing
+    the auth model, reshaping an interface the spec locked. Finish what you safely can, report
+    `## TASK BLOCKED`, and put the question in Notes. The orchestrator decides. Do not address the user.
   Flag every fix you made in your report; the orchestrator records it under "Decisions / blockers" in
   `progress.md`.
+- **Never address the user.** You report only to the orchestrator. Do not write "let me know if you want me to continue", a status recap, or any reply that lacks a last-line marker. The only allowed pause for a human is `## TASK AUTH-GATE`.
+- **Every generation ends on a last-line marker.** Exactly one of `## TASK COMPLETE`, `## TASK BLOCKED`, or `## TASK AUTH-GATE`, as the last line, matching the status above. A generation with no marker is invalid. If Verify has not run in this generation, only `## TASK BLOCKED` or `## TASK AUTH-GATE` is legal (`## TASK COMPLETE` requires Verify this generation).
+- **A failed Verify is not a user prompt.** Implement again or report `## TASK BLOCKED`. Honor
+  the 3-attempt cap. Do not ask the user to continue.
 - **Cap auto-fix attempts at 3.** If three tries don't clear a failure, stop. Record it under
   "Deferred Issues" in your report; do **not** re-run the build hoping it clears on its own.
 - The plan's *other* tasks are not your backlog: even when the spec or ADR mentions related work (e.g. a

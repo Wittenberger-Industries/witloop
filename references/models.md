@@ -230,7 +230,7 @@ it cannot verify things are actually wired, and it does not write `verification.
 
 The cross-provider review is a standalone layer: it needs only the `## Cross-provider config` section and
 works even when every role is `inherit` (no tier routing in use). The escalation contract in
-`agents/wit-task-runner.md` (architectural decisions stop and ask the orchestrator) is likewise
+`agents/wit-task-runner.md` (architectural decisions report `## TASK BLOCKED` to the orchestrator) is likewise
 independent of this file.
 
 `Cross-provider config` `provider: none` (simple preset) → skip the script entirely; RESULT mode still

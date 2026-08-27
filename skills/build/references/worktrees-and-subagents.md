@@ -109,8 +109,13 @@ Process:
 2. Implement the minimum to make Verify pass. Watch it pass.
 3. Run lint + typecheck; fix what you introduced.
 4. Refactor if needed; keep the test green.
+5. End every reply on exactly one last-line marker: ## TASK COMPLETE, ## TASK BLOCKED, or
+   ## TASK AUTH-GATE. Architectural questions are ## TASK BLOCKED with the question in Notes;
+   never address the user. A failed Verify is another implement pass or ## TASK BLOCKED, never
+   a user prompt. If Verify has not run this generation, only BLOCKED or AUTH-GATE is legal.
 Report back: files changed, the Verify command + its result, and anything that surprised you or suggests
 the plan needs amending. Keep the report under ~15 lines. Do not touch files outside this task.
+The last line of every reply is exactly one of ## TASK COMPLETE / ## TASK BLOCKED / ## TASK AUTH-GATE.
 ```
 
 The subagent returns that short report; you tick `progress.md` (you are its single writer during build:

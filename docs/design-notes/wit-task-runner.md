@@ -49,10 +49,11 @@ file in sync; a rule whose "why" is deleted instead of relocated loses its guard
   runners never write that file) and ship's checker greps that log for `frontend via
   frontend-design` vs `frontend via wit fallback` to flag UI built blind while the skill was
   installed.
-- **Fix vs. escalate:** "don't quietly redesign" was folded into STOP-and-ask; it is the same
-  prohibition stated twice. `references/models.md` cites this bullet as the escalation contract
-  (architectural decisions stop and ask the orchestrator), deliberately independent of
-  model-routing config, so keep the stop-and-ask wording recognizable.
+- **Fix vs. escalate:** "don't quietly redesign" is `## TASK BLOCKED` with the question in Notes,
+  never a human wait. The old STOP-and-ask wording is retired so the orchestrator can parse the
+  last-line marker. `references/models.md` cites this bullet as the escalation contract
+  (architectural decisions report `## TASK BLOCKED` to the orchestrator), deliberately independent of
+  model-routing config. Auth-gate remains the only allowed pause for a human.
 - **Why every fix is flagged:** a silent fix is as bad as a silent skip; an unreported deviation
   escapes review exactly like unreported missing work. The orchestrator records flagged fixes under
   "Decisions / blockers" in `progress.md`, which is how deviations survive into ship's review.
@@ -85,4 +86,6 @@ file in sync; a rule whose "why" is deleted instead of relocated loses its guard
 - **Why the last line is an ALL-CAPS marker:** the `## TASK COMPLETE` / `## TASK BLOCKED` /
   `## TASK AUTH-GATE` line is machine-detected by the orchestrator and the keep-alive loop; exactly
   one, matching the status line, or the outcome cannot be parsed (build:2 pauses cleanly on
-  `## TASK AUTH-GATE` instead of retrying it as a failure).
+  `## TASK AUTH-GATE` instead of retrying it as a failure). Every generation must end on that
+  marker: a mid-task recap with no last line looks like a finished answer, and Cursor `/goal` will
+  not re-prompt the parent.

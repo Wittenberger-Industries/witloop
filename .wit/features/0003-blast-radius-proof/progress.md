@@ -52,15 +52,21 @@ timestamp: 2026-08-27
 - 2026-08-27T21:30:42+03:00 **Update** PR opened: https://github.com/Wittenberger-Industries/witloop/pull/94
 - 2026-08-27T21:30:42+03:00 remote checks: 1/1 green · validate pass https://github.com/Wittenberger-Industries/witloop/actions/runs/33103824592/job/98628250153
 - 2026-08-27T21:30:42+03:00 **Update** phase = done https://github.com/Wittenberger-Industries/witloop/pull/94
+- 2026-08-27T22:00:59+03:00 **Update** additional slice on open PR 94: runner/build no-yield (tasks 5-6)
+- 2026-08-27T22:00:59+03:00 **Update** task 5 done
+- 2026-08-27T22:00:59+03:00 **Update** task 6 done
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Checker result-mode rows
 - [x] 2. Ship template, gate honesty, close-out box
 - [x] 3. RPA gate pointer
 - [x] 4. Lockstep 1.16.1
+- [x] 5. Runner never yields
+- [x] 6. Build continues the DAG same turn
 
 ## Decisions / blockers
 - Seed: combined roadmap row 4 (pstack blast-radius + D3 unknown-never-PASS). Version target 1.16.x.
 - Verdict bands: proven, unproven, or n/a (docs-only). No new WAIVED band. User-accepted red CI stays as today (`progress.md` only).
 - PR must show one safety fact (this-session command or unproven) and mark any named AC/gate check that was not run as unproven, never omit it. Suite green does not replace the safety fact.
 - Enforcement: ship writes those rows into `PR.md`; checker result-mode BLOCKER if a row is missing or is a writeup with no command/`unproven`/`n/a`. Tests cover both.
+- Same-PR add: runners never yield to the user; build continues the DAG in the same turn. Cursor `/goal` stays a done-lock.

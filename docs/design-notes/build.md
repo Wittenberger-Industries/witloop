@@ -48,9 +48,17 @@ against future "simplification".
   no longer restates the checker's enforcement.
 - **Why one committer, one `progress.md` writer:** runners edit disjoint files in a shared worktree;
   serializing commits and ticks through the orchestrator keeps history and state clean.
+- **Why no yield while the DAG has work:** Cursor `/goal` and Grok `/goal` are done-locks, not
+  schedulers. A parent wrap-up, a backgrounded `wit-task-runner`, or an ended turn while
+  `tasks.md` still has unticked items leaves the goal running and the chat idle. Tick, commit, and
+  dispatch the next ready set in this same turn. Auth-gate and a real design-gate AskQuestion are
+  the only legal pauses.
+- **Why Grok pulls at the wave gate:** completions are pull-based (`get_command_or_subagent_output`);
+  waiting on a notification drops dispatches. The same wave gate is already the tokens append
+  point.
 - **Why the `tokens.md` row is appended the moment the completion notification arrives:** the exact
   figure exists only in that notification; deferred, it is gone, and the ledger rule forbids
-  estimates.
+  estimates. On Grok that moment is the wave-gate pull, not a push notification.
 - **Why the wave-end gate:** runners lint/typecheck only what they touched (a repo-wide sweep can trip
   over siblings' in-flight files, per `agents/wit-task-runner.md`), so the full suite runs once,
   serially, at each wave boundary. Both refinements, the wave-end gate and the sole-runner exception,

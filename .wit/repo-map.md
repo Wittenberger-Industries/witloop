@@ -2,10 +2,10 @@
 type: Repo Map
 title: Repo map - Witloop
 description: Stack, exact verified commands, and conventions scan recorded for this repo.
-timestamp: 2026-08-25
+timestamp: 2026-08-27
 ---
 
-# Repo map  (scanned 2026-08-19; work-type routing 2026-08-25)
+# Repo map  (scanned 2026-08-27, refreshed)
 
 - **Kind:** existing
 - **Languages:** Markdown (skills, agents, references) + Python 3.13 (scripts/tests; CI is Python 3.x)

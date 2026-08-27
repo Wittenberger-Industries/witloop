@@ -8,20 +8,20 @@ timestamp: 2026-08-25
 # Witloop - overview  (documented 2026-08-19 by /wit:scan; work-type routing 2026-08-25)
 
 ## What it is
-Witloop (`wit`, formerly `wi`) is an opinionated, low-token spec-driven engineering loop shipped as a plugin. One source tree targets Claude Code, Codex CLI, Copilot CLI, Grok Build, and Cursor. You scan a project once, then `/wit:dev` routes work type `feature | bug-fix | investigation` before write-capable setup. Investigation is read-only (cited answer, no dossier or PR). Bug-fix overlays the existing phases. Feature still brainstorms, designs, and ships to an open PR.
+Witloop (`wit`, formerly `wi`) is an opinionated, low-token spec-driven engineering loop shipped as a plugin. One source tree targets Claude Code, Codex CLI, Copilot CLI, Grok Build, and Cursor. You run `/wit:setup` once, then `/wit:dev` routes work type `feature | bug-fix | investigation` before write-capable setup. Investigation is read-only (cited answer, no dossier or PR). Bug-fix overlays the existing phases. Feature still brainstorms, designs, and ships to an open PR.
 
 ## Stack
-Markdown skills and agent charters, plus stdlib Python for validation, token ledgers, mermaid checks, and GitHub-issue drafts. No application runtime, no package lockfile. Version `1.16.1` in the three plugin manifests. Skills use `${PLUGIN_ROOT}` (ADR-0003).
+Markdown skills and agent charters, plus stdlib Python for validation, token ledgers, mermaid checks, and GitHub-issue drafts. No application runtime, no package lockfile. Version `1.16.2` in the three plugin manifests. Skills use `${PLUGIN_ROOT}` (ADR-0003).
 
 ## How it is organized
-- `skills/` - user-facing `scan`, `dev`, `rpa`, `add-issues`; hidden phase skills `brainstorm`, `research`, `plan`, `build`, `ship`
+- `skills/` - five user-facing `setup`, `scan`, `dev`, `rpa`, `add-issues`; hidden phase skills `brainstorm`, `research`, `plan`, `build`, `ship`
 - `agents/` - `wit-researcher`, `wit-task-runner`, `wit-code-checker` charters
 - `references/` - host tool maps (`codex`, `copilot`, `grok`, `cursor`), `capabilities.md`, `workflow.md`, `keep-alive.md`, `models.md`, skill aliases
 - `scripts/validate.py` - plugin-structure gate (portability files, YAML, version parity)
 - `docs/` - maintainer plans/specs/design-notes and the live `docs/roadmap.md` queue
 - `.claude-plugin/` and `.codex-plugin/` - marketplace/plugin manifests
 
-On-repo wit state for this source repo lives in `.wit/` (dogfood). Consumer projects get their own `.wit/` when they run scan.
+On-repo wit state for this source repo lives in `.wit/` (dogfood). Consumer projects get their own `.wit/` when they run setup.
 
 ## Run it
 Install via the host marketplace (see README). Develop by editing skills/references/scripts; gate with `python scripts/validate.py` and `python -m unittest discover -s tests` (or `pytest tests/`). Exact commands: `repo-map.md`.

@@ -44,11 +44,12 @@ timestamp: 2026-08-27
 - 2026-08-27T21:12:44+03:00 waves via superpowers:dispatching-parallel-agents + subagent-driven-development
 - 2026-08-27T21:18:59+03:00 **Update** task 1 done (parent takeover after user-backgrounded runner)
 - 2026-08-27T21:18:59+03:00 **Update** task 2 done
+- 2026-08-27T21:18:59+03:00 **Update** task 3 done
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Checker result-mode rows
 - [x] 2. Ship template, gate honesty, close-out box
-- [ ] 3. RPA gate pointer
+- [x] 3. RPA gate pointer
 - [x] 4. Lockstep 1.16.1
 
 ## Decisions / blockers

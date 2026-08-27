@@ -14,6 +14,7 @@ CHECKER_NOTES = ROOT / "docs" / "design-notes" / "wit-code-checker.md"
 SHIP = ROOT / "skills" / "ship" / "SKILL.md"
 GATE = ROOT / "skills" / "ship" / "references" / "verification-gate.md"
 SHIP_NOTES = ROOT / "docs" / "design-notes" / "ship.md"
+RPA_GATE = ROOT / "skills" / "rpa" / "references" / "verification-gate.md"
 EM_DASH = "\u2014"
 
 RUNTIME_PATHS = (
@@ -293,6 +294,33 @@ class ShipSafetyFactTests(unittest.TestCase):
     def test_no_em_dash_in_ship_files(self):
         for path in (SHIP, GATE, SHIP_NOTES, Path(__file__)):
             self.assertNotIn(EM_DASH, load(path), path.name)
+
+
+class RpaSafetyFactTests(unittest.TestCase):
+    def test_pointer_uses_same_rows_and_heading(self):
+        text = load(RPA_GATE)
+        checker_section = text[text.index("## Checker (result mode)") :]
+        self.assertIn("Safety fact", checker_section)
+        self.assertIn("### Safety fact", checker_section)
+        self.assertIn("ship:5", checker_section)
+        self.assertIn("unproven", checker_section)
+        self.assertIn("n/a", checker_section)
+
+    def test_unproven_does_not_skip_rpa_gate_commands(self):
+        text = load(RPA_GATE)
+        self.assertRegex(text, r"(?i)unproven does not skip")
+        for word in ("restore", "validate", "Analyzer", "paradigm"):
+            self.assertIn(word, text, word)
+
+    def test_no_d3_severity_cluster(self):
+        text = load(RPA_GATE)
+        self.assertNotIn("PASS / CONCERNS / FAIL / WAIVED", text)
+        self.assertNotIn("CONCERNS", text)
+        self.assertNotIn("WAIVED", text)
+        self.assertIn("verdict is PASS", text)
+
+    def test_no_em_dash_in_rpa_gate(self):
+        self.assertNotIn(EM_DASH, load(RPA_GATE))
 
 
 if __name__ == "__main__":

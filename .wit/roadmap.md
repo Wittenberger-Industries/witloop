@@ -51,7 +51,7 @@ Not an overlap of candidates: pstack PR babysitting vs D3 "never poll CI". Keep 
 | 1 | Work-type routing: bug fix and investigation | `work-type-routing` | pstack | workflow + references | Now | done | - |
 | 2 | Project-local verification map | `verification-map` | pstack | generated skill + project memory | Now | candidate | - |
 | 3 | On-demand subsystem walkthrough | `understand` | pstack | delegated skill capability | Now | candidate | 1 |
-| 4 | Unproven-never-PASS (safety fact + waived) | `blast-radius-proof` | both | ship evidence step | Now | in-progress | - |
+| 4 | Unproven-never-PASS (safety fact + waived) | `blast-radius-proof` | both | ship evidence step | Now | done | - |
 | 5 | Halt-and-diff when the plan is wrong | `correct-course` | D3 | build + design-gate procedure | Now | candidate | - |
 | 6 | Hindsight lens in plan-mode checker | `hindsight-lens` | D3 | checker plan-mode question | Next | candidate | 5 |
 | 7 | GitHub-native PR babysitting | `github-pr-babysit` | pstack | hidden workflow | Next | candidate | - |
@@ -107,7 +107,7 @@ Not an overlap of candidates: pstack PR babysitting vs D3 "never poll CI". Keep 
 
 ### 4. Unproven-never-PASS (safety fact + waived)
 
-- **Status:** in-progress as `0003-blast-radius-proof` (1.16.x).
+- **Status:** done as `0003-blast-radius-proof` (1.16.1).
 - **Source:** pstack `skills/blast-radius/SKILL.md` plus D3 `d3-dev/phase-09-verify.md` Gate Verdict.
   Hard merge; see Overlaps.
 - **Witloop gap:** the checker proves acceptance criteria and reviews the diff. It does not require

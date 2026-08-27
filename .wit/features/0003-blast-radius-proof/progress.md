@@ -3,7 +3,7 @@ type: Feature Progress
 title: Ship verification honesty
 description: Require a proven or unproven safety fact at ship, and never silent-PASS an unmeasured check.
 feature: 0003-blast-radius-proof
-status: ship
+status: done
 timestamp: 2026-08-27
 ---
 
@@ -11,7 +11,7 @@ timestamp: 2026-08-27
 
 - **Slug:** 0003-blast-radius-proof
 - **Created:** 2026-08-27
-- **Phase:** ship
+- **Phase:** done
 - **Gate mode:** interactive
 - **Flow:** dev
 - **Work type:** feature
@@ -49,6 +49,9 @@ timestamp: 2026-08-27
 - 2026-08-27T21:22:26+03:00 verification via superpowers:verification-before-completion
 - 2026-08-27T21:22:26+03:00 review via wit-code-checker + superpowers:requesting-code-review[inline]
 - 2026-08-27T21:22:26+03:00 cross-provider layer skipped (provider none)
+- 2026-08-27T21:30:42+03:00 **Update** PR opened: https://github.com/Wittenberger-Industries/witloop/pull/94
+- 2026-08-27T21:30:42+03:00 remote checks: 1/1 green · validate pass https://github.com/Wittenberger-Industries/witloop/actions/runs/33103824592/job/98628250153
+- 2026-08-27T21:30:42+03:00 **Update** phase = done https://github.com/Wittenberger-Industries/witloop/pull/94
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Checker result-mode rows

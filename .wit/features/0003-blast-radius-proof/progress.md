@@ -15,10 +15,10 @@ timestamp: 2026-08-27
 - **Gate mode:** interactive
 - **Flow:** dev
 - **Work type:** feature
-- **Worktree:** -
-- **Branch:** -
+- **Worktree:** D:/ClaudeCowork/wi-plugin/wi-plugin-wit-0003-blast-radius-proof
+- **Branch:** wit/0003-blast-radius-proof
 - **Host:** cursor
-- **Plugin root (resolved):** D:/ClaudeCowork/wi-plugin/wi-plugin
+- **Plugin root (resolved):** D:/ClaudeCowork/wi-plugin/wi-plugin-wit-0003-blast-radius-proof
 
 ## Capabilities (resolved)
 - keep_alive=model_judged_goal · tokens=unavailable · ask=AskQuestion · subagent=Task wit-* when listed else inline agents/*.md · shell=Python scripts (POSIX or PowerShell) · skill_invoke=plugin skills + natural-language auto-trigger
@@ -38,12 +38,16 @@ timestamp: 2026-08-27
 - 2026-08-27T20:31:53+03:00 plan via superpowers:writing-plans
 - 2026-08-27T21:03:10+03:00 **Update** design gate opened
 - 2026-08-27T21:03:10+03:00 **Update** design gate approved, phase = build
+- 2026-08-27T21:12:44+03:00 **Update** build engine engaged (wit 1.16.0)
+- 2026-08-27T21:12:44+03:00 worktree via superpowers
+- 2026-08-27T21:12:44+03:00 tdd via superpowers:test-driven-development
+- 2026-08-27T21:12:44+03:00 waves via superpowers:dispatching-parallel-agents + subagent-driven-development
 
 ## Tasks (mirrored from tasks.md once planned)
 - [ ] 1. Checker result-mode rows
 - [ ] 2. Ship template, gate honesty, close-out box
 - [ ] 3. RPA gate pointer
-- [ ] 4. Lockstep 1.16.1
+- [x] 4. Lockstep 1.16.1
 
 ## Decisions / blockers
 - Seed: combined roadmap row 4 (pstack blast-radius + D3 unknown-never-PASS). Version target 1.16.x.

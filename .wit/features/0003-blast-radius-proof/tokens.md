@@ -20,6 +20,8 @@ elapsed time or the orchestrator's own dispatch/arrival stamps (OS clock); write
 | research | researcher: contract-tests | unavailable | unavailable | Host tokens cell unavailable; no notification counts |
 | plan | checker: plan-mode round 1 | unavailable | unavailable | Host tokens cell unavailable; no notification counts |
 | plan | checker: plan-mode round 2 | unavailable | unavailable | Host tokens cell unavailable; no notification counts |
+| build | task-runner: task 4 | unavailable | unavailable | Host tokens cell unavailable; no notification counts |
+| build | task-runner: task 1 (interrupted; parent takeover) | unavailable | unavailable | Host tokens cell unavailable; user-backgrounded then interrupted |
 
 **Subagents (exact): <sum>.**
 **Σ compute: <dur> across <n> dispatches.**

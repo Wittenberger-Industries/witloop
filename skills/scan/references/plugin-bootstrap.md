@@ -9,7 +9,7 @@ tags: [scan, reference]
 # Plugin bootstrap: the skills wit works best with
 
 wit runs standalone, but it's deliberately thin and gets much stronger when it can delegate to a few
-existing skills. On first scan, check what's installed and **offer** to add the rest. Never install
+existing skills. On first setup, check what's installed and **offer** to add the rest. Never install
 without asking; never block if the user declines.
 
 ## How to check availability
@@ -53,20 +53,21 @@ Claude `/plugin` install (not used when Host is cursor):
 
 ## Entry-command aliases (Copilot / Codex / Grok)
 
-On Claude Code the plugin namespace already gives `/wit:scan`, `/wit:dev`, `/wit:rpa`, `/wit:add-issues`;
-skip this section.
+On Claude Code the plugin namespace already gives `/wit:setup`, `/wit:scan`, `/wit:dev`, `/wit:rpa`,
+`/wit:add-issues`; skip this section.
 On Cursor, skip this section: plugin skills plus natural-language auto-trigger are enough; do not copy
 aliases into `~/.agents/skills/`.
-On Copilot CLI the plugin prefix renders the entry points as `/wit scan`, `/wit dev`, `/wit rpa`,
-`/wit add-issues`, and on Codex they invoke as `$scan`, `$dev`, `$rpa`, `$add-issues`; on Grok Build they
-invoke as bare `/scan`, `/dev`, `/rpa`, `/add-issues` (Grok qualifies clashes by **scope**, `/user:scan`,
-not `/wit:scan`, and a built-in of the same name wins).
-wit ships flat **forwarding aliases** that read as one token: `/wit-scan`, `/wit-dev`, `/wit-rpa`,
-`/wit-add-issues` (Copilot / Grok) and `$wit-scan`, `$wit-dev`, `$wit-rpa`, `$wit-add-issues` (Codex),
-which are also the collision-free branded form on Grok.
+On Copilot CLI the plugin prefix renders the entry points as `/wit setup`, `/wit scan`, `/wit dev`,
+`/wit rpa`, `/wit add-issues`, and on Codex they invoke as `$setup`, `$scan`, `$dev`, `$rpa`,
+`$add-issues`; on Grok Build they invoke as bare `/setup`, `/scan`, `/dev`, `/rpa`, `/add-issues`
+(Grok qualifies clashes by **scope**, `/user:scan`, not `/wit:scan`, and a built-in of the same name
+wins; prefer branded `/wit-setup` if bare `/setup` clashes).
+wit ships flat **forwarding aliases** that read as one token: `/wit-setup`, `/wit-scan`, `/wit-dev`,
+`/wit-rpa`, `/wit-add-issues` (Copilot / Grok) and `$wit-setup`, `$wit-scan`, `$wit-dev`, `$wit-rpa`,
+`$wit-add-issues` (Codex), which are also the collision-free branded form on Grok.
 
 As part of the same offer below, ask once whether to install them: copy each directory under
-`${PLUGIN_ROOT}/references/skill-aliases/` (i.e. `wit-scan/`, `wit-dev/`, `wit-rpa/`,
+`${PLUGIN_ROOT}/references/skill-aliases/` (i.e. `wit-setup/`, `wit-scan/`, `wit-dev/`, `wit-rpa/`,
 `wit-add-issues/`) into `~/.agents/skills/`, the shared flat-skills directory these harnesses read
 (Copilot, Codex, and Grok Build all scan it; never a harness's own managed dir like `~/.grok/skills/`;
 create it if absent; overwriting an existing `wit-*` alias there is fine, they are wit's own

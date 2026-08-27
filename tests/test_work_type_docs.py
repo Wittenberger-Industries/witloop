@@ -1,6 +1,6 @@
 """Contract tests for user docs and maintainer design-notes on work-type routing.
 
-Asserts README/AGENTS descriptions, four advertised commands, advertised hosts, and the
+Asserts README/AGENTS descriptions, five advertised commands, advertised hosts, and the
 design-note ownership split. Frozen archives (docs/plans/, docs/specs/) are not
 this feature's files; this module does not open them for writes.
 """
@@ -28,7 +28,7 @@ DOC_FILES = (
     SHIP_NOTES,
     CHECKER_NOTES,
 )
-ADVERTISED = ("scan", "dev", "rpa", "add-issues")
+ADVERTISED = ("setup", "scan", "dev", "rpa", "add-issues")
 README_HOSTS = ("Claude", "Copilot", "Grok", "Cursor")
 HOSTS = ("Claude", "Codex", "Copilot", "Grok", "Cursor")
 KIND = "--kind feature|bug-fix|investigation"
@@ -113,12 +113,12 @@ class DocSetTests(unittest.TestCase):
 
 
 class ReadmeUserDocsTests(unittest.TestCase):
-    def test_four_advertised_commands_and_no_fifth(self):
+    def test_five_advertised_commands_and_no_sixth(self):
         text = load(README)
         slugs = readme_command_table_slugs(text)
         self.assertEqual(tuple(slugs), ADVERTISED)
-        self.assertEqual(len(slugs), 4)
-        self.assertRegex(text, r"Only these four entry points")
+        self.assertEqual(len(slugs), 5)
+        self.assertRegex(text, r"Only these five entry points")
         table = "\n".join(
             line
             for line in text.splitlines()
@@ -188,11 +188,11 @@ class ReadmeUserDocsTests(unittest.TestCase):
 
 
 class AgentsBootstrapTests(unittest.TestCase):
-    def test_four_user_facing_commands_wording(self):
+    def test_five_user_facing_commands_wording(self):
         text = load(AGENTS)
         self.assertRegex(
             text,
-            r"Only scan/dev/rpa/add-issues are user-facing",
+            r"Only setup/scan/dev/rpa/add-issues are user-facing",
         )
         for name in ADVERTISED:
             self.assertIn(name, text, name)

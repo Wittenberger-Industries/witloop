@@ -3,8 +3,8 @@ type: Skill
 name: wit-scan
 description: >
   Alias of wit's scan skill for flat-skill installs (Copilot CLI /wit-scan, Codex CLI $wit-scan, Grok Build
-  /wit-scan); forwards to the wit plugin's scan entry point: document a project folder and bootstrap wit in
-  it. Supports "--refresh" to drift-check an existing scan and consolidate learnings.
+  /wit-scan); forwards to the wit plugin's scan entry point: refresh an existing .wit/ map. Missing
+  repo-map runs setup first. Supports "--refresh" (bare invoke is silent --refresh).
 ---
 
 # /wit-scan: alias of wit's `scan` skill

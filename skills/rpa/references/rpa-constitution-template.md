@@ -116,6 +116,7 @@ timestamp: <YYYY-MM-DD>
   check is n/a: the gate is `uip maestro flow validate` (+ eval when sets exist).
 - `uip` restore + validate succeed; **Workflow Analyzer: zero error-level violations**.   (confirm)
 - `tokens.md` (token ledger) passes `check_tokens.py`: rows + filled sum + resolved Orchestrator.
+  When `ledger: skip`, this bullet does not apply.
 - Every SDD acceptance criterion verified; every assumption confirmed or logged for sign-off.
 
 ## Out of scope by default

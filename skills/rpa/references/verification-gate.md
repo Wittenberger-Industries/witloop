@@ -124,6 +124,7 @@ run the checker says isn't met.
 - restore + validate succeed; Workflow Analyzer has **zero error-level violations**.
 - the **token ledger `tokens.md` passes `check_tokens.py`**: present, with a row per delegated build unit,
   the Subagents sum filled, and a resolved `## Orchestrator` section (real figure or honest `unavailable`).
+  When `ledger: skip`, this bullet does not apply.
 - every criterion in the SDD's acceptance-criteria section maps to something that actually passed.
 - every assumption is either confirmed (gate) or recorded for sign-off; no unaddressed `NEEDS DECISION`.
 - the **checker (result mode) verdict is PASS**: every SDD acceptance criterion and locked decision

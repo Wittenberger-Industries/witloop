@@ -27,3 +27,9 @@ _Avoid_: blast-radius writeup, gate verdict, CONCERNS
 
 **Unproven:** An honest, visible row meaning a named safety fact or extra check was not exercised this session. Not a silent PASS, not a skipped repo-map gate command, and not a WAIVED fail.
 _Avoid_: CONCERNS, waived, skipped
+
+**Setup:** The advertised first-run command (`/wit:setup`). It writes repo docs, constitution, models, and the tokens ledger toggle. Missing `.wit/repo-map.md` at scan / dev / rpa runs this first (do not key off a missing `.wit/` directory).
+_Avoid_: first-run scan, bootstrap scan
+
+**Scan:** Refresh of an already-written `.wit/` map (`--refresh`, including stale auto-refresh). It does not create a project from scratch.
+_Avoid_: setup, bootstrap

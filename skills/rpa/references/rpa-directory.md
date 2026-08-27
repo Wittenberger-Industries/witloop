@@ -34,7 +34,7 @@ folder for the whole solution, with **one SDD** covering its 1..N processes.
         ├── tasks.md         # the multi-process build DAG (components -> processes -> sub-workflows)
         ├── verification.md  # checker output (plan mode pre-gate, result mode at ship); EPHEMERAL; verdict folds into PR.md
         ├── cross-review.md  # cross-provider diff review (ship; only when configured); EPHEMERAL
-        ├── tokens.md        # token ledger
+        ├── tokens.md        # present when ledger is on: token ledger
         ├── PR.md            # PR description
         └── processes/
             └── <process>/
@@ -60,7 +60,7 @@ folder for the whole solution, with **one SDD** covering its 1..N processes.
 - **The run dossier**: what ship's tidy leaves under `features/<run-slug>/` at `done` (the manifest ship
   reads when progress.md says `Flow: rpa`): `progress.md`, `pdd.md`, `architecture.md`, `sdd.md`,
   `process-inventory.md`, `assumptions.md`, `tasks.md`, `tokens.md`, `PR.md`, plus `processes/<p>/tobe.md`
-  per process. `verification.md` and `cross-review.md` are ephemeral, ship's prune list for the rpa flow
+  per process. When `ledger: skip`, the run dossier omits `tokens.md`. `verification.md` and `cross-review.md` are ephemeral, ship's prune list for the rpa flow
   (no `research/` exists here): their verdicts fold into `PR.md` (ship:5), then ship's dossier tidy
   prunes them (same rule as the dev flow).
 - **The SDD structure is overridable** (clients differ): an existing project `sdd.md`'s ToC wins; else
@@ -190,7 +190,7 @@ timestamp: <YYYY-MM-DD>
      read THIS block, not models.md. Rewrite only when absent or .wit/models.md changed after the
      stamp (models.md's resolve-once rule). Keep the stamp mid-line: Log-span parsing keys on
      stamps that OPEN a line. -->
-- resolved <ISO-8601 stamp> from .wit/models.md (preset: <smart | simple | custom | none - all inherit>)
+- resolved <ISO-8601 stamp> from .wit/models.md (preset: <smart | simple | custom | none - all inherit> · ledger: <on | skip>)
 - orchestrator=<tier> (informational) · checker=<tier> · researcher=<tier> · task-runner=<tier> · rpa-build=<tier>
 - cross-provider=<none | provider model (at-finish | per-wave)> · MoA=<none | points=<…>; proposers=<…>; layers=<n>; aggregator=<tier>>
 

@@ -80,6 +80,7 @@ DAG allows (independent processes and independent sub-workflows in parallel):
    (`python ${PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<run-slug>/tokens.md`;
    python fallback: `references/workflow.md` "Script invocation"), and ship finalizes it
    (`token_report.py --write`) under a `check_tokens.py` close-out gate.
+   When `ledger: skip`, `tokens.md` is not mandatory; do not `--init` and do not append.
 5. **Register new components.** If the build created something reusable (a generic login, a notifier),
    add it to `.wit/components.md` so the next process inherits it.
 

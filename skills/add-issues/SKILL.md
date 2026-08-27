@@ -38,7 +38,7 @@ Design rationale for this skill lives in the wit repo's `docs/design-notes/add-i
 - Ensure `.wit/issues/` is self-gitignored before any draft lands (idempotent; same pattern as
   `.logs/` in workflow.md):
   `python ${PLUGIN_ROOT}/skills/ship/scripts/ensure_logdir.py .wit/issues`
-  Do not rely on a root `.gitignore` entry - scan only seeds that on greenfield setup. The
+  Do not rely on a root `.gitignore` entry - setup only seeds that on greenfield. The
   directory is transient staging and should be empty (see wit-directory.md). If a draft is
   sitting there, a previous run didn't finish - offer to resume it or discard it before
   starting fresh.

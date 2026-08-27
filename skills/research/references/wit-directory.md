@@ -16,16 +16,16 @@ reasoned about. Keep every file small and current; these are working artifacts, 
 ```
 .wit/
 ├── index.md                # OKF root index (optional): directory listing; the one reserved index that MAY carry frontmatter (okf_version only).
-├── constitution.md         # project ground rules. Written once by scan, read by every phase.
-├── repo-map.md             # cached scan facts: stack, commands, conventions, frontend/backend.
-├── overview.md             # readable docs of an EXISTING project (scan; absent for greenfield).
-├── architecture.md         # mermaid architecture diagram (scan; kept current by ship's docs-sync).
+├── constitution.md         # project ground rules. Written once by setup, read by every phase.
+├── repo-map.md             # cached setup facts: stack, commands, conventions, frontend/backend.
+├── overview.md             # readable docs of an EXISTING project (setup; absent for greenfield).
+├── architecture.md         # mermaid architecture diagram (setup; kept current by ship's docs-sync).
 ├── glossary.md             # project domain terms (brainstorm): canonical names + aliases to avoid.
 ├── adr/                    # project-wide decision log: ADR-0001, ADR-0002, ... + index.md
 ├── learnings.md            # INDEX of learnings: one line + hook per feature (ship). Read this, not the dir.
 ├── learnings/              # substantial per-feature learnings, each its own .md (ship; indexed above).
 ├── roadmap.md              # optional. Ordered list of features for a larger effort.
-├── models.md               # tiered model routing: model assignments (optional; references/models.md); written+committed at first dev/rpa run
+├── models.md               # tiered model routing: model assignments (optional; references/models.md); written+committed at first-run setup
 ├── issues/                 # add-issues transient drafts only; self-gitignored (*); deleted on publish/abort
 └── features/
     └── 0001-<slug>/        # one folder per feature; NNNN- global ordinal (creation order) + kebab slug
@@ -38,7 +38,7 @@ reasoned about. Keep every file small and current; these are working artifacts, 
         ├── verification.md # checker output (plan mode pre-gate, result mode at ship); EPHEMERAL; verdict folds into PR.md, pruned at ship's dossier tidy
         ├── cross-review.md # cross-provider diff review (ship; only when configured); EPHEMERAL, pruned with verification.md
         ├── .logs/          # redirected command output (gates, CI pulls; workflow.md's output house rule); self-gitignored, EPHEMERAL
-        ├── tokens.md       # token ledger: exact subagent usage + orchestrator (finalized by ship pre-PR)
+        ├── tokens.md       # present when ledger is on: token ledger: exact subagent usage + orchestrator (finalized by ship pre-PR)
         └── PR.md           # the PR description (ship:5); committed, consumed by gh pr create
 ```
 
@@ -57,7 +57,8 @@ reasoned about. Keep every file small and current; these are working artifacts, 
   dossier (design gate)`), so the gate decides against committed artifacts and the build worktree
   (branched from main) starts with them; during build the **branch copy is canonical**, and main's copy
   catches up when the branch merges. **Project-level files are committed where they're written, by the
-  phase that writes them**: scan its docs (+ the greenfield `.gitignore`), brainstorm glossary updates,
+  phase that writes them**: setup its first-run docs (+ the greenfield `.gitignore`), scan its refresh,
+  brainstorm glossary updates,
   research the ADR + its index row, dev/rpa `models.md` / `roadmap.md`, ship the docs-sync
   (`chore(wit): …` / `docs(wit): …` subjects); **only the feature folder defers**, to research's design-gate
   commit. That is what puts ADRs and the dossier on the branch (committed on main before build branches
@@ -78,13 +79,14 @@ reasoned about. Keep every file small and current; these are working artifacts, 
   This bullet is ship's prune list for the dev flow: the tidy prunes exactly what it names. `.logs/` holds
   redirected command output (workflow.md's output house rule); its own `.gitignore` (containing `*`) keeps
   it out of `git status` and every dossier commit, so it is never tracked; the tidy plain-deletes the
-  directory. After `done`, a feature folder holds exactly the seven-file dossier: progress, brief, spec,
-  tasks, pitfalls, tokens, PR.
+  directory. After `done`, a feature folder holds exactly the seven-file dossier when `ledger: on`: progress, brief, spec,
+  tasks, pitfalls, tokens, PR. When `ledger: skip`, six files (drop `tokens.md`). Honor `ledger: skip` from the
+  resolved-routing first bullet's `· ledger:` stamp (missing `ledger:` fail-closes to `on`; anything but exact `skip` is `on`). Do not re-open `.wit/models.md` at append. Do not support mid-run toggle.
 - **`.wit/issues/` is add-issues staging, not ship ephemera.** Drafts live only until add-issues
   publishes or aborts (kept only when `gh issue create` fails, so the next run can resume). add-issues
   creates the dir with its own `.gitignore` containing `*` (same self-gitignore pattern as `.logs/`), so
   drafts never enter `git status` even on projects whose root `.gitignore` was not seeded by a greenfield
-  scan. Never committed. Ship's tidy never prunes or sweeps it - add-issues owns the lifecycle;
+  setup. Never committed. Ship's tidy never prunes or sweeps it - add-issues owns the lifecycle;
   `/wit:dev` / `/wit:rpa` and `/wit:add-issues` are separate entry points.
 - **Project-level memory persists & compounds.** `constitution.md`, `repo-map.md`, `overview.md`,
   `architecture.md`, `glossary.md`, `adr/`, `roadmap.md`, `models.md`, `learnings.md`, and `learnings/` belong to the
@@ -172,7 +174,7 @@ timestamp: <YYYY-MM-DD>
      read THIS block, not models.md. Rewrite only when absent or .wit/models.md changed after the
      stamp (models.md's resolve-once rule). Keep the stamp mid-line: Log-span parsing keys on
      stamps that OPEN a line. -->
-- resolved <ISO-8601 stamp> from .wit/models.md (preset: <smart | simple | custom | none - all inherit>)
+- resolved <ISO-8601 stamp> from .wit/models.md (preset: <smart | simple | custom | none - all inherit> · ledger: <on | skip>)
 - orchestrator=<tier> (informational) · checker=<tier> · researcher=<tier> · task-runner=<tier> · rpa-build=<tier>
 - cross-provider=<none | provider model (at-finish | per-wave)> · MoA=<none | points=<…>; proposers=<…>; layers=<n>; aggregator=<tier>>
 
@@ -215,8 +217,7 @@ specific job, e.g. `task-runner: task 3 (@/db seam)`): on Claude, `token_report.
 `finalize_tokens.py`) labels each
 `## Subagent detail` row from the harness's `agent-<id>.meta.json` `description`, so a shared name makes
 the split and this ledger joinable by eye. ship
-compiles the totals at the dossier tidy and `dev` includes the table in the final report. The scaffold is written by `check_tokens.py --init` from `_ledger.TEMPLATE`
-(the source of truth for the exact bytes); the block below is illustrative.
+compiles the totals at the dossier tidy and `dev` includes the table in the final report. The scaffold is written by check_tokens.py `--init` from research:0 **when ledger is on** (bytes from `_ledger.TEMPLATE`, the source of truth for the exact bytes); the block below is illustrative.
 
 ```markdown
 ---

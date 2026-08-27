@@ -1,31 +1,32 @@
 ---
 type: Readme
 title: "Witloop"
-description: Spec-driven loop (scan, dev, rpa, add-issues) for Claude Code, Copilot CLI, Grok Build, and Cursor. v1.16.1.
+description: Spec-driven loop (setup, scan, dev, rpa, add-issues) for Claude Code, Copilot CLI, Grok Build, and Cursor. v1.16.2.
 timestamp: 2026-08-27
 tags: [witloop, readme, overview]
 ---
 
 # Witloop
 
-Witloop is a plugin (`wit`) that takes a software change or a UiPath PDD from a conversation to an open pull request. Scan a repo once. After that, one command runs the loop. You talk at brainstorm and at a design gate. The rest is autonomous.
+Witloop is a plugin (`wit`) that takes a software change or a UiPath PDD from a conversation to an open pull request. Set up a repo once. After that, one command runs the loop. You talk at brainstorm and at a design gate. The rest is autonomous.
 
-It runs on **four hosts**: Claude Code, GitHub Copilot CLI, Grok Build, and Cursor. Current release is **1.16.1**.
+It runs on **four hosts**: Claude Code, GitHub Copilot CLI, Grok Build, and Cursor. Current release is **1.16.2**.
 
 | Command | What it does |
 |---------|--------------|
-| **`/wit:scan`** | Documents the repo (including a mermaid architecture diagram) and bootstraps `.wit/` plus optional helper plugins. `--refresh` drift-checks the map. |
+| **`/wit:setup`** | First-run: repo docs, constitution, plugin offer, models preset, tokens ledger. `--auto` writes simple plus ledger on. |
+| **`/wit:scan`** | Refresh-only: drift-checks the map and consolidates learnings. Missing `repo-map.md` runs setup first. Bare invoke is silent `--refresh`. |
 | **`/wit:dev "idea"`** | Routes `feature`, `bug-fix`, or `investigation`, then runs that path. `--kind` overrides. Add `--auto` to auto-approve the design gate. |
 | **`/wit:rpa "pdd"`** | Reads a PDD, refines the TO-BE with you, writes an SDD, then builds REFramework or Maestro (XAML or coded) to a PR. `--auto` supported. |
 | **`/wit:add-issues`** | Files a GitHub Bug, Feature, or Task via `gh`. To file a bug as an issue, use this, not `/wit:dev`. |
 
-Only these four entry points show up as slash commands. Brainstorm, research, plan, build, and ship stay hidden and run inside the loop. Natural language still triggers them ("ship it", "scan this repo").
+Only these five entry points show up as slash commands. Brainstorm, research, plan, build, and ship stay hidden and run inside the loop. Natural language still triggers them ("ship it", "scan this repo").
 
-On Claude the names are `/wit:scan` and so on. Copilot uses `/wit-scan` after scan copies aliases into `~/.agents/skills/` (`/wit scan` always works). Grok uses `/scan` or `/wit-scan`. Cursor loads plugin skills and auto-triggers from each skill description.
+On Claude the names are `/wit:setup` and so on. Copilot uses `/wit-setup` after setup copies aliases into `~/.agents/skills/` (`/wit setup` always works). Grok uses `/wit-setup` (prefer branded; bare `/setup` may clash). Cursor loads plugin skills and auto-triggers from each skill description.
 
 ## Work types
 
-`/wit:dev` is still one of those four commands. Before it writes anything, it deduces a work type. `--kind feature|bug-fix|investigation` overrides. Mixed or unclear intent is announced as `feature`. It never asks and never routes silently.
+`/wit:dev` is still one of those five commands. Before it writes anything, it deduces a work type. `--kind feature|bug-fix|investigation` overrides. Mixed or unclear intent is announced as `feature`. It never asks and never routes silently.
 
 - **feature** (default). Brainstorm, design gate, build, ship, PR.
 - **investigation**. A read-only cited answer this turn. No dossier, design gate, keep-alive, or PR.
@@ -41,7 +42,7 @@ https://github.com/Wittenberger-Industries/witloop
 
 ```
 Install the Witloop plugin (id wit) from https://github.com/Wittenberger-Industries/witloop
-using this host's plugin marketplace or plugin install flow. Then confirm a scan command is available.
+using this host's plugin marketplace or plugin install flow. Then confirm a setup command is available.
 ```
 
 The agent should pick this host's plugin marketplace commands from Install below, without being walked through each one.
@@ -84,7 +85,8 @@ Same skills everywhere. Host behavior: `references/capabilities.md`. Tool maps: 
 ## How a run works
 
 ```
-/wit:scan                         once per project
+/wit:setup                        once per project
+/wit:scan                         refresh the map
 /wit:dev "idea"                   work type (feature default) -> brainstorm (you) -> research -> plan -> check -> DESIGN GATE (you) -> build -> check -> ship -> PR
 /wit:dev "idea" --auto            same, design gate auto-approved and recorded
 /wit:dev "idea" --kind investigation   read-only cited answer; no dossier, gate, keep-alive, or PR
@@ -108,6 +110,7 @@ flowchart TD
     tobe --> sddplan["SDD, architecture, assumptions, tasks"]
   end
 
+  setup["/wit:setup"] -.-> brainstorm
   scan["/wit:scan"] -.-> brainstorm
   planp --> precheck["checker, plan mode"]
   sddplan --> precheck
@@ -170,7 +173,7 @@ Python-first defaults (uv, pytest, ruff, mypy). `scan` records whatever the repo
 ```
 .
 ├── .claude-plugin/      marketplace.json + plugin.json
-├── skills/              scan, dev, rpa, add-issues, plus hidden phase skills
+├── skills/              setup, scan, dev, rpa, add-issues, plus hidden phase skills
 ├── agents/              wit-task-runner, wit-researcher, wit-code-checker
 ├── references/          host adapters, capabilities.md, keep-alive.md, skill-aliases/
 ├── scripts/validate.py  manifests, frontmatter, cross-refs

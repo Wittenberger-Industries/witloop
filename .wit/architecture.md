@@ -6,7 +6,7 @@ timestamp: 2026-08-25
 ---
 
 # Architecture - Witloop
-_Diagrammed 2026-08-19; updated for the capability table (ADR-0001), work-type routing (1.15.0), and generic PLUGIN_ROOT (1.16.0)._
+_Diagrammed 2026-08-19; updated for the capability table (ADR-0001), work-type routing (1.15.0), generic PLUGIN_ROOT (1.16.0), and /wit:setup first-run (1.16.2)._
 
 ```mermaid
 flowchart TD
@@ -18,6 +18,7 @@ flowchart TD
     keepalive["keep-alive.md templates"]
   end
   subgraph entry["Entry skills"]
+    setup_sk["setup"]
     scan_sk["scan"]
     dev_sk["dev"]
     rpa_sk["rpa"]
@@ -50,6 +51,7 @@ flowchart TD
     investigation_md["investigation.md"]
     bugfix_md["bug-fix.md"]
   end
+  setup_sk --> constitution
   scan_sk --> constitution
   dev_sk --> worktypes_md
   dev_sk -.-> investigation_md
@@ -74,4 +76,4 @@ flowchart TD
   constitution --> featuredir
 ```
 
-Legend: solid arrows are the `/wit:dev` sequence and script calls; dashed arrows are host-adapter lookups the skills read rather than own. `dev` loads `work-types.md` on every run; `investigation.md` and `bug-fix.md` are on-demand (investigation exits read-only; bug-fix overlays phases). Four entry skills; one named review agent (`wit-code-checker`). `capabilities.md` is the capability x host matrix; `cursor-tools.md` is one of the tool maps. Entry skills stamp cells into `progress.md`; later phases read that stamp.
+Legend: solid arrows are the `/wit:dev` sequence and script calls; dashed arrows are host-adapter lookups the skills read rather than own. `dev` loads `work-types.md` on every run; `investigation.md` and `bug-fix.md` are on-demand (investigation exits read-only; bug-fix overlays phases). Five entry skills; one named review agent (`wit-code-checker`). `capabilities.md` is the capability x host matrix; `cursor-tools.md` is one of the tool maps. Entry skills stamp cells into `progress.md`; later phases read that stamp.

@@ -9,9 +9,9 @@ tags: [witloop, bootstrap, cross-platform, codex, copilot, grok, cursor]
 # Witloop: cross-platform bootstrap
 
 This repository **is** Witloop (plugin id `wit`, formerly `wi`): an opinionated, low-token, spec-driven dev loop. Its capabilities
-are delivered as skills under `skills/` (`scan`, `dev`, `research`, `plan`, `build`, `ship`, `brainstorm`,
-`rpa`) plus three subagent prompt templates under `agents/` (`wit-code-checker`, `wit-researcher`,
-`wit-task-runner`). The `wit-` prefix is a deliberate cross-platform tag (PR #15); on Claude these render
+are delivered as skills under `skills/` (`setup`, `scan`, `dev`, `research`, `plan`, `build`, `ship`,
+`brainstorm`, `rpa`, `add-issues`) plus three subagent prompt templates under `agents/` (`wit-code-checker`,
+`wit-researcher`, `wit-task-runner`). The `wit-` prefix is a deliberate cross-platform tag (PR #15); on Claude these render
 as `wit:wit-<name>`; the stutter is accepted, and the checker stays `wit-code-checker` (skills call it
 *the checker*).
 
@@ -35,8 +35,11 @@ and apply it as you go:
 - **Cursor:** `references/cursor-tools.md`
 
 ## Invoking wit
+- First-run a repo: the `setup` skill (`/wit:setup` on Claude; `/wit-setup` on Copilot / Grok;
+  `$wit-setup` on Codex once aliases are installed). `--auto` writes the simple models preset plus
+  ledger on. Grok: prefer branded `/wit-setup` (bare `/setup` may clash).
 - Start a feature, bug-fix, or investigation: the `dev` skill (`/wit:dev` on Claude; `/wit-dev` on Copilot / `$wit-dev` on Codex once
-  scan's bootstrap has installed the flat aliases into `~/.agents/skills/`; the raw plugin forms
+  setup's bootstrap has installed the flat aliases into `~/.agents/skills/`; the raw plugin forms
   `/wit dev` and `$dev` always work; or describe the request and let it auto-trigger).
   `--kind feature|bug-fix|investigation` overrides the deduced work type. An investigation is a
   read-only cited answer (no dossier, design gate, keep-alive, or PR). A bug-fix is repro-first;
@@ -44,8 +47,8 @@ and apply it as you go:
   (design-gate auto-approve). Details: `README.md`.
 - File a GitHub issue ("file a bug"): the `add-issues` skill (`/wit:add-issues` on Claude; `/wit-add-issues` on
   Copilot / Grok; `$wit-add-issues` on Codex once aliases are installed).
-- Bootstrap a repo first with the `scan` skill.
-- Only scan/dev/rpa/add-issues are user-facing commands. The phase skills (brainstorm, research, plan,
+- Refresh repo docs with the `scan` skill.
+- Only setup/scan/dev/rpa/add-issues are user-facing commands. The phase skills (brainstorm, research, plan,
   build, ship) carry `user-invocable: false`; hidden from slash pickers, still invoked by the
   orchestrating skill and by natural language ("ship it").
 - Persistence: wit hands off to a keep-alive loop at the end of brainstorm. Print the block for the

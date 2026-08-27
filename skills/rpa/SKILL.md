@@ -31,6 +31,9 @@ capability table** (`${PLUGIN_ROOT}/references/capabilities.md` Host probe; same
 `wit:dev`). Plugin root per capabilities.md **Plugin root** (never pass unexpanded `${PLUGIN_ROOT}`).
 When the run's `progress.md` is seeded (step 2), copy that host's cells into
 `Host:`, `Plugin root (resolved):`, and `## Capabilities (resolved)`. Stamp every host including claude.
+If `.wit/repo-map.md` is missing, run **setup** first (forward `--auto` when present), then continue.
+`.wi/` with no `.wit/` is the same tell. Map present but `.wit/models.md` absent → run setup's
+**models+ledger slice only** (setup:6-7; not a full first-run).
 
 1. **Bootstrap the prerequisites.** Follow `${PLUGIN_ROOT}/skills/rpa/references/uipath-bootstrap.md`:
    ensure **markitdown**, the **UiPath skills** plugin, and the **.NET 8 runtime** are installed (offer to
@@ -40,14 +43,15 @@ When the run's `progress.md` is seeded (step 2), copy that host's cells into
    `${PLUGIN_ROOT}/skills/rpa/references/ingest.md`: derive the **numbered run-slug**
    (`NNNN-<name>`, the next global 4-digit ordinal; ingest:1); catalog the repo's supporting files into
    `.wit/inputs.md`; detect reusable components into `.wit/components.md`; convert the PDD to `pdd.md` with
-   markitdown (skip if it's already Markdown). Run the **model routing first-run setup** here too
-   (`${PLUGIN_ROOT}/references/models.md` "First-run setup"), then resolve the routing once per
-   that reference and record the `## Model routing (resolved)` block when the run's `progress.md` is
-   seeded (rpa-directory.md's template); every build delegation reads the block's `rpa-build` cell (a
-   routing role label, resolved per models.md), and at ship the cross-provider diff review layers on top
-   of wit-code-checker's result-mode pass, per `wit:ship`. The project-level `.wit/`
-   outputs of rpa:1–3 (`inputs.md`,
-   `components.md`, `orchestrator.md`, `models.md`, a first-run `rpa-constitution.md`) are **committed
+   markitdown (skip if it's already Markdown). Apply `.wit/models.md` if present (warn once on an
+   orchestrator-tier mismatch) and resolve the routing once per
+   `${PLUGIN_ROOT}/references/models.md` **Dispatch rule**; record the
+   `## Model routing (resolved)` block when the run's `progress.md` is seeded
+   (rpa-directory.md's template). Do not write `.wit/models.md` from this skill. Every build
+   delegation reads the block's `rpa-build` cell (a routing role label, resolved per models.md), and
+   at ship the cross-provider diff review layers on top of wit-code-checker's result-mode pass, per
+   `wit:ship`. The project-level `.wit/` outputs of rpa:1–3 (`inputs.md`,
+   `components.md`, `orchestrator.md`, a first-run `rpa-constitution.md`) are **committed
    where written** (`chore(wit): …`, the project-level rule in `wit-directory.md`).
 3. **Brainstorm: refine the TO-BE (the one conversation).** Follow
    `${PLUGIN_ROOT}/skills/rpa/references/brainstorm-protocol.md`: take the PDD's **existing ToBe as
@@ -83,9 +87,9 @@ When the run's `progress.md` is seeded (step 2), copy that host's cells into
      `ADR-NNNN` + its index row, committed where written (`docs(wit): ADR-NNNN <title>`; rpa-directory.md's
      rule, same as the dev flow); the gate's **Approach (ADR-NNNN)** line cites it. Nothing hard to
      reverse → no ADR (plan:2's rule: don't manufacture decisions).
-5. **Design gate.** **Pre-gate check (checker · plan mode):** first scaffold the token ledger (idempotent):
+5. **Design gate.** **Pre-gate check (checker · plan mode):** first scaffold the token ledger (idempotent) when `ledger: on`:
    `python ${PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<run-slug>/tokens.md`
-   (python fallback: workflow.md "Script invocation"). The checker is a subagent: append its `tokens.md`
+   (python fallback: workflow.md "Script invocation"). When `ledger: skip` (progress.md `· ledger: skip`; missing `ledger:` fail-closes to `on`; do not re-open `.wit/models.md`): do not `--init` and do not append. The checker is a subagent: when `ledger: on`, append its `tokens.md`
    row the moment its completion notification arrives, per wit-directory.md's **ledger rule** (exact
    tokens + `Duration`; `unavailable` when unobservable, never an estimate); each checker round appends
    its own row; rpa:6's scaffold-if-absent remains the fallback. Then, before rendering the gate,
@@ -134,20 +138,20 @@ When the run's `progress.md` is seeded (step 2), copy that host's cells into
    to `uipath-rpa` per process/sub-workflow in **parallel waves** (state the **approved paradigm** in the
    prompt: XAML-only → pure drag-drop activities, **no Invoke Code and no `.cs`**; coded-allowed → `.cs`
    workflows ok; scaffold each unit as REFramework per the SDD, never Blank), append each unit's tokens
-   to `tokens.md` (scaffold it first if absent:
+   to `tokens.md` when `ledger: on` (scaffold it first if absent:
    `python ${PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<run-slug>/tokens.md`;
-   python fallback: workflow.md "Script invocation"), and register any new reusable component back into
+   python fallback: workflow.md "Script invocation"). When `ledger: skip`: do not `--init` and do not append. Register any new reusable component back into
    `.wit/components.md`.
 7. **Verify & ship.** Gate = `${PLUGIN_ROOT}/skills/rpa/references/verification-gate.md`, **branched
    on `Framework`**: REFramework → approved paradigm + Workflow Analyzer + `uip` validate; Maestro →
    `uip maestro flow validate` (+ `eval` if eval sets exist). Both → `tokens.md` passes `check_tokens.py`
-   + the **checker · result mode**, one dispatch: the feature-level pass over the SDD's
+   when `ledger: on`; when `ledger: skip`, `check_tokens.py` is not a gate. Then the **checker · result mode**, one dispatch: the feature-level pass over the SDD's
    acceptance-criteria section plus the inline line-level review (verification-gate.md). Then reuse the
    **ship** skill (`wit:ship`) for the docs-sync, PR (`PR.md` committed, then `gh pr create --body-file`),
    close-out checklist (including the remote-checks gate: ship:8 verifies the PR's remote checks before
    any cleanup), **compound/learnings** (confirm + promote the candidate `.wit/learnings/<run-slug>.md`
    written at the gate; update its `.wit/learnings.md` index line), and the **token report** (`tokens.md`,
-   finalized before the dossier commit, mandatory).
+   finalized before the dossier commit, mandatory when `ledger: on`; when `ledger: skip`, not mandatory; do not print).
    **Publish to the tenant (if approved), after the PR is open and its remote-checks gate has landed**
    (green or none configured; never while checks are pending or red). If `progress.md` `Publish: ≠ none`
    and `uip` is authenticated to the `orchestrator.md` tenant, delegate to **`uipath-solution`**: `pack` +

@@ -10,7 +10,7 @@ tags: [cursor, tools, portability, reference]
 
 wit's skills are written with Claude Code names. On Cursor, use these equivalents.
 Host cells live in `references/capabilities.md` (**the capability table**); this file is the
-Cursor procedure. Stamp `Host: cursor` once at scan / dev / rpa entry and read that stamp later.
+Cursor procedure. Stamp `Host: cursor` once at setup / scan / dev / rpa entry and read that stamp later.
 
 ## ${PLUGIN_ROOT}
 

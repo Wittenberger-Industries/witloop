@@ -31,7 +31,7 @@ cross-skill refs such as `ship` reading `${PLUGIN_ROOT}/skills/scan/scripts/chec
 | parallel waves | `/fleet` (monitor with `/tasks`) |
 | WebFetch | `web_fetch` |
 | WebSearch | no equivalent; use `web_fetch` with a search URL |
-| invoke a wit skill | skills load natively: `/wit <skill>` (plugin), `/wit-scan`/`/wit-dev`/`/wit-rpa`/`/wit-add-issues` (flat aliases), or auto-trigger by description |
+| invoke a wit skill | skills load natively: `/wit <skill>` (plugin), `/wit-setup`/`/wit-scan`/`/wit-dev`/`/wit-rpa`/`/wit-add-issues` (flat aliases), or auto-trigger by description |
 | resolve a skill's `SKILL.md` path (dispatch pointer for pinned runners) | it is under the skill's install dir (`~/.copilot/installed-plugins/<...>/SKILL.md`, or the clone dir from `/skills add`); the orchestrator resolves it once and passes it in the `[frontend]`-style dispatch |
 
 ## /goal keep-alive
@@ -43,10 +43,10 @@ confirmations.
 
 ## Command namespace
 `/wit:dev` etc. do not exist. Plugin-installed skills are auto-prefixed with the plugin name: wit's entry
-points invoke as `/wit scan`, `/wit dev`, `/wit rpa` (the prefix is Copilot's, not configurable; a separator
-inside a skill `name` makes it silently fail to load). For a one-token form, scan's bootstrap offers to
-copy the flat aliases from `references/skill-aliases/` into `~/.agents/skills/`, giving `/wit-scan`,
-`/wit-dev`, `/wit-rpa`, `/wit-add-issues` (flat skills carry no prefix). The clone + `/skills add` fallback registers skills
+points invoke as `/wit setup`, `/wit scan`, `/wit dev`, `/wit rpa` (the prefix is Copilot's, not configurable; a separator
+inside a skill `name` makes it silently fail to load). For a one-token form, setup's bootstrap offers to
+copy the flat aliases from `references/skill-aliases/` into `~/.agents/skills/`, giving `/wit-setup`,
+`/wit-scan`, `/wit-dev`, `/wit-rpa`, `/wit-add-issues` (flat skills carry no prefix). The clone + `/skills add` fallback registers skills
 flat too. The phase skills (brainstorm, research, plan, build, ship) are `user-invocable: false`: hidden
 from the `/` picker, invoked by the orchestrating skill or by natural language; every skill still
 auto-triggers from its `description`.

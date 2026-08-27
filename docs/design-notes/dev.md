@@ -27,17 +27,21 @@ against future "simplification".
   checks that dev/SKILL.md still contains "autopilot" (the cross-platform handoff branch), so never
   trim the platform names out of the skill.
 
-## dev:1 (scan and model routing)
+## dev:1 (setup and model routing)
 
-- **Why scan-first is a hard precondition:** every later phase builds on `repo-map.md` and
-  `constitution.md`, and the dev:4 preflight checks the gate commands against the map; a missing or
-  stale map means arming a keep-alive condition on wrong commands.
+- **Why setup-first when the map is missing:** every later phase builds on `repo-map.md` and
+  `constitution.md`, and the dev:4 preflight checks the gate commands against the map; a missing map
+  means arming a keep-alive condition on wrong commands. Setup owns first-run; `--refresh` is the
+  cheap path when the map is stale, not missing. Forward `--auto` so a hands-off new project does
+  not stall on models or ledger questions.
 - **What `--refresh` buys:** the drift pass is cheap; it updates facts and consolidates learnings.
-  That is why staleness tells trigger a refresh rather than a full re-scan.
+  That is why staleness tells trigger a refresh rather than a full re-setup.
 - **Why routing is resolved once and recorded:** models.md owns the resolve-once rule. The
   `## Model routing (resolved)` block in progress.md exists so every later dispatch reads a recorded
   decision instead of re-deriving it, and so a resumed run inherits identical routing; that is also
-  why a resumed feature missing the block gets it written on re-entry.
+  why a resumed feature missing the block gets it written on re-entry. Dev does not write
+  `.wit/models.md`; setup owns that. Map present but models.md absent is the upgrade hole: run
+  setup's models+ledger slice only so a pre-setup scan does not inherit-all forever.
 
 ## dev:2 (feature folder)
 
@@ -103,10 +107,10 @@ against future "simplification".
 Runtime rules live in `skills/dev/SKILL.md` and `skills/dev/references/work-types.md` plus on-demand
 `investigation.md` / `bug-fix.md`. This file is not loaded at runtime; it is why those rules exist.
 
-- **Why work type is deduced before write-capable setup:** an investigation classified after scan,
+- **Why work type is deduced before write-capable setup:** an investigation classified after setup,
   models, or a feature folder would already have written `.wit/` state, so the read-only contract
   would be broken before the exit. The prelude parses `--auto` and `--kind` in memory, loads
-  `work-types.md`, announces, and only then continues to host probe / scan / folder.
+  `work-types.md`, announces, and only then continues to host probe / setup / folder.
 - **Why investigation exits:** it is an answer, not a loop. No dossier, design gate, keep-alive, or
   PR. Loading `investigation.md` and stopping keeps the four advertised commands (no `/wit:how`).
   Investigation exits here so later steps never run.

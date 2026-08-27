@@ -31,9 +31,9 @@ doc, never loaded at runtime).
   `spec.md`/`tasks.md` while planning). Researchers read sources and return short reports, never
   pulling their material into this context. Re-entry (research:0) reads `progress.md` + the active
   artifact, not prior-phase files.
-- **Delegate, summarize, discard.** Append each researcher's `tokens.md` row the moment its completion
+- **Delegate, summarize, discard.** When `ledger: on`, append each researcher's `tokens.md` row the moment its completion
   notification arrives, per wit-directory.md's **ledger rule**: exact tokens + `Duration`,
-  `unavailable` when unobservable, never an estimate.
+  `unavailable` when unobservable, never an estimate. When `ledger: skip`, do not append.
 - **Borrow.** Detect installed skills and hand off:
   `${PLUGIN_ROOT}/skills/research/references/integrations.md`.
 
@@ -54,9 +54,9 @@ missing Work type = feature; never consult Gate bypass.
 First act, always: append a Log line to `progress.md`: `research engine engaged (wit <version>)`,
 reading <version> from `${PLUGIN_ROOT}/.claude-plugin/plugin.json` (don't guess; if that file
 isn't reachable, e.g. a per-skill Copilot install, omit the version rather than inventing one). Then
-scaffold the token ledger (idempotent; no-op if it exists):
+scaffold the token ledger (idempotent; no-op if it exists) when `ledger: on`:
 `python ${PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<slug>/tokens.md`
-(python fallback: workflow.md "Script invocation"). Then re-enter the phase it names
+(python fallback: workflow.md "Script invocation"). When `ledger: skip` (progress.md `· ledger: skip`; missing `ledger:` fail-closes to `on`; do not re-open `.wit/models.md`): do not `--init` and do not append. Then re-enter the phase it names
 (research | plan | design-gate). **Design-gate re-entry guard:** resuming at `design-gate` requires a
 fresh plan-mode `verification.md` (`type: Verification`) in the feature folder; missing, or predating
 the current `spec.md`/`tasks.md`, means the research:2 pre-gate checker pass runs first, then the gate
@@ -120,7 +120,7 @@ learnings from `progress.md`'s `applicable learnings:` Log line. It builds a
 feature-backward coverage matrix and returns BLOCKER/WARNING/INFO findings, writing `verification.md`.
 Feed them back: a BLOCKER (an unmapped acceptance criterion, a silently down-scoped decision) loops to
 plan to fix, then the checker re-checks (**max 2 rounds**; each round appends its own `tokens.md` row
-per the **ledger rule**). Whatever remains is **carried into the gate summary** with its severity. Then
+per the **ledger rule** when `ledger: on`). Whatever remains is **carried into the gate summary** with its severity. Then
 Phase = `design-gate`, stamped as `- <ts> **Update** design gate opened`; the exact wording matters:
 `token_report.py` reads this stamp as the end of the first autonomous span. This flip is **research's
 alone**: plan ends with Phase still `plan`.
@@ -193,6 +193,6 @@ end the turn waiting for another prompt. Under **auto-approve** skip the re-prin
 act, never wit's. A recorded narrow-fix bypass is treated like `--auto` here (no second paste).
 
 Then proceed: **build** (`wit:build`), worktree + parallel waves, then **ship** (`wit:ship`), which ends
-with the PR and the final report (token table included). No questions from here on.
+with the PR and the final report (token table included when `ledger: on`). No questions from here on.
 
 Phase contracts & resumability: `${PLUGIN_ROOT}/references/workflow.md`.

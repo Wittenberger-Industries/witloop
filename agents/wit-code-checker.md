@@ -108,6 +108,25 @@ generated REFramework project.
    | Smallest justified fix | planned change is the evidence-backed minimum | PR names it | BLOCKER |
    | Regression test or impractical rationale | a task or an explicit out | test present or rationale still in spec/PR | BLOCKER if neither |
 
+   Always-on in **result** mode for every shipping work type (feature, bug-fix, rpa). Skip these rows in **plan** mode. Glossary terms **Safety fact** and **Unproven** are plan-mode carve-outs: honor
+   them at ship, not as covering-task BLOCKERs in plan.
+
+   When `PR.md` is absent (first ship:2), missing `### Safety fact` is not a miss; still write this
+   row into `verification.md`.
+
+   Docs-only `n/a` is valid only when Proof is `n/a` plus a reason and `git diff --stat` does not
+   touch `skills/`, `agents/`, `scripts/`, `tests/`, `references/`, `.claude-plugin/`,
+   `.codex-plugin/`, or `AGENTS.md`. README, `docs/`, and `.wit/roadmap.md` may be `n/a`.
+
+   | Item | Plan mode | Result mode | Severity if missing |
+   |---|---|---|---|
+   | Safety fact heading | skip | `### Safety fact` in `PR.md` when that file exists | BLOCKER |
+   | Safety fact matrix row | skip | write the row into verification.md | BLOCKER |
+   | Proof token | skip | this-session command, `unproven`, or `n/a` | BLOCKER if writeup-only |
+   | Honest unproven | skip | Proof is `unproven` | INFO |
+   | Valid docs-only n/a | skip | Proof `n/a` plus reason; no runtime-path touch | INFO |
+   | n/a on runtime-behavior diff | skip | `n/a` while diff touches a runtime path | BLOCKER |
+
    Extra "might help" work stays the existing over-build hunt in (4): **WARNING**, not a new
    severity.
 3. **Hunt silent scope-reduction.** Scan the tasks / diff for

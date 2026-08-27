@@ -15,20 +15,24 @@ are delivered as skills under `skills/` (`scan`, `dev`, `research`, `plan`, `bui
 as `wit:wit-<name>`; the stutter is accepted, and the checker stays `wit-code-checker` (skills call it
 *the checker*).
 
-## If you are not Claude Code
-wit's skills use Claude Code tool names and the `${CLAUDE_PLUGIN_ROOT}` variable. Before following a skill,
-read the mapping for your platform and apply it as you go:
+## Plugin root
 
+`${PLUGIN_ROOT}` is the wit plugin root on every host, including Claude: the directory holding
+`skills/`, `agents/`, and `.claude-plugin/`. Resolve it once per `references/capabilities.md`
+"Plugin root" (env aliases, walk-up from cwd, then host cache). Stamp the absolute path and reuse
+it. Never pass an unexpanded `${PLUGIN_ROOT}` into the shell. Do not treat Claude as a special case
+that keeps the env while other hosts rewrite the placeholder.
+
+## Tool names
+
+wit's skills use Claude Code tool names. Before following a skill, read the mapping for this host
+and apply it as you go:
+
+- **Claude Code:** native names
 - **Codex CLI:** `references/codex-tools.md`
 - **GitHub Copilot CLI:** `references/copilot-tools.md`
 - **Grok Build:** `references/grok-tools.md`
 - **Cursor:** `references/cursor-tools.md`
-
-Key rule: **`${CLAUDE_PLUGIN_ROOT}` is the wit plugin root** (the directory holding `skills/`, `agents/`,
-`.claude-plugin/`) whether that's an installed plugin dir (e.g. Copilot's
-`~/.copilot/installed-plugins/…`, Cursor's `~/.cursor/plugins/cache/…`) or a clone of this repo. Resolve
-every `${CLAUDE_PLUGIN_ROOT}` path against it. On Cursor the env is usually empty: follow the resolve-once
-order in that tool map (env if it is a wit root, walk-up from cwd, then cache).
 
 ## Invoking wit
 - Start a feature, bug-fix, or investigation: the `dev` skill (`/wit:dev` on Claude; `/wit-dev` on Copilot / `$wit-dev` on Codex once

@@ -74,7 +74,7 @@ claim green you didn't verify).
 
 ## Checker (result mode): feature-level + line-level, one dispatch
 
-Beyond the tooling above, dispatch the **checker** (`${CLAUDE_PLUGIN_ROOT}/agents/wit-code-checker.md`) in `result`
+Beyond the tooling above, dispatch the **checker** (`${PLUGIN_ROOT}/agents/wit-code-checker.md`) in `result`
 mode, **one dispatch, two sequential passes**, same interface and logging as ship:2:
 
 - **Feature-level pass**: against **the SDD's acceptance-criteria section** (sdd:10 in the base ToC) + the

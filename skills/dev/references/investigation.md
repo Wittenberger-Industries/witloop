@@ -37,13 +37,13 @@ stamp `progress.md`.
 Run the full union (never stamp absent from memory; stamp absent only after the union misses):
 
 ```shell
-python ${CLAUDE_PLUGIN_ROOT}/skills/research/scripts/discover_skills.py --name how
+python ${PLUGIN_ROOT}/skills/research/scripts/discover_skills.py --name how
 ```
 
 If the question is motivational, also run:
 
 ```shell
-python ${CLAUDE_PLUGIN_ROOT}/skills/research/scripts/discover_skills.py --name why
+python ${PLUGIN_ROOT}/skills/research/scripts/discover_skills.py --name why
 ```
 
 Delegation is mandatory when `how` is present. Resolve the `SKILL.md` path in memory (pointer

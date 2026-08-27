@@ -282,5 +282,5 @@ timestamp: <YYYY-MM-DD>
 ```
 
 Include a small **mermaid flowchart** of the TO-BE (validate with
-`${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py`). Keep `tobe.md` faithful to the refined
+`${PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py`). Keep `tobe.md` faithful to the refined
 process; the SDD turns it into the technical design.

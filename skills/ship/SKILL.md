@@ -20,15 +20,15 @@ checker (not you) re-reads the repo.
 
 First act once engaged: append `- <ts> **Update** phase = ship (ship engine engaged (wit <version>))` to
 progress.md's Log: full ISO-8601 stamp from the OS clock
-(`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/now.py`; `date -Iseconds` where POSIX),
-<version> read from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`.
+(`python ${PLUGIN_ROOT}/skills/ship/scripts/now.py`; `date -Iseconds` where POSIX),
+<version> read from `${PLUGIN_ROOT}/.claude-plugin/plugin.json`.
 
 Design rationale for this skill lives in the wit repo's `docs/design-notes/ship.md` (maintainer doc,
 never loaded at runtime).
 
 ## 1 · Verification gate (must be green)
 
-Run the full gate from `${CLAUDE_PLUGIN_ROOT}/skills/ship/references/verification-gate.md`: the complete
+Run the full gate from `${PLUGIN_ROOT}/skills/ship/references/verification-gate.md`: the complete
 test suite, lint, format check, typecheck, and any CI-equivalent command from `repo-map.md`. Every gate
 command runs per workflow.md's **output house rule**: redirected to
 `.wit/features/<slug>/.logs/gate-<step>.txt`, verdict from the exit code + `tail -n 30`, failures pulled
@@ -71,12 +71,12 @@ aggregator checker alone writes `verification.md` and counts as one review round
 below and the max-2-rounds loop unchanged). Append `+ MoA (<N> proposers, <L> layers, aggregator <tier>)`
 to the review log line above. Full contract (identical proposer prompts, markers, layer semantics, the
 aggregator's dedupe/max-severity/verify-before-drop rule, `tokens.md` rows):
-`${CLAUDE_PLUGIN_ROOT}/references/moa.md`. MoA row `none`, or `review` not in its `points` → the single
+`${PLUGIN_ROOT}/references/moa.md`. MoA row `none`, or `review` not in its `points` → the single
 dispatch above runs unchanged.
 
 **Cross-provider layer (only when configured).** If the resolved-routing block's cross-provider row
 names a provider (≠ `none`) and its API key is present, **additionally** run the independent
-cross-provider diff review (`${CLAUDE_PLUGIN_ROOT}/references/models.md`: the `cross_review.py`
+cross-provider diff review (`${PLUGIN_ROOT}/references/models.md`: the `cross_review.py`
 mechanics, inputs, and exit codes): a second opinion layered on top of the checker dispatch, it never
 writes `verification.md` and never replaces the checker. When it cannot run (unconfigured, or the script
 signals a config/API error or a missing key), log `cross-provider layer skipped (<reason>)` and continue;
@@ -104,7 +104,7 @@ blanket re-document.
   service updates `.wit/architecture.md` (mermaid graph + legend). Absent (a greenfield project's first
   feature) → create it from scan's template (scan's docs are committed where written,
   wit-directory.md's project-level rule, so absence really means greenfield). Then validate it:
-  `python ${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py .wit/architecture.md`; fix every
+  `python ${PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py .wit/architecture.md`; fix every
   error it reports. (python fallback: workflow.md "Script invocation"; holds for every script in this
   SKILL.)
 - **Project overview & commands:** organization/stack/run-step changes → `.wit/overview.md`; command
@@ -270,8 +270,8 @@ each touched file must still decide correctly if loaded alone.>
 - **Tidy the dossier** (BEFORE cutting the PR, so the PR carries a clean `.wit/`). Read the **`Flow:`**
   line from the feature's `progress.md` (`dev` | `rpa`; a **missing line means `dev`**). It keys the
   directory reference that defines the sweep whitelist, the ephemera list, and the dossier manifest:
-  `dev` → `${CLAUDE_PLUGIN_ROOT}/skills/research/references/wit-directory.md`, `rpa` →
-  `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/rpa-directory.md`. **RPA runs: see rpa:7** for how
+  `dev` → `${PLUGIN_ROOT}/skills/research/references/wit-directory.md`, `rpa` →
+  `${PLUGIN_ROOT}/skills/rpa/references/rpa-directory.md`. **RPA runs: see rpa:7** for how
   ship's dev-named artifacts (spec.md, pitfalls.md, brief.md) map to the RPA ones. Then:
   1. *Sweep strays:* every feature-specific file lives under `.wit/features/<slug>/`: anything this run
      left loose in `.wit/` or elsewhere moves into the slug folder, or is deleted if worthless.
@@ -290,7 +290,7 @@ each touched file must still decide correctly if loaded alone.>
      Never-committed ones are untracked: plain-delete them (`cross-review.md`; `.logs/` likewise,
      self-gitignored). Skip pruning if the constitution says to keep them.
   3. *Finalize `tokens.md`: NOW, inside the dossier commit*, or it never rides the PR:
-     `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/finalize_tokens.py --write .wit/features/<slug>/tokens.md`
+     `python ${PLUGIN_ROOT}/skills/ship/scripts/finalize_tokens.py --write .wit/features/<slug>/tokens.md`
      (`--progress <path>` to override the sibling `progress.md`). That is the only ship:6 token
      CLI; it reads `Host:` from progress.md and routes per **the capability table** (`tokens` cell;
      see the script docstring). It rewrites the `## Orchestrator` section in place, recomputes the
@@ -314,7 +314,7 @@ dossier file), then open the PR from it. Write UTF-8 with the CLI; do not redire
 (PowerShell `>` is UTF-16):
 
 ```
-python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/strip_frontmatter.py .wit/features/<slug>/PR.md .wit/features/<slug>/PR.body.md
+python ${PLUGIN_ROOT}/skills/ship/scripts/strip_frontmatter.py .wit/features/<slug>/PR.md .wit/features/<slug>/PR.body.md
 gh pr create --title "<…>" --body-file .wit/features/<slug>/PR.body.md   # add --draft if the run ended blocked or partial
 ```
 
@@ -326,7 +326,7 @@ checks before any cleanup.
 **A pushed branch is not a shipped feature.** If `gh` is unavailable or `pr create` fails, the run is
 **not done**: record in `progress.md`'s Decisions/blockers the exact recovery command
 (frontmatter-stripped, as above):
-`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/strip_frontmatter.py .wit/features/<slug>/PR.md .wit/features/<slug>/PR.body.md; gh pr create --title "<…>" --body-file .wit/features/<slug>/PR.body.md`,
+`python ${PLUGIN_ROOT}/skills/ship/scripts/strip_frontmatter.py .wit/features/<slug>/PR.md .wit/features/<slug>/PR.body.md; gh pr create --title "<…>" --body-file .wit/features/<slug>/PR.body.md`,
 plus the failure reason, and tell the user in the final report that the PR still needs creating.
 Never silently stop at the push. **Never force-push.** If
 `superpowers:finishing-a-development-branch` is installed, consult it only for the close-out
@@ -348,7 +348,7 @@ merge-ready the moment a remote appears.
 **The remote-checks gate: before any cleanup.** The ship:1 gate was local; the PR's checks, CI runs
 and deployment checks (e.g. Vercel), are the authoritative signal, and they run remotely *after* the
 push. The PR must be green, not just the worktree. Re-create the log dir first if the ship:6 tidy
-pruned it: `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/ensure_logdir.py .wit/features/<slug>/.logs`
+pruned it: `python ${PLUGIN_ROOT}/skills/ship/scripts/ensure_logdir.py .wit/features/<slug>/.logs`
 (idempotent; self-gitignored so a red-path fix commit can never stage CI logs: workflow.md's output
 house rule). Give the checks a
 moment to register, then watch them to completion: `gh pr checks <pr-url-or-number> --watch
@@ -400,7 +400,7 @@ checklist**; an unticked box means ship is not finished, no matter what the cons
       `red - accepted by user (<reason>)` recorded in Decisions (`--auto` never accepts red)
 - [ ] `.wit/features/<slug>/PR.md` exists and is committed on the branch
 - [ ] `tokens.md` passes the structural gate: run
-      `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py .wit/features/<slug>/tokens.md`;
+      `python ${PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py .wit/features/<slug>/tokens.md`;
       a **non-zero exit blocks `Phase = done`**; an honest `unavailable` (for the orchestrator, a
       duration, or a total) always passes. The exit code *replaces* reading the file by eye: it is
       the close-out condition the keep-alive loop waits on.

@@ -11,7 +11,7 @@ RESEARCH = ROOT / "skills" / "research" / "SKILL.md"
 BUILD = ROOT / "skills" / "build" / "SKILL.md"
 WORKFLOW = ROOT / "references" / "workflow.md"
 
-PLUGIN_BUG_FIX = "${CLAUDE_PLUGIN_ROOT}/skills/dev/references/bug-fix.md"
+PLUGIN_BUG_FIX = "${PLUGIN_ROOT}/skills/dev/references/bug-fix.md"
 OPENED = "design gate opened"
 BYPASS_STAMP = "design gate bypassed (narrow-fix)"
 AUTO_STAMP = "design gate auto-approved (--auto)"

@@ -98,4 +98,4 @@ dispatches) and it is why `points: none` is the default.
 `dev` features get both points; `rpa` runs mirror the **review** point only.
 
 Tiered model routing (single-agent dispatch tiers) is the separate
-`${CLAUDE_PLUGIN_ROOT}/references/models.md`; the two compose, but neither requires the other.
+`${PLUGIN_ROOT}/references/models.md`; the two compose, but neither requires the other.

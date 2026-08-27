@@ -66,7 +66,7 @@ wit ships flat **forwarding aliases** that read as one token: `/wit-scan`, `/wit
 which are also the collision-free branded form on Grok.
 
 As part of the same offer below, ask once whether to install them: copy each directory under
-`${CLAUDE_PLUGIN_ROOT}/references/skill-aliases/` (i.e. `wit-scan/`, `wit-dev/`, `wit-rpa/`,
+`${PLUGIN_ROOT}/references/skill-aliases/` (i.e. `wit-scan/`, `wit-dev/`, `wit-rpa/`,
 `wit-add-issues/`) into `~/.agents/skills/`, the shared flat-skills directory these harnesses read
 (Copilot, Codex, and Grok Build all scan it; never a harness's own managed dir like `~/.grok/skills/`;
 create it if absent; overwriting an existing `wit-*` alias there is fine, they are wit's own

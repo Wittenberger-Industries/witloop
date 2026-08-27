@@ -89,7 +89,7 @@ class CapabilityTableTests(unittest.TestCase):
     def test_workflow_points_at_table_without_embedding_it(self):
         text = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("**the capability table**", text)
-        self.assertIn("${CLAUDE_PLUGIN_ROOT}/references/capabilities.md", text)
+        self.assertIn("${PLUGIN_ROOT}/references/capabilities.md", text)
         self.assertNotIn("| capability |", text)
 
     def test_progress_template_has_host_probe_fields(self):

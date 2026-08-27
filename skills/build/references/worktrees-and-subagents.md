@@ -63,7 +63,7 @@ Never `git worktree remove --force` a tree with uncommitted work without telling
   keep the wit feature worktree canonical and do **not** nest it inside a session worktree. A Grok session
   workspace is a standalone **copy** of the repo, so the git signals above do not fire: detect it by cwd
   under `~/.grok/worktrees/` and then follow this same sandboxed variant
-  (`${CLAUDE_PLUGIN_ROOT}/references/grok-tools.md`). Subagent `isolation: worktree` (`spawn_subagent`)
+  (`${PLUGIN_ROOT}/references/grok-tools.md`). Subagent `isolation: worktree` (`spawn_subagent`)
   stays the level-2 escalate only, exactly like the ladder below.
 
 If `superpowers:using-git-worktrees` is installed, prefer it; it handles edge cases (submodules, dirty
@@ -76,11 +76,11 @@ Each task runs in a **fresh** subagent so context doesn't accumulate across a lo
 immediate context, not the whole project.
 
 The dispatch mechanism is the stamped `subagent` cell (**the capability table**,
-`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md`). Prefer a named `wit-*` type
+`${PLUGIN_ROOT}/references/capabilities.md`). Prefer a named `wit-*` type
 (`wit-task-runner`, `wit-researcher`, `wit-code-checker`) when it appears in this session's list;
 otherwise dispatch a generic worker and **inline** the matching `agents/*.md` charter. Missing named
 types are not a hard failure. Procedure for a cell lives in the host adapter
-(`${CLAUDE_PLUGIN_ROOT}/references/codex-tools.md` / `copilot-tools.md` / `grok-tools.md` /
+(`${PLUGIN_ROOT}/references/codex-tools.md` / `copilot-tools.md` / `grok-tools.md` /
 `cursor-tools.md`). The prompt **content** is inline on every host: the skeleton below gives each
 runner its task block + context in full. The dispatch *target* is that named-or-inline rule (session
 list wins; no `exit 1` when `wit-*` types are absent).

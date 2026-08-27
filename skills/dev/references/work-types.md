@@ -47,10 +47,10 @@ wins. A missing Work type: stamp means feature.
 
 ## After announce
 
-- **investigation:** load `${CLAUDE_PLUGIN_ROOT}/skills/dev/references/investigation.md` and exit.
+- **investigation:** load `${PLUGIN_ROOT}/skills/dev/references/investigation.md` and exit.
   No host probe, scan, models, or feature-folder writes.
 - **bug-fix:** continue through host probe, scan, models, and the folder classifier
   (`new / resume / in-flight-overlap / done-collision / roadmap-row`). After the folder classifier,
-  load `${CLAUDE_PLUGIN_ROOT}/skills/dev/references/bug-fix.md`.
+  load `${PLUGIN_ROOT}/skills/dev/references/bug-fix.md`.
 - **feature:** continue through host probe, scan, models, and the folder classifier
   (`new / resume / in-flight-overlap / done-collision / roadmap-row`). Do not load bug-fix.md.

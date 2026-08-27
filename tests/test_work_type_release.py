@@ -21,7 +21,7 @@ REPO_MAP = ROOT / ".wit" / "repo-map.md"
 AGENTS_DIR = ROOT / "agents"
 SKILLS_DIR = ROOT / "skills"
 
-RELEASE = "1.15.0"
+RELEASE = "1.16.0"
 MARKETPLACE_CATALOG = "0.2.0"
 USER_COMMANDS = ("add-issues", "dev", "rpa", "scan")
 NAMED_AGENTS = ("wit-code-checker", "wit-researcher", "wit-task-runner")

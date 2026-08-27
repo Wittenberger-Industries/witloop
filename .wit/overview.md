@@ -11,7 +11,7 @@ timestamp: 2026-08-25
 Witloop (`wit`, formerly `wi`) is an opinionated, low-token spec-driven engineering loop shipped as a plugin. One source tree targets Claude Code, Codex CLI, Copilot CLI, Grok Build, and Cursor. You scan a project once, then `/wit:dev` routes work type `feature | bug-fix | investigation` before write-capable setup. Investigation is read-only (cited answer, no dossier or PR). Bug-fix overlays the existing phases. Feature still brainstorms, designs, and ships to an open PR.
 
 ## Stack
-Markdown skills and agent charters, plus stdlib Python for validation, token ledgers, mermaid checks, and GitHub-issue drafts. No application runtime, no package lockfile. Version `1.15.0` in the three plugin manifests.
+Markdown skills and agent charters, plus stdlib Python for validation, token ledgers, mermaid checks, and GitHub-issue drafts. No application runtime, no package lockfile. Version `1.16.0` in the three plugin manifests. Skills use `${PLUGIN_ROOT}` (ADR-0003).
 
 ## How it is organized
 - `skills/` - user-facing `scan`, `dev`, `rpa`, `add-issues`; hidden phase skills `brainstorm`, `research`, `plan`, `build`, `ship`

@@ -183,7 +183,7 @@ than the stamp). No `.wit/models.md` at all → everything inherits; record
 `preset: none - all inherit` so later dispatches don't re-check. **Exception (MoA dispatches):** a
 dispatch carrying an `MoA role:` marker resolves from the block's MoA row: each proposer at its
 listed `proposers` tier, the aggregator at the `aggregator` tier
-(`${CLAUDE_PLUGIN_ROOT}/references/moa.md`). **Fallback (unchanged):** a configured model that
+(`${PLUGIN_ROOT}/references/moa.md`). **Fallback (unchanged):** a configured model that
 errors as unavailable at dispatch time → re-dispatch with `inherit` and note it in `progress.md`:
 the block itself stands; the config didn't change. Never stall a run on a model assignment.
 
@@ -214,7 +214,7 @@ it cannot verify things are actually wired, and it does not write `verification.
 1. Produce the diff (`git diff <base>...HEAD` for at-finish; the wave's commits for per-wave) to a temp
    file, plus context: `spec.md` (or the SDD's acceptance-criteria section) and the relevant
    constitution rules.
-2. Run `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/cross_review.py --config .wit/models.md
+2. Run `python ${PLUGIN_ROOT}/skills/ship/scripts/cross_review.py --config .wit/models.md
    --diff <patch> --context <spec> --out .wit/features/<slug>/cross-review.md` (python fallback:
    `references/workflow.md` "Script invocation").
 3. Exit `0` = `## REVIEW PASSED`; `1` = `## ISSUES FOUND`; treat findings like any checker finding:
@@ -244,5 +244,5 @@ checker's result-mode review at ship: N proposer agents answer the same question
 refining in a second round), and one aggregator synthesizes the single answer. **Off by default**: both
 presets write `points: none`, and a config without the `## Mixture of Agents` section is treated as
 `points: none`; enable it by hand-editing `.wit/models.md`. The full contract (dispatch markers,
-who-writes-what, layer semantics, cost) is `${CLAUDE_PLUGIN_ROOT}/references/moa.md`; it composes with
+who-writes-what, layer semantics, cost) is `${PLUGIN_ROOT}/references/moa.md`; it composes with
 the tier routing above, but neither requires the other.

@@ -43,7 +43,7 @@ by wit's own pipeline (dev owns the handoff; research/plan fire in their phases:
 invokes writing-plans there). Where the delegate's checklist demands those steps, satisfy them with the wit
 equivalents and move on.
 
-When Work type is bug-fix, follow `${CLAUDE_PLUGIN_ROOT}/skills/dev/references/bug-fix.md` repro contract
+When Work type is bug-fix, follow `${PLUGIN_ROOT}/skills/dev/references/bug-fix.md` repro contract
 (keep the four must-asks; reinterpret them; persist `## Repro contract` in `brief.md`). Brainstorm is
 never skipped. Delegation to `superpowers:brainstorming` is unchanged. Feature path unchanged: missing Work type or Work type `feature` uses today's must-asks; never consult Gate bypass.
 
@@ -109,9 +109,9 @@ Glossary updates are committed where written (`docs(wit): glossary`, the project
    - hard constraints: deadline, performance, compatibility, must-reuse-X;
    - any approach *preferences* they hold: capture as non-binding preferences, since the research phase decides.
    Use AskUserQuestion (Claude verb; stamped `ask` cell from **the capability table**
-   (`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md`); Cursor `AskQuestion` via
-   `${CLAUDE_PLUGIN_ROOT}/references/cursor-tools.md`) for the sharp forks (patterns:
-   `${CLAUDE_PLUGIN_ROOT}/skills/brainstorm/references/question-patterns.md`). Ask in focused rounds; stop
+   (`${PLUGIN_ROOT}/references/capabilities.md`); Cursor `AskQuestion` via
+   `${PLUGIN_ROOT}/references/cursor-tools.md`) for the sharp forks (patterns:
+   `${PLUGIN_ROOT}/skills/brainstorm/references/question-patterns.md`). Ask in focused rounds; stop
    when the WHAT is clear, not when you run out of questions.
 3. **Reflect and confirm.** Play the brief back. The user is about to step away: make sure it captures
    their intent; the next check-in is the design gate (architecture + design), and after that nothing

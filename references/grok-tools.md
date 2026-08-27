@@ -13,36 +13,19 @@ wit's skills are written with Claude Code names. On Grok Build (`grok` CLI), use
 Cells marked `(SPIKE S-N)` are confirmed on a real Grok Build session before this file ships (the recon
 spike in `docs/plans/2026-07-12-43-grok-build-platform.md`); everything else is final.
 
-## ${CLAUDE_PLUGIN_ROOT}: resolve once, then use an absolute path (mandatory)
+## ${PLUGIN_ROOT}
 
-`${CLAUDE_PLUGIN_ROOT}` means the **wit plugin root**: the directory holding `skills/`, `agents/`, and
-`.claude-plugin/`. On Grok the plugin-root vars are injected into **hook processes only, by design**
-(`~/.grok/docs/user-guide/09-plugins.md`), so they read **empty in the agent's tool shell** (confirmed:
-S1). wit resolves the root itself, never relying on the variable:
+Follow `references/capabilities.md` **Plugin root**. Same order on every host. Never pass an
+unexpanded `${PLUGIN_ROOT}` into the shell.
 
-1. Resolve **once** at the start of any wit entry skill (scan / dev / rpa), before the first
-   `${CLAUDE_PLUGIN_ROOT}` script call. Record the result in `progress.md` as
-   `Plugin root (resolved): <abs>` and reuse it for the rest of the run: each Grok shell tool call is a
-   fresh process and `export` does **not** persist across calls (confirmed: S2), so `progress.md` is the
-   persistence layer, not a shell variable.
-2. **Never pass an unexpanded `${CLAUDE_PLUGIN_ROOT}` into the shell.** Resolution order:
-   1. `$CLAUDE_PLUGIN_ROOT` if non-empty and it contains `skills/` + `.claude-plugin/` (usually empty on
-      Grok; see above).
-   2. `$GROK_PLUGIN_ROOT` / `$PLUGIN_ROOT` if they look like the wit root.
-   3. The active `wit@witloop` entry's `installPath` in `~/.claude/plugins/installed_plugins.json` - where
-      Grok-via-Claude-compat installs live, and the step that resolves in practice. `grok plugin list` /
-      `grok inspect` may show nothing, because wit loads through Claude compatibility, not Grok's own
-      plugin registry.
-   4. Walk up from cwd for a dir holding both `skills/scan/SKILL.md` and `.claude-plugin/plugin.json`
-      (only finds an in-tree clone / `--plugin-dir`, not a cache install).
-   Validate the winner: it must contain `skills/`, `.claude-plugin/`, and `skills/scan/SKILL.md`.
-3. Use that **absolute path** (read back from `progress.md`) in every `python <root>/skills/.../*.py`
-   call for the rest of the run, or inline it in the one command that runs the script
-   (`CLAUDE_PLUGIN_ROOT=<abs> python <abs>/skills/.../x.py`).
+Grok injects plugin-root env vars into **hook processes only** (`~/.grok/docs/user-guide/09-plugins.md`),
+so they read empty in the agent's tool shell (confirmed: S1). Each Grok shell call is a fresh process;
+`export` does not persist (confirmed: S2). `progress.md` is the persistence layer.
 
-This is the same root rule Copilot uses (`references/copilot-tools.md` "${CLAUDE_PLUGIN_ROOT}"), made a
-hard protocol because Grok shells out. The script-invocation fallback is `references/workflow.md`
-"Script invocation".
+This host's cache (step 3): the active `wit@witloop` `installPath` in
+`~/.claude/plugins/installed_plugins.json`, then `~/.grok/plugins/`. `grok plugin list` / `grok inspect`
+may show nothing when wit loaded through Claude compatibility. Call scripts as
+`python <abs>/skills/.../x.py`. Script-invocation fallback: `references/workflow.md` "Script invocation".
 
 **Other plugins' skills (superpowers, frontend-design, ...):** the same registry step resolves ANY
 Claude-compat plugin, not just wit: the plugin's entry in `~/.claude/plugins/installed_plugins.json` gives

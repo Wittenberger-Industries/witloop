@@ -12,23 +12,14 @@ wit's skills are written with Claude Code names. On Cursor, use these equivalent
 Host cells live in `references/capabilities.md` (**the capability table**); this file is the
 Cursor procedure. Stamp `Host: cursor` once at scan / dev / rpa entry and read that stamp later.
 
-## ${CLAUDE_PLUGIN_ROOT}: resolve once (mandatory)
+## ${PLUGIN_ROOT}
 
-`${CLAUDE_PLUGIN_ROOT}` means the **wit plugin root**: the directory holding `skills/`, `agents/`, and
-`.claude-plugin/`. Cursor does not inject that variable into the agent shell (it is empty here, same
-class of gap as Grok). Resolve it yourself; never pass an unexpanded `${CLAUDE_PLUGIN_ROOT}` into
-`Shell`.
+Follow `references/capabilities.md` **Plugin root**. Same order on every host. Never pass an
+unexpanded `${PLUGIN_ROOT}` into `Shell`.
 
-Order (ADR-0001; cwd-as-wit-root beats marketplace cache so this source repo dogfoods itself):
-
-1. `$CLAUDE_PLUGIN_ROOT` (or another non-empty plugin-root env) **if** it is a wit root: it contains
-   `skills/` and `.claude-plugin/` (validate with `skills/scan/SKILL.md` present).
-2. Walk up from cwd (cwd first, then parents) to a directory with those same tells.
-3. Host plugin cache: under `~/.cursor/plugins/cache/`, a directory that validates as a wit root
-   (observed layout `wittenberger-industries-witloop/wit/<hash>/`). Prefer plugin id `wit`.
-
-Stamp `Plugin root (resolved): <abs>` in `progress.md` and reuse that absolute path for every
-`python <root>/skills/.../*.py` call. Later phases never re-guess.
+This host's cache (step 3): `~/.cursor/plugins/cache/`, observed layout
+`wittenberger-industries-witloop/wit/<hash>/`. Prefer plugin id `wit`. Cursor does not inject a
+plugin-root env into the agent shell, so step 1 is usually empty and walk-up or this cache wins.
 
 ## Install: marketplace vs plugin cache
 

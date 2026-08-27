@@ -18,7 +18,7 @@ standalone. `scan` offers to install the recommended set on first run (see the s
 
 A skill is "available" if it appears in the session's skills list, or its directory exists under a known
 plugin/skills path. Check sources **in this order** (union; first hit wins). The helper
-`${CLAUDE_PLUGIN_ROOT}/skills/research/scripts/discover_skills.py` implements it (session paths as
+`${PLUGIN_ROOT}/skills/research/scripts/discover_skills.py` implements it (session paths as
 argv or stdin, then the dirs below; `--name` prints `present`/`absent`).
 
 1. Session skills list (paths the helper reads from argv or stdin).

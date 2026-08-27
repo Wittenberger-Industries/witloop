@@ -11,7 +11,7 @@ tags: [research, reference]
 The loop is one interactive phase (**brainstorm**, run by `dev`) followed by an autonomous pipeline
 (**research -> plan -> build -> ship**, sequenced by `dev`). The handoff after brainstorm is the single human
 checkpoint: the go-signal is the keep-alive block matching the stamped `keep_alive` cell
-(`${CLAUDE_PLUGIN_ROOT}/references/keep-alive.md`); the run continues into research in the same turn;
+(`${PLUGIN_ROOT}/references/keep-alive.md`); the run continues into research in the same turn;
 after it, the pipeline makes and records decisions on its own.
 
 ## State machine
@@ -75,7 +75,7 @@ first, then the gate renders.*
    attempts; contradictory brief), stop, record the blocker + a clean partial state, open a draft PR or
    leave a tidy branch, and report. Hands-off is not silent.
 8. **The capability table.** Host behavior follows **the capability table**
-   (`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md`). Entry skills stamp cells into
+   (`${PLUGIN_ROOT}/references/capabilities.md`). Entry skills stamp cells into
    `progress.md`; later phases read those cells and never re-guess the product. Adapters
    fill columns; skills do not.
 
@@ -108,7 +108,7 @@ skills cite them as **the context budget** and **the output house rule**:
    subagent dispatch, not an orchestrator Read.
 2. **The output house rule. Never pipe unbounded command output into context.** Redirect to the
    feature's log dir and read the verdict, not the stream. Once per feature:
-   `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/ensure_logdir.py .wit/features/<slug>/.logs`
+   `python ${PLUGIN_ROOT}/skills/ship/scripts/ensure_logdir.py .wit/features/<slug>/.logs`
    (self-gitignored: the dir never enters `git status` or a dossier commit). Then per command:
    `<cmd> > .wit/features/<slug>/.logs/<name>.txt 2>&1; echo $?; tail -n 30 .wit/features/<slug>/.logs/<name>.txt`.
    On red, pull the failing lines (`grep -n -B1 -A3 -iE 'fail|error' <log>`), never the whole log;
@@ -122,13 +122,14 @@ The cost and the time are also *measured* where they can be, never estimated: `t
 subagent's **exact** usage and `Duration`, ship's `finalize_tokens.py` routes by stamped `Host:`
 (Claude: `token_report.py`; Grok: `grok_token_report.py`; Cursor/Copilot/Codex/unstamped: unavailable)
 for the real orchestrator total and derives the autonomous wall-clock from `progress.md`'s OS-clock Log
-stamps (`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/now.py`, not `date -Iseconds`), and
+stamps (`python ${PLUGIN_ROOT}/skills/ship/scripts/now.py`, not `date -Iseconds`), and
 anything unobservable is written `unavailable`, never a fabricated number. The full
 discipline (row timing, stamp format, what ship's finalize fills) is wit-directory.md's `tokens.md`
 template section; phase skills cite it as **the ledger rule**.
 
 ## Script invocation
 
-Bundled scripts run as `python` plus the script's `${CLAUDE_PLUGIN_ROOT}` path; where `python` does not
+Bundled scripts run as `python` plus the **stamped absolute** plugin root, never an unexpanded
+`${PLUGIN_ROOT}` placeholder; where `python` does not
 resolve, fall back to `py -3` (Windows) or `python3` (Linux/macOS). Every skill's script call inherits
 this; skills cite it as **the python fallback** instead of restating it.

@@ -21,7 +21,7 @@ Precondition: the design gate passed (SDD + assumptions confirmed, or `--auto`),
 ## 1. Isolate
 
 The worktree + branch (`wit/<run-slug>`) are created at rpa:6, framework-neutral, exactly as
-`wit:build` does it (`${CLAUDE_PLUGIN_ROOT}/skills/build/references/worktrees-and-subagents.md`; use
+`wit:build` does it (`${PLUGIN_ROOT}/skills/build/references/worktrees-and-subagents.md`; use
 `superpowers:using-git-worktrees` if installed); and the run dossier arrives with the checkout: it
 was committed on main at the design gate (`docs(<run-slug>): feature dossier (design gate)`), and the
 branch starts from main. Record path + branch in `progress.md`. Before wave 1, verify
@@ -77,7 +77,7 @@ DAG allows (independent processes and independent sub-workflows in parallel):
    `progress.md`. **Append each delegated unit's token count to `tokens.md`** the moment that subagent
    reports completion (the only point the count exists): `tokens.md` is **mandatory**, not optional;
    initialize it on the first delegation if absent
-   (`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<run-slug>/tokens.md`;
+   (`python ${PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<run-slug>/tokens.md`;
    python fallback: `references/workflow.md` "Script invocation"), and ship finalizes it
    (`token_report.py --write`) under a `check_tokens.py` close-out gate.
 5. **Register new components.** If the build created something reusable (a generic login, a notifier),

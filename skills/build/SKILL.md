@@ -21,7 +21,7 @@ or `auto-approve (--auto)` stamp, **or** (Work type bug-fix AND `## Gate bypass`
 a `design gate bypassed (narrow-fix)` log line), recorded in `progress.md`. missing Work type = feature
 (refuse bypass; never consult a Gate bypass block). Refuse to build without it; route to the research
 skill instead. First act once engaged: append `build engine engaged (wit <version>)` to progress.md's
-Log, <version> read from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`, never guessed. From here
+Log, <version> read from `${PLUGIN_ROOT}/.claude-plugin/plugin.json`, never guessed. From here
 build runs autonomously.
 Inputs: `tasks.md`, `spec.md`, `constitution.md`, `repo-map.md`. That list is also the ceiling
 (workflow.md's **context budget**): hold `tasks.md` (the active artifact) plus `progress.md` and the
@@ -29,14 +29,14 @@ two project files; consult `spec.md` **by section** when a task needs a criterio
 read everything else; never pre-read a runner's source files "to prepare" a dispatch. On re-entry,
 `progress.md`'s ticks + Log are the build's state; don't re-Read prior-phase artifacts to
 reconstruct it. Reason lean throughout (the **compact-reasoning rule**,
-`${CLAUDE_PLUGIN_ROOT}/references/compact-reasoning.md`): scheduling, dispatch, and report handling get
+`${PLUGIN_ROOT}/references/compact-reasoning.md`): scheduling, dispatch, and report handling get
 essential, decision-bearing thoughts only, never a re-derivation of what `tasks.md`/`progress.md`
 already settle.
 
 ## 1 · Isolate (default: worktree + branch)
 
 Create a dedicated worktree and branch for the feature. Exact commands and the no-git / opt-out
-variants: `${CLAUDE_PLUGIN_ROOT}/skills/build/references/worktrees-and-subagents.md`. **Delegation
+variants: `${PLUGIN_ROOT}/skills/build/references/worktrees-and-subagents.md`. **Delegation
 check:** if `superpowers:using-git-worktrees` is in your available skills you MUST use it (log
 `worktree via superpowers` to progress.md); this reference is the fallback when absent (delegation
 point; precedence: integrations.md). Record the worktree path and branch in `progress.md`.
@@ -60,7 +60,7 @@ run it as wide as the DAG allows. Repeat until every task is ticked:
    commands, nothing more. Pointers and rules, not pasted file bodies: the runner reads its own files
    (workflow.md's context budget). **Model per dispatch (tiered model routing):** pass each runner the
    `task-runner` tier from `progress.md`'s `## Model routing (resolved)` block, resolving or refreshing it
-   and handling an unavailable model per `${CLAUDE_PLUGIN_ROOT}/references/models.md`'s resolve-once rule.
+   and handling an unavailable model per `${PLUGIN_ROOT}/references/models.md`'s resolve-once rule.
 3. **TDD per task** (per the constitution): failing test first, minimal implementation, green, refactor.
    **Skill-mediated routing is operational, not just asserted** (integrations.md: delegation is mandatory
    when installed). Pinned runners have no Skill tool, so for a task tagged for a skill-mediated
@@ -78,7 +78,7 @@ run it as wide as the DAG allows. Repeat until every task is ticked:
    `Self-Check: PASS`; a stub or an unmet Verify means the task is *not* done, no matter what the
    console printed. You are the only committer and `progress.md`'s only writer during build. Append the
    runner's `tokens.md` row the moment its completion notification arrives; if the file is absent,
-   `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<slug>/tokens.md`
+   `python ${PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<slug>/tokens.md`
    first (python fallback: workflow.md "Script invocation"), per wit-directory.md's **ledger rule** (exact
    tokens + `Duration`, `unavailable` when unobservable, never an estimate). Then recompute the ready set
    and dispatch the next wave without waiting for stragglers it doesn't depend on.
@@ -97,7 +97,7 @@ output house rule (`… > .wit/features/<slug>/.logs/w<N>-tests.txt 2>&1`), verd
 `tail -n 30`, failures pulled by grep, never the whole log. When the resolved-routing block's
 cross-provider row says `per-wave` (progress.md; #38's resolve-once rule), also run **the
 cross-provider diff review** (the layer on top of wit-code-checker) over the wave's diff there
-(`${CLAUDE_PLUGIN_ROOT}/references/models.md`, same bounded 2-round loop as at ship).
+(`${PLUGIN_ROOT}/references/models.md`, same bounded 2-round loop as at ship).
 (b) **sole-runner exception**: when exactly one task in a wave executes tests (the rest are docs/config),
 that runner keeps full TDD (watch-fail / watch-pass); only multi-test waves switch to authored-not-run +
 orchestrator serial Verify.

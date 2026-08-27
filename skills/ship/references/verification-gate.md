@@ -26,6 +26,16 @@ Red flags that mean you have NOT verified (stop and run the command):
 
 This is the line between a gate and a guess.
 
+## Honesty (safety fact)
+
+A green suite does not replace the one safety fact. Named extra non-gate checks that were not run this
+session are listed `unproven`; they are never omitted so the PR looks complete. unproven does not skip
+configured repo-map commands (format, lint, typecheck, tests, CI-equivalent). This file keeps five Run
+steps; there is no sixth.
+
+When a repo-map command is `n/a - not configured`, record that under Testing. That phrase is not the
+Safety fact Proof token `n/a`.
+
 ## Run, in this order
 
 1. **Format check**: e.g. `ruff format --check .` / `prettier --check`. Fast, catches noise.

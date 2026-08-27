@@ -11,6 +11,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CHECKER = ROOT / "agents" / "wit-code-checker.md"
 CHECKER_NOTES = ROOT / "docs" / "design-notes" / "wit-code-checker.md"
+SHIP = ROOT / "skills" / "ship" / "SKILL.md"
+GATE = ROOT / "skills" / "ship" / "references" / "verification-gate.md"
+SHIP_NOTES = ROOT / "docs" / "design-notes" / "ship.md"
 EM_DASH = "\u2014"
 
 RUNTIME_PATHS = (
@@ -225,6 +228,70 @@ class CheckerSafetyFactTests(unittest.TestCase):
 
     def test_no_em_dash_in_edited_files(self):
         for path in (CHECKER, CHECKER_NOTES, Path(__file__)):
+            self.assertNotIn(EM_DASH, load(path), path.name)
+
+
+class ShipSafetyFactTests(unittest.TestCase):
+    def test_safety_fact_heading_between_testing_and_verification(self):
+        text = load(SHIP)
+        testing = text.index("### Testing")
+        safety = text.index("### Safety fact")
+        verification = text.index("### Verification")
+        self.assertLess(testing, safety)
+        self.assertLess(safety, verification)
+
+    def test_template_has_claim_proof_and_optional_not_run(self):
+        block = load(SHIP)[
+            load(SHIP).index("### Safety fact") : load(SHIP).index("### Verification")
+        ]
+        self.assertIn("Claim", block)
+        self.assertIn("Proof", block)
+        self.assertIn("Not-run", block)
+        self.assertIn("unproven", block)
+        self.assertRegex(block, r"`n/a`")
+
+    def test_ship5_copies_checker_matrix_row(self):
+        text = load(SHIP)
+        section = text[text.index("## 5 · PR description") : text.index("## 6 ·")]
+        self.assertRegex(section, r"(?i)cop(y|ies).{0,80}matrix row")
+        self.assertIn("### Safety fact", section)
+
+    def test_ship8_checkbox_for_heading_and_legal_proof(self):
+        text = load(SHIP)
+        section = text[text.index("## 8 ·") :]
+        self.assertIn("### Safety fact", section)
+        self.assertRegex(section, r"(?i)legal Proof|this-session command")
+
+    def test_ship1_points_at_gate_honesty(self):
+        text = load(SHIP)
+        section = text[text.index("## 1 ·") : text.index("## 2 ·")]
+        self.assertRegex(section, r"(?i)honesty")
+
+    def test_gate_honesty_unproven_does_not_skip_and_five_run_steps(self):
+        text = load(GATE)
+        self.assertRegex(text, r"(?i)honesty")
+        self.assertRegex(text, r"(?i)unproven does not skip")
+        self.assertIn("n/a - not configured", text)
+        run = text[text.index("## Run, in this order") : text.index("## Run commands")]
+        self.assertIn("1. **Format", run)
+        self.assertIn("5. **CI-equivalent", run)
+        self.assertNotIn("6. **", run)
+
+    def test_testing_na_not_configured_is_not_safety_fact_na(self):
+        ship = load(SHIP)
+        testing = ship[ship.index("### Testing") : ship.index("### Safety fact")]
+        safety = ship[ship.index("### Safety fact") : ship.index("### Verification")]
+        self.assertIn("n/a - not configured", testing)
+        self.assertRegex(safety, r"`n/a`")
+        self.assertNotIn("n/a - not configured", safety)
+
+    def test_fail_then_pass_stays_inside_testing(self):
+        ship = load(SHIP)
+        testing = ship[ship.index("### Testing") : ship.index("### Safety fact")]
+        self.assertRegex(testing, r"fail then pass|fail-then-pass")
+
+    def test_no_em_dash_in_ship_files(self):
+        for path in (SHIP, GATE, SHIP_NOTES, Path(__file__)):
             self.assertNotIn(EM_DASH, load(path), path.name)
 
 

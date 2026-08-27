@@ -38,6 +38,8 @@ a delegation point; precedence: `skills/research/references/integrations.md`. Re
 stamped Reflection line per verification-gate.md ("When the gate is red"), then fix the code (loop
 back to build), never lower the bar.
 
+The gate file's honesty paragraph applies: `unproven` is not a skip of a configured repo-map command.
+
 ## 2 · Review against intent
 
 Self-review the diff with fresh eyes, `git diff --stat`, then open only the hunks a criterion or
@@ -210,6 +212,9 @@ the PR **body** is everything *below* the frontmatter, stripped before feeding `
 When Work type is bug-fix, Summary names the root cause and the smallest fix; Testing pastes fail then
 pass on the same named surface; Verification carries the result-mode matrix.
 
+Copy the checker's Safety fact matrix row from `verification.md` into the Safety fact section (Claim, Proof,
+optional Not-run).
+
 CONDITIONAL `## Rules inventory`: include that section only when the diff changes rule text (skills,
 agents, references that agents load). Do not require it for every PR. Constitution: before/after
 inventory; each touched file must still decide correctly if loaded alone.
@@ -238,8 +243,14 @@ root cause and the smallest fix.>
 - <key change 2>
 
 ### Testing
-<what was run and the result: test suite, lint, typecheck. Note new tests added. When Work type is
+<what was run and the result: test suite, lint, typecheck. Note new tests added. When a repo-map
+command is `n/a - not configured`, record that here. When Work type is
 bug-fix: paste fail then pass on the same named surface.>
+
+### Safety fact
+- Claim: <the one claim this change is safe because of>
+- Proof: <this-session command | `unproven` | `n/a`>
+- Not-run: <optional named extra checks listed `unproven`; omit this bullet if none>
 
 ### Verification
 <checker result-mode verdict: every acceptance criterion + locked decision delivered and wired; any
@@ -399,6 +410,7 @@ checklist**; an unticked box means ship is not finished, no matter what the cons
 - [ ] Remote checks: `N/N green` logged with run URLs, or `none configured` logged, or
       `red - accepted by user (<reason>)` recorded in Decisions (`--auto` never accepts red)
 - [ ] `.wit/features/<slug>/PR.md` exists and is committed on the branch
+- [ ] `PR.md` contains `### Safety fact` and a legal Proof (this-session command, `unproven`, or `n/a`)
 - [ ] `tokens.md` passes the structural gate: run
       `python ${PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py .wit/features/<slug>/tokens.md`;
       a **non-zero exit blocks `Phase = done`**; an honest `unavailable` (for the orchestrator, a

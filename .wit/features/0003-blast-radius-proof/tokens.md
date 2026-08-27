@@ -23,6 +23,7 @@ elapsed time or the orchestrator's own dispatch/arrival stamps (OS clock); write
 | build | task-runner: task 4 | unavailable | unavailable | Host tokens cell unavailable; no notification counts |
 | build | task-runner: task 1 (interrupted; parent takeover) | unavailable | unavailable | Host tokens cell unavailable; user-backgrounded then interrupted |
 | build | parent: task 1 | unavailable | unavailable | Host tokens cell unavailable; implemented in orchestrator session |
+| build | parent: task 2 | unavailable | unavailable | Host tokens cell unavailable; implemented in orchestrator session |
 
 **Subagents (exact): <sum>.**
 **Σ compute: <dur> across <n> dispatches.**

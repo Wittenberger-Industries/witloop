@@ -77,10 +77,10 @@ run it as wide as the DAG allows. Repeat until every task is ticked:
    `progress.md` and commit the task (`<type>: <task title>`) only when the runner reports
    `Self-Check: PASS`; a stub or an unmet Verify means the task is *not* done, no matter what the
    console printed. You are the only committer and `progress.md`'s only writer during build. Append the
-   runner's `tokens.md` row the moment its completion notification arrives; if the file is absent,
+   runner's `tokens.md` row the moment its completion notification arrives (when `ledger: on`); if the file is absent,
    `python ${PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<slug>/tokens.md`
    first (python fallback: workflow.md "Script invocation"), per wit-directory.md's **ledger rule** (exact
-   tokens + `Duration`, `unavailable` when unobservable, never an estimate). Then recompute the ready set
+   tokens + `Duration`, `unavailable` when unobservable, never an estimate). When `ledger: skip` (progress.md `· ledger: skip`; missing `ledger:` fail-closes to `on`; do not re-open `.wit/models.md`): do not `--init` and do not append. Then recompute the ready set
    and dispatch the next wave without waiting for stragglers it doesn't depend on.
    A runner whose last line is **`## TASK AUTH-GATE`** (status `auth-gate`: a `401` / `run <x> login` /
    missing `ENV` wall) is **not** a failure to retry: don't commit it, record the exact unblock steps in

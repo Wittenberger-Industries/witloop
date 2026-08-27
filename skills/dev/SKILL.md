@@ -117,7 +117,7 @@ If the work type is `investigation`, load `${PLUGIN_ROOT}/skills/dev/references/
    approve / amend / stop, or auto-approve per the flag).
 6. **Implement** (after the gate): **build** (skill `wit:build`), worktree + parallel waves, then
    **ship** (skill `wit:ship`): verification gate, PR opened and its remote checks verified, cleanup,
-   and the final report including the token table. **No questions anywhere in this stretch**
+   and the final report including the token table only when `ledger: on`. **No questions anywhere in this stretch**
    (workflow.md's no-questions rule).
 
 ## Boundaries

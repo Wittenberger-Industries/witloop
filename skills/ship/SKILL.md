@@ -302,6 +302,7 @@ each touched file must still decide correctly if loaded alone.>
      self-gitignored). Skip pruning if the constitution says to keep them.
   3. *Finalize `tokens.md`: NOW, inside the dossier commit*, or it never rides the PR:
      `python ${PLUGIN_ROOT}/skills/ship/scripts/finalize_tokens.py --write .wit/features/<slug>/tokens.md`
+     When `ledger: skip` (progress.md `· ledger: skip`; missing `ledger:` fail-closes to `on`; do not re-open `.wit/models.md`): do not run `finalize_tokens.py`.
      (`--progress <path>` to override the sibling `progress.md`). That is the only ship:6 token
      CLI; it reads `Host:` from progress.md and routes per **the capability table** (`tokens` cell;
      see the script docstring). It rewrites the `## Orchestrator` section in place, recomputes the
@@ -314,7 +315,8 @@ each touched file must still decide correctly if loaded alone.>
   4. *What remains is the fixed dossier for this flow*: take the manifest from the flow's directory
      reference, not from memory: `dev` → wit-directory.md's seven-file dossier (progress, brief, spec,
      tasks, pitfalls, tokens, PR); `rpa` → rpa-directory.md's run dossier (the SDD pack plus
-     per-process `tobe.md`).
+     per-process `tobe.md`). When `ledger: skip`, six files (drop `tokens.md`) for `dev`; rpa's run
+     dossier omits `tokens.md`.
   5. Commit it: `chore(<slug>): tidy feature dossier`.
 
 ## 7 · Open the PR (autonomous)
@@ -415,7 +417,7 @@ checklist**; an unticked box means ship is not finished, no matter what the cons
       `python ${PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py .wit/features/<slug>/tokens.md`;
       a **non-zero exit blocks `Phase = done`**; an honest `unavailable` (for the orchestrator, a
       duration, or a total) always passes. The exit code *replaces* reading the file by eye: it is
-      the close-out condition the keep-alive loop waits on.
+      the close-out condition the keep-alive loop waits on. When `ledger: skip`: omit or n/a this checkbox; do not call the script; keep-alive must not wait on that exit.
 - [ ] `.wit/learnings.md` index has this feature's line (and the detail file exists if one was
       warranted)
 - [ ] dossier = exactly the flow's manifest (per progress.md `Flow:`, missing = dev; dev: the
@@ -439,7 +441,8 @@ Then deliver the **final run report** in the console: the approach (cite ADR-NNN
 gate results with local and remote status reported **separately**
 (`local gate: green · PR checks: N/N green · deployment: ready`, never one undifferentiated "green"),
 the PR URL, and the **token table read from the finalized `tokens.md`** (completed in the dossier tidy;
-never recomputed here). **Subagent rows are exact** (from completion notifications): report that sum
+never recomputed here). When `ledger: skip`, omit the **token table**. Omit the two tokens.md-sourced timing lines
+(`autonomous total`, `Σ subagent compute`). The two `progress.md` span lines may stay. **Subagent rows are exact** (from completion notifications): report that sum
 as the headline, with the orchestrator figure (or `unavailable`) alongside, and the cost estimate +
 per-agent split when the finalize produced them. The two numbers wit trusts: **subagent-exact**
 (completion notifications) and **orchestrator-from-transcript** (Claude path inside

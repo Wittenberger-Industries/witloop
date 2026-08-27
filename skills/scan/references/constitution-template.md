@@ -8,7 +8,7 @@ tags: [constitution, template, okf, scan]
 
 # Project constitution: template
 
-Copy this to `.wit/constitution.md`, fill in from what `scan` detected, and ask the user to confirm the
+Copy this to `.wit/constitution.md`, fill in from what `setup` detected, and ask the user to confirm the
 lines marked `(confirm)`. This file is the project's ground rules. **Every phase reads it**, so it is the
 cheapest possible place to encode "how we build here": write it once, and you stop re-explaining
 conventions in every plan and every build subagent.

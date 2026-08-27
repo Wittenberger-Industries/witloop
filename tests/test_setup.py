@@ -31,7 +31,21 @@ INVESTIGATION = ROOT / "skills" / "dev" / "references" / "investigation.md"
 MODELS = ROOT / "references" / "models.md"
 DEV_NOTES = ROOT / "docs" / "design-notes" / "dev.md"
 RPA_NOTES = ROOT / "docs" / "design-notes" / "rpa.md"
+SHIP = ROOT / "skills" / "ship" / "SKILL.md"
+BUILD = ROOT / "skills" / "build" / "SKILL.md"
+RESEARCH = ROOT / "skills" / "research" / "SKILL.md"
+WIT_DIRECTORY = ROOT / "skills" / "research" / "references" / "wit-directory.md"
+RPA_DIRECTORY = ROOT / "skills" / "rpa" / "references" / "rpa-directory.md"
+CONSTITUTION_TEMPLATE = ROOT / "skills" / "scan" / "references" / "constitution-template.md"
+RPA_CONSTITUTION_TEMPLATE = (
+    ROOT / "skills" / "rpa" / "references" / "rpa-constitution-template.md"
+)
+VERIFICATION_GATE = ROOT / "skills" / "rpa" / "references" / "verification-gate.md"
+BUILD_UIPATH = ROOT / "skills" / "rpa" / "references" / "build-uipath.md"
+BUILD_MAESTRO = ROOT / "skills" / "rpa" / "references" / "build-maestro.md"
+CHECK_TOKENS = ROOT / "skills" / "ship" / "scripts" / "check_tokens.py"
 EM_DASH = "\u2014"
+LEDGER_SKIP = re.compile(r"ledger:\s*`?skip`?")
 RUNTIME_NEVER = re.compile(
     r"runtime never reads this file|never loaded at runtime",
     re.IGNORECASE,
@@ -61,12 +75,36 @@ INVOKE_OWNED = (
     DEV_NOTES,
     RPA_NOTES,
 )
+LEDGER_OWNED = (
+    SHIP,
+    BUILD,
+    RESEARCH,
+    RPA,
+    DEV,
+    WIT_DIRECTORY,
+    RPA_DIRECTORY,
+    CONSTITUTION_TEMPLATE,
+    RPA_CONSTITUTION_TEMPLATE,
+    VERIFICATION_GATE,
+    BUILD_UIPATH,
+    BUILD_MAESTRO,
+)
 
 
 def load(path: Path) -> str:
     if not path.is_file():
         raise AssertionError("%s is missing" % path.relative_to(ROOT))
     return path.read_text(encoding="utf-8")
+
+
+def skip_near(text: str, needle: str, window: int = 800) -> bool:
+    skip = r"ledger:\s*`?skip`?"
+    escaped = re.escape(needle)
+    flags = re.DOTALL | re.IGNORECASE
+    return bool(
+        re.search(skip + r".{0,%d}%s" % (window, escaped), text, flags)
+        or re.search(escaped + r".{0,%d}%s" % (window, skip), text, flags)
+    )
 
 
 def frontmatter(text: str) -> str:
@@ -372,6 +410,125 @@ class SetupInvokeTests(unittest.TestCase):
 
     def test_no_em_dashes_in_owned_files(self):
         for path in INVOKE_OWNED:
+            text = load(path)
+            self.assertNotIn(EM_DASH, text, path)
+
+
+class LedgerSkipTests(unittest.TestCase):
+    def test_research_build_skip_no_init_no_append(self):
+        for path in (RESEARCH, BUILD):
+            text = load(path)
+            self.assertRegex(text, LEDGER_SKIP)
+            self.assertTrue(skip_near(text, "--init"), path)
+            self.assertRegex(text, r"(?i)do not(?: run)? `--init`")
+            self.assertRegex(text, r"(?i)do not append")
+
+    def test_ship_skip_no_finalize_table_or_check_tokens_gate(self):
+        text = load(SHIP)
+        self.assertRegex(text, LEDGER_SKIP)
+        self.assertTrue(skip_near(text, "finalize_tokens.py"))
+        self.assertTrue(skip_near(text, "check_tokens.py"))
+        self.assertRegex(text, r"(?i)do not run.*finalize_tokens")
+        self.assertRegex(text, r"(?i)omit the \*\*token table\*\*")
+        self.assertIn("autonomous total", text)
+        self.assertIn("Σ subagent compute", text)
+        self.assertRegex(text, r"(?i)omit the two tokens\.md-sourced timing lines")
+        self.assertRegex(text, r"(?i)(?:omit|n/a).{0,80}checkbox|checkbox.{0,80}(?:omit|n/a)")
+        self.assertRegex(text, r"(?i)do not call the script")
+        self.assertRegex(text, r"(?i)keep-alive must not wait")
+        self.assertRegex(text, r"six files")
+
+    def test_dev_token_table_only_when_ledger_on(self):
+        text = load(DEV)
+        self.assertRegex(text, r"token table only when `ledger: on`")
+
+    def test_rpa_skill_skip_no_init_report_not_gate(self):
+        text = load(RPA)
+        self.assertRegex(text, LEDGER_SKIP)
+        self.assertTrue(skip_near(text, "--init"))
+        self.assertTrue(skip_near(text, "check_tokens.py"))
+        self.assertRegex(text, r"(?i)do not(?: run)? `--init`")
+        self.assertRegex(text, r"(?i)do not append")
+        self.assertRegex(text, r"(?i)not mandatory")
+        self.assertRegex(text, r"(?i)not a gate")
+
+    def test_wit_directory_seven_on_six_skip_keeps_tokens_heading(self):
+        text = load(WIT_DIRECTORY)
+        self.assertIn("## `tokens.md` template", text)
+        self.assertIn("seven-file dossier", text)
+        self.assertRegex(text, r"six files")
+        self.assertIn("drop `tokens.md`", text)
+        self.assertIn("present when ledger is on", text)
+        self.assertRegex(
+            text,
+            r"check_tokens\.py `--init`.{0,80}research:0.{0,40}when ledger is on",
+        )
+
+    def test_resolved_routing_stamps_ledger_on_both_directory_templates(self):
+        for path in (WIT_DIRECTORY, RPA_DIRECTORY):
+            text = load(path)
+            self.assertIn("· ledger: <on | skip>", text)
+
+    def test_rpa_directory_omits_tokens_on_skip(self):
+        text = load(RPA_DIRECTORY)
+        self.assertRegex(text, LEDGER_SKIP)
+        self.assertRegex(text, r"(?i)omits `tokens\.md`")
+
+    def test_verification_gate_carves_out_check_tokens_when_skip(self):
+        text = load(VERIFICATION_GATE)
+        self.assertIn("passes `check_tokens.py`", text)
+        self.assertRegex(text, LEDGER_SKIP)
+        self.assertRegex(text, r"(?i)does not apply")
+
+    def test_rpa_build_refs_carve_out_mandatory_and_init(self):
+        for path in (BUILD_UIPATH, BUILD_MAESTRO):
+            text = load(path)
+            self.assertIn("tokens.md` is **mandatory**", text)
+            self.assertRegex(text, LEDGER_SKIP)
+            self.assertTrue(skip_near(text, "--init"), path)
+            self.assertRegex(text, r"(?i)do not(?: run)? `--init`")
+
+    def test_rpa_constitution_template_carves_out_skip(self):
+        text = load(RPA_CONSTITUTION_TEMPLATE)
+        self.assertIn("passes `check_tokens.py`", text)
+        self.assertRegex(text, LEDGER_SKIP)
+
+    def test_scan_constitution_template_has_no_skip_rule(self):
+        text = load(CONSTITUTION_TEMPLATE)
+        self.assertNotRegex(text, LEDGER_SKIP)
+        self.assertNotIn("## Token ledger", text)
+        self.assertNotIn("what `scan` detected", text)
+        self.assertIn("what `setup` detected", text)
+
+    def test_wit_directory_retargets_scan_off_first_run(self):
+        text = load(WIT_DIRECTORY)
+        self.assertNotIn("Written once by scan", text)
+        self.assertIn("Written once by setup", text)
+        self.assertNotIn("seeded by a greenfield scan", text)
+
+    def test_fail_closed_missing_stamp_and_no_mid_run_toggle(self):
+        text = load(WIT_DIRECTORY)
+        self.assertRegex(text, r"(?i)exact `skip`")
+        self.assertRegex(text, r"(?i)fail-clos")
+        self.assertRegex(text, r"(?i)missing `ledger:`")
+        self.assertRegex(text, r"(?i)mid-run toggle")
+
+    def test_honor_reads_stamp_does_not_reopen_models_at_append(self):
+        for path in (RESEARCH, BUILD, SHIP, RPA):
+            text = load(path)
+            self.assertIn("· ledger:", text)
+            self.assertRegex(text, r"(?i)do not re-open `.wit/models.md`")
+            self.assertRegex(text, r"(?i)missing `ledger:`")
+
+    def test_check_tokens_stays_format_only_no_skip_flag(self):
+        text = load(CHECK_TOKENS)
+        self.assertNotIn("--skip", text)
+        self.assertNotIn("skip", text.lower())
+        self.assertIn("--init", text)
+        self.assertIn("add_argument", text)
+
+    def test_no_em_dashes_in_owned_files(self):
+        for path in LEDGER_OWNED:
             text = load(path)
             self.assertNotIn(EM_DASH, text, path)
 

@@ -21,7 +21,7 @@ elapsed time or the orchestrator's own dispatch/arrival stamps (OS clock); write
 | research | researcher: ledger-skip | unavailable | unavailable | Host tokens cell unavailable; no notification counts |
 | build | task-runner: task 1 | unavailable | unavailable | Host tokens cell unavailable; no notification counts |
 | build | task-runner: task 2 | unavailable | unavailable | Host tokens cell unavailable; no notification counts |
-| build | task-runner: task 4 | unavailable | unavailable | Host tokens cell unavailable; no notification counts |
+| build | task-runner: task 5 | unavailable | unavailable | Host tokens cell unavailable; no notification counts |
 
 **Subagents (exact): <sum>.**
 **Σ compute: <dur> across <n> dispatches.**

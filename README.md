@@ -1,7 +1,7 @@
 ---
 type: Readme
 title: "Witloop"
-description: Spec-driven loop (scan, dev, rpa, add-issues) for Claude Code, Copilot CLI, Grok Build, and Cursor. v1.16.0.
+description: Spec-driven loop (scan, dev, rpa, add-issues) for Claude Code, Copilot CLI, Grok Build, and Cursor. v1.16.1.
 timestamp: 2026-08-27
 tags: [witloop, readme, overview]
 ---
@@ -10,7 +10,7 @@ tags: [witloop, readme, overview]
 
 Witloop is a plugin (`wit`) that takes a software change or a UiPath PDD from a conversation to an open pull request. Scan a repo once. After that, one command runs the loop. You talk at brainstorm and at a design gate. The rest is autonomous.
 
-It runs on **four hosts**: Claude Code, GitHub Copilot CLI, Grok Build, and Cursor. Current release is **1.16.0**.
+It runs on **four hosts**: Claude Code, GitHub Copilot CLI, Grok Build, and Cursor. Current release is **1.16.1**.
 
 | Command | What it does |
 |---------|--------------|

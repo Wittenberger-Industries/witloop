@@ -57,6 +57,11 @@ rationale lives here, anchored by step. When editing the skill, keep this file i
 - **Why a file, not console output:** the feature's artifacts were made for exactly this; a committed
   `PR.md` survives the run, is consumable by `gh pr create --body-file`, and lets a human open the PR
   by hand if the run couldn't. The dossier is the durable record of the feature.
+- **Why `### Safety fact` sits between Testing and Verification:** Testing is the gate commands
+  (including `n/a - not configured`). The safety fact is one claim plus a this-session Proof, or
+  `unproven`, or docs-only `n/a`. Ship:5 copies the checker matrix row into that heading. Honest
+  `unproven` is INFO, not a second gate and not a sixth Run step. Ship:2 may lack `PR.md`; that is
+  not a miss. There is no second checker pass after ship:5.
 
 ## Bug-fix PR evidence and conditional Rules inventory
 

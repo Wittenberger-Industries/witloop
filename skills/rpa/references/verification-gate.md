@@ -75,7 +75,11 @@ claim green you didn't verify).
 ## Checker (result mode): feature-level + line-level, one dispatch
 
 Beyond the tooling above, dispatch the **checker** (`${PLUGIN_ROOT}/agents/wit-code-checker.md`) in `result`
-mode, **one dispatch, two sequential passes**, same interface and logging as ship:2:
+mode, **one dispatch, two sequential passes**, same interface and logging as ship:2.
+
+Safety fact rows are the same always-on result-mode rows as that charter. The PR uses the same
+`### Safety fact` heading via ship:5. Proof is a this-session command from this gate's list, or
+`unproven`, or `n/a`. unproven does not skip restore, validate, Analyzer, or the paradigm check.
 
 - **Feature-level pass**: against **the SDD's acceptance-criteria section** (sdd:10 in the base ToC) + the
   locked decisions (sdd:1-7, the `rpa-constitution`, any ADR): it confirms each is **delivered and

@@ -108,3 +108,21 @@ those rows exist.
   `## CHECK PASSED` / `## ISSUES FOUND`, the tools list, or the 2-round cap would break orchestrator
   detection and every host dispatch. Bug-fix coverage is extra matrix rows, not a second agent or a
   new severity.
+
+## Additive safety-fact rows (result mode)
+
+Runtime rules live in `agents/wit-code-checker.md`. This file is not loaded at runtime; it is why
+those rows exist.
+
+- **Why a second table after the bug-fix matrix:** `bug_fix_matrix()` in
+  `tests/test_bug_fix_checker.py` parses the first Item/Plan/Result/Severity table. Putting safety-fact
+  rows first would steal that parse (`len(rows) == 5`). Always-on result-mode rows sit after, with a
+  blank-line split so the tables do not merge.
+- **Why plan mode skips them:** Safety fact and Unproven are glossary carve-outs whose honor point is
+  ship. Plan-mode covering-task BLOCKERs for those terms would fail every design gate.
+- **Why absent `PR.md` is not a miss:** ship:2 runs before ship:5 writes `PR.md`. The checker still
+  writes the Safety fact row into `verification.md` so ship:5 can copy it.
+- **Why honest `unproven` is INFO, not WARNING:** WARNING implies a waiver pointer (hidden WAIVED).
+  Visible honest unproven is the product. Writeup-only Proof stays BLOCKER. `n/a` on a runtime-path
+  diff (`skills/`, `agents/`, `scripts/`, `tests/`, `references/`, `.claude-plugin/`,
+  `.codex-plugin/`, `AGENTS.md`) is BLOCKER.

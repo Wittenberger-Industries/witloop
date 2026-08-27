@@ -2,7 +2,7 @@
 type: Glossary
 title: "Glossary: Witloop"
 description: Canonical project domain terms and the aliases to avoid.
-timestamp: 2026-08-25
+timestamp: 2026-08-27
 ---
 
 # Glossary: Witloop
@@ -21,3 +21,9 @@ _Avoid_: Cursor Autopilot, keep-alive none on Cursor
 
 **Work type:** The intent class `feature`, `bug-fix`, or `investigation` that selects a Witloop execution path before feature-folder classification.
 _Avoid_: task type, route kind
+
+**Safety fact:** The one claim a change is safe because of. At ship it is proven by a command run this session, marked `unproven`, or `n/a` for a docs-only PR. A green suite does not replace it.
+_Avoid_: blast-radius writeup, gate verdict, CONCERNS
+
+**Unproven:** An honest, visible row meaning a named safety fact or extra check was not exercised this session. Not a silent PASS, not a skipped repo-map gate command, and not a WAIVED fail.
+_Avoid_: CONCERNS, waived, skipped

@@ -1,0 +1,72 @@
+---
+type: Feature Progress
+title: Ship verification honesty
+description: Require a proven or unproven safety fact at ship, and never silent-PASS an unmeasured check.
+feature: 0003-blast-radius-proof
+status: done
+timestamp: 2026-08-27
+---
+
+# Feature: Ship verification honesty
+
+- **Slug:** 0003-blast-radius-proof
+- **Created:** 2026-08-27
+- **Phase:** done
+- **Gate mode:** interactive
+- **Flow:** dev
+- **Work type:** feature
+- **Worktree:** D:/ClaudeCowork/wi-plugin/wi-plugin-wit-0003-blast-radius-proof
+- **Branch:** wit/0003-blast-radius-proof
+- **Host:** cursor
+- **Plugin root (resolved):** D:/ClaudeCowork/wi-plugin/wi-plugin-wit-0003-blast-radius-proof
+
+## Capabilities (resolved)
+- keep_alive=model_judged_goal · tokens=unavailable · ask=AskQuestion · subagent=Task wit-* when listed else inline agents/*.md · shell=Python scripts (POSIX or PowerShell) · skill_invoke=plugin skills + natural-language auto-trigger
+
+## Model routing (resolved)
+- resolved 2026-08-27T20:25:05+03:00 from .wit/models.md (preset: custom)
+- orchestrator=cursor-grok-4.6-xhigh (informational) · checker=cursor-grok-4.6-xhigh · researcher=cursor-grok-4.6-xhigh · task-runner=cursor-grok-4.6-xhigh · rpa-build=cursor-grok-4.6-xhigh
+- cross-provider=none · MoA=none
+
+## Log
+- 2026-08-27T20:25:05+03:00 **Created** feature, phase = brainstorm
+- 2026-08-27T20:25:05+03:00 **Update** roadmap row 4 `blast-radius-proof` in-progress; scan refreshed 2026-08-27 (manifests + validate.py since last stamp; commands unchanged)
+- 2026-08-27T20:25:05+03:00 brainstorm via superpowers:brainstorming, dialogue
+- 2026-08-27T20:31:53+03:00 **Update** phase = research (research engine engaged (wit 1.16.0))
+- 2026-08-27T20:31:53+03:00 **Update** applicable learnings: 0003-work-type-routing: WHEN parallel tasks create files the always-loaded skill must plugin-root-point at → DO add a serial wiring task after those files exist
+- 2026-08-27T20:31:53+03:00 **Update** phase = plan
+- 2026-08-27T20:31:53+03:00 plan via superpowers:writing-plans
+- 2026-08-27T21:03:10+03:00 **Update** design gate opened
+- 2026-08-27T21:03:10+03:00 **Update** design gate approved, phase = build
+- 2026-08-27T21:12:44+03:00 **Update** build engine engaged (wit 1.16.0)
+- 2026-08-27T21:12:44+03:00 worktree via superpowers
+- 2026-08-27T21:12:44+03:00 tdd via superpowers:test-driven-development
+- 2026-08-27T21:12:44+03:00 waves via superpowers:dispatching-parallel-agents + subagent-driven-development
+- 2026-08-27T21:18:59+03:00 **Update** task 1 done (parent takeover after user-backgrounded runner)
+- 2026-08-27T21:18:59+03:00 **Update** task 2 done
+- 2026-08-27T21:18:59+03:00 **Update** task 3 done
+- 2026-08-27T21:22:26+03:00 **Update** phase = ship (ship engine engaged (wit 1.16.0))
+- 2026-08-27T21:22:26+03:00 verification via superpowers:verification-before-completion
+- 2026-08-27T21:22:26+03:00 review via wit-code-checker + superpowers:requesting-code-review[inline]
+- 2026-08-27T21:22:26+03:00 cross-provider layer skipped (provider none)
+- 2026-08-27T21:30:42+03:00 **Update** PR opened: https://github.com/Wittenberger-Industries/witloop/pull/94
+- 2026-08-27T21:30:42+03:00 remote checks: 1/1 green · validate pass https://github.com/Wittenberger-Industries/witloop/actions/runs/33103824592/job/98628250153
+- 2026-08-27T21:30:42+03:00 **Update** phase = done https://github.com/Wittenberger-Industries/witloop/pull/94
+- 2026-08-27T22:00:59+03:00 **Update** additional slice on open PR 94: runner/build no-yield (tasks 5-6)
+- 2026-08-27T22:00:59+03:00 **Update** task 5 done
+- 2026-08-27T22:00:59+03:00 **Update** task 6 done
+
+## Tasks (mirrored from tasks.md once planned)
+- [x] 1. Checker result-mode rows
+- [x] 2. Ship template, gate honesty, close-out box
+- [x] 3. RPA gate pointer
+- [x] 4. Lockstep 1.16.1
+- [x] 5. Runner never yields
+- [x] 6. Build continues the DAG same turn
+
+## Decisions / blockers
+- Seed: combined roadmap row 4 (pstack blast-radius + D3 unknown-never-PASS). Version target 1.16.x.
+- Verdict bands: proven, unproven, or n/a (docs-only). No new WAIVED band. User-accepted red CI stays as today (`progress.md` only).
+- PR must show one safety fact (this-session command or unproven) and mark any named AC/gate check that was not run as unproven, never omit it. Suite green does not replace the safety fact.
+- Enforcement: ship writes those rows into `PR.md`; checker result-mode BLOCKER if a row is missing or is a writeup with no command/`unproven`/`n/a`. Tests cover both.
+- Same-PR add: runners never yield to the user; build continues the DAG in the same turn. Cursor `/goal` stays a done-lock.

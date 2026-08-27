@@ -21,7 +21,7 @@ REPO_MAP = ROOT / ".wit" / "repo-map.md"
 AGENTS_DIR = ROOT / "agents"
 SKILLS_DIR = ROOT / "skills"
 
-RELEASE = "1.16.0"
+RELEASE = "1.16.1"
 MARKETPLACE_CATALOG = "0.2.0"
 USER_COMMANDS = ("add-issues", "dev", "rpa", "scan")
 NAMED_AGENTS = ("wit-code-checker", "wit-researcher", "wit-task-runner")
@@ -111,6 +111,7 @@ class SourceMemoryTests(unittest.TestCase):
     def test_overview_routes_work_types_at_1_15_0(self):
         text = load(OVERVIEW)
         self.assertIn(RELEASE, text)
+        self.assertNotIn("1.16.0", text)
         self.assertNotIn("1.14.1", text)
         self.assertRegex(text, r"(?i)work type")
         for work_type in WORK_TYPES:

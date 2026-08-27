@@ -158,7 +158,8 @@ tier, including `fable`).
 When `.wit/models.md` is **absent**, **setup** asks once (*"Model routing: smart, simple, or custom?"*),
 pre-fill from the chosen preset (`wit-researcher`'s literal is computed once as one tier below the
 chosen orchestrator tier), confirm the per-role rows (and any per-agent override), and write the file
-(setup's `chore(wit): setup` commit covers it). **`--auto`** writes the **simple** preset plus
+**without** `## Token ledger` (setup:7 asks and writes that heading). Setup's `chore(wit): setup`
+commit covers it. **`--auto`** writes the **simple** preset plus
 `## Token ledger` with `ledger | on` and logs it as an assumption. Either way the file persists and
 is **never re-asked** (edit `.wit/models.md` to change it). When the file exists, skip the write.
 Setup does not seed `## Model routing (resolved)` (no feature folder); apply and resolve-once stay at

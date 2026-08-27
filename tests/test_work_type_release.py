@@ -70,7 +70,7 @@ def wit_plugin_version(marketplace: dict) -> str | None:
 
 
 class ManifestLockstepTests(unittest.TestCase):
-    def test_three_plugin_versions_are_exactly_1_15_0(self):
+    def test_three_plugin_versions_are_exactly_1_16_2(self):
         plugin = json.loads(load(PLUGIN))
         marketplace = json.loads(load(MARKETPLACE))
         codex = json.loads(load(CODEX))
@@ -83,7 +83,7 @@ class ManifestLockstepTests(unittest.TestCase):
         self.assertEqual({v_plugin, v_codex, v_market}, {RELEASE})
         self.assertEqual(marketplace.get("metadata", {}).get("version"), MARKETPLACE_CATALOG)
 
-    def test_manifest_descriptions_keep_four_commands_and_five_hosts(self):
+    def test_manifest_descriptions_keep_five_commands_and_five_hosts(self):
         plugin = json.loads(load(PLUGIN))
         marketplace = json.loads(load(MARKETPLACE))
         wit = next(p for p in marketplace["plugins"] if p.get("name") == "wit")
@@ -114,7 +114,7 @@ class FiveCommandTests(unittest.TestCase):
 
 
 class SourceMemoryTests(unittest.TestCase):
-    def test_overview_routes_work_types_at_1_15_0(self):
+    def test_overview_routes_work_types_at_1_16_2(self):
         text = load(OVERVIEW)
         self.assertIn(RELEASE, text)
         self.assertNotIn("1.16.1", text)

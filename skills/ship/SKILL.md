@@ -104,7 +104,7 @@ Make the docs match reality before the PR: update what this change *actually* af
 blanket re-document.
 - **Architecture diagram:** a change that added or removed a module, dependency, layer, or external
   service updates `.wit/architecture.md` (mermaid graph + legend). Absent (a greenfield project's first
-  feature) → create it from scan's template (scan's docs are committed where written,
+  feature) → create it from setup's template (setup's docs are committed where written,
   wit-directory.md's project-level rule, so absence really means greenfield). Then validate it:
   `python ${PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py .wit/architecture.md`; fix every
   error it reports. (python fallback: workflow.md "Script invocation"; holds for every script in this

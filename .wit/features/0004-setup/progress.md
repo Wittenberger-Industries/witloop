@@ -3,7 +3,7 @@ type: Feature Progress
 title: "/wit-setup first-run"
 description: Fifth advertised command owns first-run; scan is refresh-only; models and ledger toggle live in setup.
 feature: 0004-setup
-status: build
+status: ship
 timestamp: 2026-08-27
 ---
 
@@ -11,7 +11,7 @@ timestamp: 2026-08-27
 
 - **Slug:** 0004-setup
 - **Created:** 2026-08-27
-- **Phase:** build
+- **Phase:** ship
 - **Gate mode:** interactive
 - **Flow:** dev
 - **Work type:** feature
@@ -47,6 +47,12 @@ timestamp: 2026-08-27
 - 2026-08-27T23:14:23+03:00 **Update** task 3 done
 - 2026-08-27T23:20:43+03:00 **Update** task 4 done
 - 2026-08-27T23:31:12+03:00 **Update** task 5 done
+- 2026-08-27T23:32:22+03:00 **Update** phase = ship (ship engine engaged (wit 1.16.2))
+- 2026-08-27T23:32:22+03:00 verification via superpowers:verification-before-completion
+- 2026-08-27T23:33:40+03:00 **Update** retarget: rebased onto origin/master after PR #94 squash-merge; 0003 commits dropped
+- 2026-08-27T23:33:40+03:00 review via wit-code-checker + superpowers:requesting-code-review[inline]
+- 2026-08-27T23:33:40+03:00 cross-provider layer skipped (none)
+- 2026-08-27T23:38:00+03:00 **Update** ship:3 retarget advertised scan leftover (checker WARNINGs 1-3)
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Setup skill plus five-command lockstep

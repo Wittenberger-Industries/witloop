@@ -6,7 +6,7 @@ timestamp: 2026-08-25
 ---
 
 # Architecture - Witloop
-_Diagrammed 2026-08-19; updated for the capability table (ADR-0001), work-type routing (1.15.0), and generic PLUGIN_ROOT (1.16.0)._
+_Diagrammed 2026-08-19; updated for the capability table (ADR-0001), work-type routing (1.15.0), generic PLUGIN_ROOT (1.16.0), and /wit:setup first-run (1.16.2)._
 
 ```mermaid
 flowchart TD

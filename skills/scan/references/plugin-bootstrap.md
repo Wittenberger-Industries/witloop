@@ -9,7 +9,7 @@ tags: [scan, reference]
 # Plugin bootstrap: the skills wit works best with
 
 wit runs standalone, but it's deliberately thin and gets much stronger when it can delegate to a few
-existing skills. On first scan, check what's installed and **offer** to add the rest. Never install
+existing skills. On first setup, check what's installed and **offer** to add the rest. Never install
 without asking; never block if the user declines.
 
 ## How to check availability

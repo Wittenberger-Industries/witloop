@@ -86,7 +86,9 @@ Do not seed `## Model routing (resolved)` here.
 6. **Models preset.** If `.wit/models.md` is **absent**, follow `${PLUGIN_ROOT}/references/models.md`
    **"First-run setup"**: interactive → ask once (*"Model routing: smart, simple, or custom?"*),
    pre-fill from the chosen preset, write the file. **`--auto`** writes the **simple** preset without
-   asking. Do not duplicate the preset tables here. When the file exists, skip the write. Do not
+   asking. Do not duplicate the preset tables here. Interactive write **omits** `## Token ledger`
+   (setup:7 writes it after the ask). `--auto` writes that heading with `ledger | on` in the same
+   sitting. When the file exists, skip the write. Do not
    seed `## Model routing (resolved)` (no feature folder yet; that stays at `dev:2` / rpa seed).
 
 7. **Token ledger.** If `.wit/models.md` has no `## Token ledger` heading, ask once whether this

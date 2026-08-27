@@ -31,6 +31,14 @@ INVESTIGATION = ROOT / "skills" / "dev" / "references" / "investigation.md"
 MODELS = ROOT / "references" / "models.md"
 DEV_NOTES = ROOT / "docs" / "design-notes" / "dev.md"
 RPA_NOTES = ROOT / "docs" / "design-notes" / "rpa.md"
+README = ROOT / "README.md"
+AGENTS = ROOT / "AGENTS.md"
+GLOSSARY = ROOT / ".wit" / "glossary.md"
+SCAN_ALIAS = ROOT / "references" / "skill-aliases" / "wit-scan" / "SKILL.md"
+CURSOR_TOOLS = ROOT / "references" / "cursor-tools.md"
+PLUGIN_JSON = ROOT / ".claude-plugin" / "plugin.json"
+CODEX_PLUGIN = ROOT / ".codex-plugin" / "plugin.json"
+MARKETPLACE = ROOT / ".claude-plugin" / "marketplace.json"
 SHIP = ROOT / "skills" / "ship" / "SKILL.md"
 BUILD = ROOT / "skills" / "build" / "SKILL.md"
 RESEARCH = ROOT / "skills" / "research" / "SKILL.md"
@@ -148,6 +156,14 @@ class SetupSkillTests(unittest.TestCase):
         self.assertIn("--auto", text)
         self.assertIn("simple", text)
         self.assertIn("ledger | on", text)
+
+    def test_interactive_models_write_omits_token_ledger_until_step_7(self):
+        text = load(SETUP)
+        self.assertIn("omits", text)
+        self.assertIn("## Token ledger", text)
+        models = load(MODELS)
+        self.assertIn("without", models)
+        self.assertIn("## Token ledger", models)
 
     def test_missing_repo_map_is_the_empty_project_path(self):
         text = load(SETUP)
@@ -303,6 +319,20 @@ class SetupAliasTests(unittest.TestCase):
         self.assertIn("wit-setup/", text)
         self.assertIn("/wit-setup", text)
         self.assertIn("$wit-setup", text)
+
+    def test_plugin_bootstrap_offer_runs_on_first_setup(self):
+        text = load(PLUGIN_BOOTSTRAP)
+        self.assertIn("On first setup", text)
+        self.assertNotIn("On first scan", text)
+
+    def test_host_maps_attribute_alias_copy_to_setup_bootstrap(self):
+        for path in (GROK_TOOLS, COPILOT_TOOLS, CODEX_TOOLS):
+            text = load(path)
+            self.assertNotIn("scan's bootstrap", text, path)
+            self.assertIn("setup's bootstrap", text)
+
+    def test_copilot_invoke_list_includes_setup(self):
+        self.assertIn("/wit setup", load(COPILOT_TOOLS))
 
     def test_host_maps_mention_wit_setup(self):
         self.assertIn("/wit-setup", load(COPILOT_TOOLS))
@@ -531,6 +561,55 @@ class LedgerSkipTests(unittest.TestCase):
         for path in LEDGER_OWNED:
             text = load(path)
             self.assertNotIn(EM_DASH, text, path)
+
+
+class AdvertisedScanRetargetTests(unittest.TestCase):
+    def test_readme_scan_row_is_refresh_only(self):
+        text = load(README)
+        table = "\n".join(
+            line for line in text.splitlines() if line.startswith("| **`/wit:")
+        )
+        scan_row = next(line for line in table.splitlines() if "/wit:scan" in line)
+        self.assertNotIn("bootstraps", scan_row)
+        self.assertIn("Refresh-only", scan_row)
+        self.assertIn("setup", scan_row)
+
+    def test_wit_scan_alias_is_refresh_not_bootstrap(self):
+        fm = frontmatter(load(SCAN_ALIAS))
+        self.assertIn("refresh", fm.lower())
+        self.assertNotIn("bootstrap wit in", fm.lower())
+
+    def test_manifests_say_scan_refreshes_not_bootstraps(self):
+        for path in (PLUGIN_JSON, CODEX_PLUGIN, MARKETPLACE):
+            text = load(path)
+            self.assertNotIn("documents and bootstraps", text, path)
+            self.assertIn("refreshes the map", text)
+
+    def test_glossary_setup_tell_is_missing_repo_map(self):
+        text = load(GLOSSARY)
+        self.assertIn("repo-map.md", text)
+        self.assertNotIn("Missing `.wit/` at scan", text)
+
+    def test_dev_preflight_and_ship_point_at_setup_not_scan(self):
+        self.assertIn("setup's guided setup", load(DEV))
+        self.assertNotIn("scan's guided setup", load(DEV))
+        ship = load(SHIP)
+        self.assertIn("setup's template", ship)
+        self.assertNotIn("scan's template", ship)
+
+    def test_agents_and_readme_alias_copy_is_setup_bootstrap(self):
+        self.assertIn("setup's bootstrap", load(AGENTS))
+        self.assertNotIn("scan's bootstrap", load(AGENTS))
+        self.assertIn("after setup copies aliases", load(README))
+
+    def test_cursor_stamp_list_includes_setup(self):
+        text = load(CURSOR_TOOLS)
+        self.assertIn("setup / scan / dev / rpa", text)
+
+    def test_wit_directory_tree_attributes_docs_to_setup(self):
+        text = load(WIT_DIRECTORY)
+        self.assertIn("(setup; absent for greenfield)", text)
+        self.assertIn("(setup; kept current by ship's docs-sync)", text)
 
 
 if __name__ == "__main__":

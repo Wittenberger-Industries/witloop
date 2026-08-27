@@ -39,7 +39,7 @@ and apply it as you go:
   `$wit-setup` on Codex once aliases are installed). `--auto` writes the simple models preset plus
   ledger on. Grok: prefer branded `/wit-setup` (bare `/setup` may clash).
 - Start a feature, bug-fix, or investigation: the `dev` skill (`/wit:dev` on Claude; `/wit-dev` on Copilot / `$wit-dev` on Codex once
-  scan's bootstrap has installed the flat aliases into `~/.agents/skills/`; the raw plugin forms
+  setup's bootstrap has installed the flat aliases into `~/.agents/skills/`; the raw plugin forms
   `/wit dev` and `$dev` always work; or describe the request and let it auto-trigger).
   `--kind feature|bug-fix|investigation` overrides the deduced work type. An investigation is a
   read-only cited answer (no dossier, design gate, keep-alive, or PR). A bug-fix is repro-first;

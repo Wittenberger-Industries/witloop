@@ -49,7 +49,7 @@ The standard wit install on Grok is **two steps**:
 2. **The flat `wit-*` aliases** into `~/.agents/skills/` (the shared flat-skills dir Grok scans; confirmed
    live). The bare plugin commands are `/setup`, `/scan`, `/dev`, `/rpa`, `/add-issues`; the aliases add the
    collision-free branded forms `/wit-setup`, `/wit-scan`, `/wit-dev`, `/wit-rpa`, `/wit-add-issues`. Prefer
-   branded `/wit-setup` (bare `/setup` may clash). scan's bootstrap
+   branded `/wit-setup` (bare `/setup` may clash). setup's bootstrap
    offers this copy (`skills/scan/references/plugin-bootstrap.md`); it is additive, one-time, and
    version-independent (the
    forwarders locate whatever wit plugin is installed).

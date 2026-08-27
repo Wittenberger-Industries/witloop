@@ -17,9 +17,9 @@ reasoned about. Keep every file small and current; these are working artifacts, 
 .wit/
 ├── index.md                # OKF root index (optional): directory listing; the one reserved index that MAY carry frontmatter (okf_version only).
 ├── constitution.md         # project ground rules. Written once by setup, read by every phase.
-├── repo-map.md             # cached scan facts: stack, commands, conventions, frontend/backend.
-├── overview.md             # readable docs of an EXISTING project (scan; absent for greenfield).
-├── architecture.md         # mermaid architecture diagram (scan; kept current by ship's docs-sync).
+├── repo-map.md             # cached setup facts: stack, commands, conventions, frontend/backend.
+├── overview.md             # readable docs of an EXISTING project (setup; absent for greenfield).
+├── architecture.md         # mermaid architecture diagram (setup; kept current by ship's docs-sync).
 ├── glossary.md             # project domain terms (brainstorm): canonical names + aliases to avoid.
 ├── adr/                    # project-wide decision log: ADR-0001, ADR-0002, ... + index.md
 ├── learnings.md            # INDEX of learnings: one line + hook per feature (ship). Read this, not the dir.

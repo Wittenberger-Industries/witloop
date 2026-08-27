@@ -43,8 +43,8 @@ confirmations.
 
 ## Command namespace
 `/wit:dev` etc. do not exist. Plugin-installed skills are auto-prefixed with the plugin name: wit's entry
-points invoke as `/wit scan`, `/wit dev`, `/wit rpa` (the prefix is Copilot's, not configurable; a separator
-inside a skill `name` makes it silently fail to load). For a one-token form, scan's bootstrap offers to
+points invoke as `/wit setup`, `/wit scan`, `/wit dev`, `/wit rpa` (the prefix is Copilot's, not configurable; a separator
+inside a skill `name` makes it silently fail to load). For a one-token form, setup's bootstrap offers to
 copy the flat aliases from `references/skill-aliases/` into `~/.agents/skills/`, giving `/wit-setup`,
 `/wit-scan`, `/wit-dev`, `/wit-rpa`, `/wit-add-issues` (flat skills carry no prefix). The clone + `/skills add` fallback registers skills
 flat too. The phase skills (brainstorm, research, plan, build, ship) are `user-invocable: false`: hidden

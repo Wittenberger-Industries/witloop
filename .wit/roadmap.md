@@ -13,8 +13,8 @@ It keeps only methods that close a real gap. Earlier D3 harvests already in the 
 learnings, the verification iron law, Reflection lines, glossary, `process:` close-out) are not
 re-listed as candidates.
 
-Standing fit rules: preserve brainstorm and the design gate; keep the four advertised commands unless
-the owner chooses otherwise; keep host mechanics in adapters and state in committed `.wit/`; require no
+Standing fit rules: preserve brainstorm and the design gate; keep the five advertised commands
+(setup, scan, dev, rpa, add-issues) unless the owner chooses otherwise; keep host mechanics in adapters and state in committed `.wit/`; require no
 MCP; keep one feature per PR; keep `wit-code-checker` as the single review-agent contract.
 
 Horizons are recommendations, not approval to build. `docs/roadmap.md` remains the published GitHub

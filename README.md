@@ -15,14 +15,14 @@ It runs on **four hosts**: Claude Code, GitHub Copilot CLI, Grok Build, and Curs
 | Command | What it does |
 |---------|--------------|
 | **`/wit:setup`** | First-run: repo docs, constitution, plugin offer, models preset, tokens ledger. `--auto` writes simple plus ledger on. |
-| **`/wit:scan`** | Documents the repo (including a mermaid architecture diagram) and bootstraps `.wit/` plus optional helper plugins. `--refresh` drift-checks the map. |
+| **`/wit:scan`** | Refresh-only: drift-checks the map and consolidates learnings. Missing `repo-map.md` runs setup first. Bare invoke is silent `--refresh`. |
 | **`/wit:dev "idea"`** | Routes `feature`, `bug-fix`, or `investigation`, then runs that path. `--kind` overrides. Add `--auto` to auto-approve the design gate. |
 | **`/wit:rpa "pdd"`** | Reads a PDD, refines the TO-BE with you, writes an SDD, then builds REFramework or Maestro (XAML or coded) to a PR. `--auto` supported. |
 | **`/wit:add-issues`** | Files a GitHub Bug, Feature, or Task via `gh`. To file a bug as an issue, use this, not `/wit:dev`. |
 
 Only these five entry points show up as slash commands. Brainstorm, research, plan, build, and ship stay hidden and run inside the loop. Natural language still triggers them ("ship it", "scan this repo").
 
-On Claude the names are `/wit:scan` and so on. Copilot uses `/wit-scan` after scan copies aliases into `~/.agents/skills/` (`/wit scan` always works). Grok uses `/scan` or `/wit-scan`. Cursor loads plugin skills and auto-triggers from each skill description.
+On Claude the names are `/wit:setup` and so on. Copilot uses `/wit-setup` after setup copies aliases into `~/.agents/skills/` (`/wit setup` always works). Grok uses `/wit-setup` (prefer branded; bare `/setup` may clash). Cursor loads plugin skills and auto-triggers from each skill description.
 
 ## Work types
 

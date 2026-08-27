@@ -85,7 +85,7 @@ If the work type is `investigation`, load `${PLUGIN_ROOT}/skills/dev/references/
    before printing anything:
    - **The gate commands are real.** The lint + test commands about to be embedded in the condition must
      exist in `repo-map.md` and not be `UNKNOWN - ask` (greenfield gaps). UNKNOWN → resolve it now (one
-     question, or scan's guided setup); never arm a condition no checker can verify. A command genuinely
+     question, or setup's guided setup); never arm a condition no checker can verify. A command genuinely
      absent from the project (no linter configured) is recorded as `n/a - not configured` and **passes**
      the preflight; the keep-alive condition renders without that clause (keep-alive.md's fill rule);
      only `UNKNOWN` blocks.

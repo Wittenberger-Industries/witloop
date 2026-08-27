@@ -28,7 +28,7 @@ PLUGIN_INVESTIGATION = (
 )
 PLUGIN_BUG_FIX = "${PLUGIN_ROOT}/skills/dev/references/bug-fix.md"
 PLUGIN_WORK_TYPES = "${PLUGIN_ROOT}/skills/dev/references/work-types.md"
-USER_COMMANDS = ("add-issues", "dev", "rpa", "scan")
+USER_COMMANDS = ("add-issues", "dev", "rpa", "scan", "setup")
 
 
 def frontmatter(text: str) -> str:

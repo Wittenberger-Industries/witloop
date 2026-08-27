@@ -43,6 +43,7 @@ timestamp: 2026-08-27
 - 2026-08-27T22:52:56+03:00 worktree via superpowers (already on wit/0004-setup; isolate in place)
 - 2026-08-27T22:52:56+03:00 tdd via superpowers:test-driven-development
 - 2026-08-27T23:02:42+03:00 **Update** task 1 done
+- 2026-08-27T23:02:42+03:00 **Update** in-scope gap: test_work_type_routing.py USER_COMMANDS (same lockstep)
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Setup skill plus five-command lockstep

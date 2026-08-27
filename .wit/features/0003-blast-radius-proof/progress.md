@@ -3,7 +3,7 @@ type: Feature Progress
 title: Ship verification honesty
 description: Require a proven or unproven safety fact at ship, and never silent-PASS an unmeasured check.
 feature: 0003-blast-radius-proof
-status: build
+status: ship
 timestamp: 2026-08-27
 ---
 
@@ -11,7 +11,7 @@ timestamp: 2026-08-27
 
 - **Slug:** 0003-blast-radius-proof
 - **Created:** 2026-08-27
-- **Phase:** build
+- **Phase:** ship
 - **Gate mode:** interactive
 - **Flow:** dev
 - **Work type:** feature
@@ -45,6 +45,10 @@ timestamp: 2026-08-27
 - 2026-08-27T21:18:59+03:00 **Update** task 1 done (parent takeover after user-backgrounded runner)
 - 2026-08-27T21:18:59+03:00 **Update** task 2 done
 - 2026-08-27T21:18:59+03:00 **Update** task 3 done
+- 2026-08-27T21:22:26+03:00 **Update** phase = ship (ship engine engaged (wit 1.16.0))
+- 2026-08-27T21:22:26+03:00 verification via superpowers:verification-before-completion
+- 2026-08-27T21:22:26+03:00 review via wit-code-checker + superpowers:requesting-code-review[inline]
+- 2026-08-27T21:22:26+03:00 cross-provider layer skipped (provider none)
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Checker result-mode rows

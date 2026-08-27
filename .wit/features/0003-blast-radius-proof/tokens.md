@@ -25,6 +25,7 @@ elapsed time or the orchestrator's own dispatch/arrival stamps (OS clock); write
 | build | parent: task 1 | unavailable | unavailable | Host tokens cell unavailable; implemented in orchestrator session |
 | build | parent: task 2 | unavailable | unavailable | Host tokens cell unavailable; implemented in orchestrator session |
 | build | parent: task 3 | unavailable | unavailable | Host tokens cell unavailable; implemented in orchestrator session |
+| ship | checker: result-mode | unavailable | unavailable | Host tokens cell unavailable; no notification counts |
 
 **Subagents (exact): <sum>.**
 **Σ compute: <dur> across <n> dispatches.**

@@ -25,6 +25,12 @@ PLUGIN_BOOTSTRAP = ROOT / "skills" / "scan" / "references" / "plugin-bootstrap.m
 GROK_TOOLS = ROOT / "references" / "grok-tools.md"
 COPILOT_TOOLS = ROOT / "references" / "copilot-tools.md"
 CODEX_TOOLS = ROOT / "references" / "codex-tools.md"
+DEV = ROOT / "skills" / "dev" / "SKILL.md"
+RPA = ROOT / "skills" / "rpa" / "SKILL.md"
+INVESTIGATION = ROOT / "skills" / "dev" / "references" / "investigation.md"
+MODELS = ROOT / "references" / "models.md"
+DEV_NOTES = ROOT / "docs" / "design-notes" / "dev.md"
+RPA_NOTES = ROOT / "docs" / "design-notes" / "rpa.md"
 EM_DASH = "\u2014"
 RUNTIME_NEVER = re.compile(
     r"runtime never reads this file|never loaded at runtime",
@@ -46,6 +52,14 @@ ALIAS_OWNED = (
     GROK_TOOLS,
     COPILOT_TOOLS,
     CODEX_TOOLS,
+)
+INVOKE_OWNED = (
+    DEV,
+    RPA,
+    INVESTIGATION,
+    MODELS,
+    DEV_NOTES,
+    RPA_NOTES,
 )
 
 
@@ -269,5 +283,99 @@ class SetupAliasTests(unittest.TestCase):
             self.assertNotIn(EM_DASH, text, path)
 
 
+class SetupInvokeTests(unittest.TestCase):
+    def test_scan_dev_rpa_missing_repo_map_run_setup_first(self):
+        scan = load(SCAN)
+        self.assertRegex(scan, r"(?i)\*\*run setup\*\*")
+        for path in (DEV, RPA):
+            text = load(path)
+            self.assertRegex(
+                text,
+                r"(?i)If `?\.wit/repo-map\.md`? is missing, run \*\*setup\*\* first",
+            )
+            self.assertRegex(text, r"forward `--auto`")
+            self.assertRegex(text, r"(?i)then continue")
+            self.assertNotRegex(
+                text,
+                r"(?i)If `?\.wit/repo-map\.md`? is missing, run \*\*scan\*\* first",
+            )
+
+    def test_add_issues_does_not_invoke_setup(self):
+        text = load(ADD_ISSUES)
+        self.assertNotRegex(text, r"(?i)\*\*run setup\*\*")
+        self.assertNotRegex(text, r"(?i)run setup first")
+        self.assertNotIn("skills/setup/SKILL.md", text)
+        self.assertNotRegex(text, r"(?i)If `?\.wit/repo-map\.md`? is missing")
+
+    def test_investigation_exits_before_setup(self):
+        prelude = load(DEV)
+        self.assertRegex(
+            prelude,
+            r"(?s)If the work type is `investigation`.+exit",
+        )
+        self.assertRegex(prelude, r"no host probe, setup")
+        inv = load(INVESTIGATION)
+        self.assertRegex(inv, r"(?i)do not run setup")
+        self.assertNotRegex(inv, r"(?i)\*\*run setup\*\* first")
+
+    def test_dev_and_rpa_drop_models_write_keep_resolve_once(self):
+        for path in (DEV, RPA):
+            text = load(path)
+            self.assertNotRegex(text, r"(?i)Model routing first-run setup")
+            self.assertNotIn("set up `.wit/models.md` if absent", text)
+            self.assertIn("## Model routing (resolved)", text)
+            self.assertRegex(text, r"(?i)resolve the routing once")
+            self.assertNotRegex(
+                text,
+                r"(?i)write the file \*\*and commit it\*\*",
+            )
+
+    def test_models_first_run_is_setup_entry_with_auto_simple_and_ledger_on(self):
+        text = load(MODELS)
+        self.assertIn("## First-run setup (setup)", text)
+        self.assertNotIn("## First-run setup (dev / rpa entry points)", text)
+        start = text.find("## First-run setup")
+        end = text.find("## Dispatch rule")
+        self.assertGreaterEqual(start, 0)
+        self.assertGreater(end, start)
+        section = text[start:end]
+        self.assertIn("--auto", section)
+        self.assertIn("simple", section)
+        self.assertIn("ledger | on", section)
+
+    def test_token_ledger_heading_key_on_or_skip_absent_is_on(self):
+        text = load(MODELS)
+        self.assertIn("## Token ledger", text)
+        self.assertRegex(text, r"(?m)^\|\s*ledger\s*\|")
+        self.assertRegex(text, r"`on`\s*\|\s*`skip`")
+        self.assertRegex(text, r"(?i)absent or not-exact-`skip` is `on`")
+
+    def test_absent_models_with_map_runs_setup_models_ledger_slice_only(self):
+        for path in (DEV, RPA):
+            text = load(path)
+            self.assertRegex(text, r"(?i)models\+ledger slice")
+            self.assertRegex(text, r"(?i)slice only")
+
+    def test_design_notes_sync_setup_first_and_resolve_once(self):
+        dev = load(DEV_NOTES)
+        self.assertRegex(dev, r"(?i)setup-first")
+        self.assertNotIn("Why scan-first is a hard precondition", dev)
+        self.assertIn("## Model routing (resolved)", dev)
+        self.assertRegex(dev, r"(?i)models\+ledger")
+        rpa = load(RPA_NOTES)
+        self.assertRegex(rpa, r"(?i)run setup")
+        self.assertRegex(rpa, r"(?i)repo-map")
+        self.assertNotIn(
+            "Why the first-run setup is a trigger plus a citation",
+            rpa,
+        )
+
+    def test_no_em_dashes_in_owned_files(self):
+        for path in INVOKE_OWNED:
+            text = load(path)
+            self.assertNotIn(EM_DASH, text, path)
+
+
 if __name__ == "__main__":
     unittest.main()
+

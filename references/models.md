@@ -71,6 +71,11 @@ timestamp: <YYYY-MM-DD>
 | proposers | opus, sonnet, sonnet |
 | layers | 1 |
 | aggregator | opus |
+
+## Token ledger
+| Key | Value |
+|------|-------|
+| ledger | <on \| skip> |
 ```
 
 Claude tiers are the Agent-dispatch tokens `fable | opus | sonnet | haiku`, plus `inherit` (= the session
@@ -148,19 +153,32 @@ its ceiling is `opus` **by design** (pricing: top tiers are never a default anyw
 *pre-fill* the table: every cell stays individually overridable (a hand-written override may name any
 tier, including `fable`).
 
-## First-run setup (dev / rpa entry points)
+## First-run setup (setup)
 
-When `.wit/models.md` is **absent** at a wit entry skill (dev:1, rpa:2): **interactive** → ask once
-(*"Model routing: smart, simple, or custom?"*), pre-fill from the chosen preset (`wit-researcher`'s literal
-is computed once as one tier below the chosen orchestrator tier), confirm the per-role rows (and any
-per-agent override), write the file **and commit it** (`chore(wit): models config`, the project-level rule
-in `wit-directory.md`: committed where written, so post-worktree phases read the same tracked copy).
-**`--auto`** → write + commit the **simple** preset and log it as an
-assumption. Either way the file persists and is **never re-asked** (edit `.wit/models.md` to change it). When
-the file exists, skip setup entirely, just apply it, warning once if the session model is below the
-configured orchestrator tier (the orchestrator-model rule above). Setup ends by resolving the routing once
-and recording it as the `## Model routing (resolved)` block when the feature's `progress.md` is seeded
-(dev:2 / rpa's run seed), the resolve-once rule below.
+When `.wit/models.md` is **absent**, **setup** asks once (*"Model routing: smart, simple, or custom?"*),
+pre-fill from the chosen preset (`wit-researcher`'s literal is computed once as one tier below the
+chosen orchestrator tier), confirm the per-role rows (and any per-agent override), and write the file
+(setup's `chore(wit): setup` commit covers it). **`--auto`** writes the **simple** preset plus
+`## Token ledger` with `ledger | on` and logs it as an assumption. Either way the file persists and
+is **never re-asked** (edit `.wit/models.md` to change it). When the file exists, skip the write.
+Setup does not seed `## Model routing (resolved)` (no feature folder); apply and resolve-once stay at
+dev:1 / rpa:2 per the Dispatch rule below. Apply an existing file at those entries, warning once if
+the session model is below the configured orchestrator tier (the orchestrator-model rule above).
+
+## Token ledger
+
+Project-level keep-or-skip for `tokens.md`, stored under this heading in `.wit/models.md`:
+
+```markdown
+## Token ledger
+| Key | Value |
+|------|-------|
+| ledger | on |
+```
+
+Key `ledger` values `on` | `skip`. Absent or not-exact-`skip` is `on` (fail-closed; old repos keep
+today's ledger). Interactive setup asks once; `--auto` always writes `on`. Never re-asked; no
+mid-run toggle.
 
 ## Dispatch rule (build, research, ship, rpa): resolve once, dispatch many
 

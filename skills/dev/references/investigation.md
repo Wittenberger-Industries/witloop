@@ -19,6 +19,7 @@ description-match. Investigation is an exit, not a loop phase.
 
 Skip all of these this turn:
 
+- setup (do not run setup; no first-run writes)
 - scan writes (`repo-map.md`, constitution, and any `--refresh` write)
 - `.wit/models.md` create
 - `.wi/` rename
@@ -27,7 +28,7 @@ Skip all of these this turn:
 - feature folder, dossier seed, and `progress.md` create
 
 If `.wit/repo-map.md`, constitution, or `.wit/adr/` already exist, **read** them as evidence. If they
-do not, explore the live tree. Do not run scan to create them.
+do not, explore the live tree. Do not run setup or scan to create them.
 
 Host and plugin-root resolve may run **in memory** so `discover_skills.py` can be invoked. Do not
 stamp `progress.md`.
@@ -113,6 +114,7 @@ The route must not:
 - Write `progress.md`
 - Write `brief.md`, `tokens.md`, ADRs, `roadmap.md`, or `.wit/models.md`
 - Run scan writes
+- Invoke setup
 - Print or arm keep-alive
 - Create a branch, worktree, commit, or PR
 - Make product-file edits

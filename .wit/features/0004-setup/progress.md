@@ -43,13 +43,13 @@ timestamp: 2026-08-27
 - 2026-08-27T22:52:56+03:00 worktree via superpowers (already on wit/0004-setup; isolate in place)
 - 2026-08-27T22:52:56+03:00 tdd via superpowers:test-driven-development
 - 2026-08-27T23:02:42+03:00 **Update** task 1 done
-- 2026-08-27T23:14:23+03:00 **Update** task 3 done
+- 2026-08-27T23:20:43+03:00 **Update** task 4 done
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Setup skill plus five-command lockstep
 - [x] 2. Scan is refresh-only
 - [x] 3. Alias and bootstrap copy list
-- [ ] 4. Dev/rpa invoke setup; models first-run moves
+- [x] 4. Dev/rpa invoke setup; models first-run moves
 - [ ] 5. Honor ledger skip
 
 ## Decisions / blockers

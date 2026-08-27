@@ -31,6 +31,9 @@ capability table** (`${PLUGIN_ROOT}/references/capabilities.md` Host probe; same
 `wit:dev`). Plugin root per capabilities.md **Plugin root** (never pass unexpanded `${PLUGIN_ROOT}`).
 When the run's `progress.md` is seeded (step 2), copy that host's cells into
 `Host:`, `Plugin root (resolved):`, and `## Capabilities (resolved)`. Stamp every host including claude.
+If `.wit/repo-map.md` is missing, run **setup** first (forward `--auto` when present), then continue.
+`.wi/` with no `.wit/` is the same tell. Map present but `.wit/models.md` absent → run setup's
+**models+ledger slice only** (setup:6-7; not a full first-run).
 
 1. **Bootstrap the prerequisites.** Follow `${PLUGIN_ROOT}/skills/rpa/references/uipath-bootstrap.md`:
    ensure **markitdown**, the **UiPath skills** plugin, and the **.NET 8 runtime** are installed (offer to
@@ -40,14 +43,15 @@ When the run's `progress.md` is seeded (step 2), copy that host's cells into
    `${PLUGIN_ROOT}/skills/rpa/references/ingest.md`: derive the **numbered run-slug**
    (`NNNN-<name>`, the next global 4-digit ordinal; ingest:1); catalog the repo's supporting files into
    `.wit/inputs.md`; detect reusable components into `.wit/components.md`; convert the PDD to `pdd.md` with
-   markitdown (skip if it's already Markdown). Run the **model routing first-run setup** here too
-   (`${PLUGIN_ROOT}/references/models.md` "First-run setup"), then resolve the routing once per
-   that reference and record the `## Model routing (resolved)` block when the run's `progress.md` is
-   seeded (rpa-directory.md's template); every build delegation reads the block's `rpa-build` cell (a
-   routing role label, resolved per models.md), and at ship the cross-provider diff review layers on top
-   of wit-code-checker's result-mode pass, per `wit:ship`. The project-level `.wit/`
-   outputs of rpa:1–3 (`inputs.md`,
-   `components.md`, `orchestrator.md`, `models.md`, a first-run `rpa-constitution.md`) are **committed
+   markitdown (skip if it's already Markdown). Apply `.wit/models.md` if present (warn once on an
+   orchestrator-tier mismatch) and resolve the routing once per
+   `${PLUGIN_ROOT}/references/models.md` **Dispatch rule**; record the
+   `## Model routing (resolved)` block when the run's `progress.md` is seeded
+   (rpa-directory.md's template). Do not write `.wit/models.md` from this skill. Every build
+   delegation reads the block's `rpa-build` cell (a routing role label, resolved per models.md), and
+   at ship the cross-provider diff review layers on top of wit-code-checker's result-mode pass, per
+   `wit:ship`. The project-level `.wit/` outputs of rpa:1–3 (`inputs.md`,
+   `components.md`, `orchestrator.md`, a first-run `rpa-constitution.md`) are **committed
    where written** (`chore(wit): …`, the project-level rule in `wit-directory.md`).
 3. **Brainstorm: refine the TO-BE (the one conversation).** Follow
    `${PLUGIN_ROOT}/skills/rpa/references/brainstorm-protocol.md`: take the PDD's **existing ToBe as

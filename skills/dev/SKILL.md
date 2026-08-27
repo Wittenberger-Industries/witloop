@@ -26,8 +26,8 @@ never loaded at runtime).
 
 ## Procedure
 
-**Work type first (read-only prelude).** Before the host probe, scan, models, or any other
-write-capable setup: parse `--auto` and `--kind` in memory (do not write yet). Valid `--kind` values
+**Work type first (read-only prelude).** Before the host probe, setup, models, or any other
+write-capable step: parse `--auto` and `--kind` in memory (do not write yet). Valid `--kind` values
 are `feature|bug-fix|investigation`; an invalid value **stops** with that set (no silent infer). Load
 `${PLUGIN_ROOT}/skills/dev/references/work-types.md` and deduce by semantic orchestrator
 judgment of the user's intent (not a keyword-only runtime classifier). Mixed or unclear intent
@@ -36,9 +36,9 @@ defaults to `feature`. Never ask. Never route silently. Always print exactly:
 (source is `kind`, `inferred`, or `ambiguous-default`). On resume, honor a stamped `Work type:`
 without re-deduction unless `--kind` is present; the override wins. A missing stamp means `feature`.
 If the work type is `investigation`, load `${PLUGIN_ROOT}/skills/dev/references/investigation.md` and exit
-(no host probe, scan, models, or feature-folder writes). Feature and bug-fix continue at step 1.
+(no host probe, setup, models, or feature-folder writes). Feature and bug-fix continue at step 1.
 
-1. **Host probe (once), then ensure the project is scanned, and current.** Detect the running harness
+1. **Host probe (once), then ensure the project is set up, and current.** Detect the running harness
    (`claude` | `codex` | `copilot` | `grok` | `cursor`). Tells: **cursor** when AskQuestion is on
    the session (or Task `subagent_type` includes `wit-*`, or agent-transcripts under `~/.cursor`),
    preferring cursor when `AskQuestion` exists and plugin-root env vars are empty;
@@ -47,15 +47,16 @@ If the work type is `investigation`, load `${PLUGIN_ROOT}/skills/dev/references/
    `${PLUGIN_ROOT}`; stamp the absolute path). When seeding `progress.md` (step 2), copy that host's cells from **the capability
    table** into `Host:`, `Plugin root (resolved):`, and `## Capabilities (resolved)`. Stamp every host
    including claude (`Host: claude` when that is the harness). Later phases read the stamp; never re-guess.
-   If the project has a legacy `.wi/` (pre-1.12.2 name)
-   and no `.wit/`, rename it first (`git mv .wi .wit`, one commit; ask unless `--auto`).
-   If `.wit/repo-map.md` is missing, run **scan** first;
-   don't proceed without a repo map and constitution. Stale (`scanned` stamp older than ~2 weeks, or
+   If `.wit/repo-map.md` is missing, run **setup** first (forward `--auto` when present), then continue;
+   don't proceed without a repo map and constitution. `.wi/` with no `.wit/` is the same tell (setup
+   owns the rename). Stale (`scanned` stamp older than ~2 weeks, or
    config/lock/CI files changed since it) → run the scan skill's **`--refresh`** drift pass before
    building on the map.
-   **Model routing first-run setup** here (`${PLUGIN_ROOT}/references/models.md` "First-run
-   setup"): set up `.wit/models.md` if absent, else apply it, then resolve the routing once per that
-   reference. dev:2 records the result as the `## Model routing (resolved)` block when `progress.md` is
+   Map present but `.wit/models.md` absent → run setup's **models+ledger slice only** (setup:6-7; not
+   a full first-run). Then apply `.wit/models.md` if present, warning once if the session model is
+   below the configured orchestrator tier, and resolve the routing once per
+   `${PLUGIN_ROOT}/references/models.md` **Dispatch rule**. Do not write `.wit/models.md` from this
+   skill. dev:2 records the result as the `## Model routing (resolved)` block when `progress.md` is
    seeded, and a resumed feature missing the block gets it written on re-entry; every later dispatch reads
    the block, not `.wit/models.md`.
 2. **Open the feature folder, or route the edge case first.** Parse flags: `--auto` sets

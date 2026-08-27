@@ -28,21 +28,25 @@ deleted instead of relocated loses its guard against future "simplification".
 
 - **Why the .NET 8 runtime is a prerequisite:** the `uip` CLI and the UiPath build toolchain need it;
   the check/install mechanics live in `uipath-bootstrap.md`, which the step follows.
+- **Why missing `repo-map.md` runs setup first:** rpa used to skip project first-run entirely; a
+  greenfield `/wit:rpa` would have no map or constitution. The one-liner after the host probe
+  (forward `--auto`, then continue) is new required behavior, not a simplification to drop. Map
+  present but models.md absent is the upgrade hole: run setup's models+ledger slice only.
 
 ## rpa:2 (ingest and register)
 
 - **Why the run-slug is numbered:** `NNNN-<name>` mirrors the `ADR-NNNN` convention, one global 4-digit
   ordinal so runs list in implementation order; the derivation detail is canonical in ingest:1
   (wit-directory.md's Slugs bullet).
-- **Why the first-run setup is a trigger plus a citation:** models.md "First-run setup" is canonical
-  for the whole procedure, including the warn-once on an orchestrator-tier mismatch; restating it in
-  the skill was belt-and-suspenders and drifted twice historically.
+- **Why rpa does not write `.wit/models.md`:** first-run write (preset plus ledger) is setup's;
+  rpa:2 only applies the file and resolve-once into `## Model routing (resolved)`. Restating the
+  write in this skill drifted twice historically.
 - **Why `rpa-build` is a role label:** there is no `agents/rpa-build.md`; the label exists so RPA build
   delegations can be routed independently of the other roles without registering a new agent. The
   resolution chain (override → `wit-task-runner` role → `inherit`) is canonical in models.md's dispatch
   rule.
 - **Why project-level outputs commit where written:** the post-gate worktree branches from main and
-  must already carry `inputs.md` / `components.md` / `orchestrator.md` / `models.md` /
+  must already carry `inputs.md` / `components.md` / `orchestrator.md` /
   `rpa-constitution.md`; the canonical statement is rpa-directory.md's "Project-level files" bullets.
 - **A trimmed restatement:** the old step 2 also noted that at ship the cross-provider diff review
   layers on top of wit-code-checker's result-mode pass; that is ship:2's rule (rpa:7 reuses ship), and

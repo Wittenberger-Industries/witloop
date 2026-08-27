@@ -20,6 +20,11 @@ WORKFLOW = ROOT / "references" / "workflow.md"
 INTEGRATIONS = ROOT / "skills" / "research" / "references" / "integrations.md"
 ADD_ISSUES = ROOT / "skills" / "add-issues" / "SKILL.md"
 ARCHITECTURE = ROOT / ".wit" / "architecture.md"
+SETUP_ALIAS = ROOT / "references" / "skill-aliases" / "wit-setup" / "SKILL.md"
+PLUGIN_BOOTSTRAP = ROOT / "skills" / "scan" / "references" / "plugin-bootstrap.md"
+GROK_TOOLS = ROOT / "references" / "grok-tools.md"
+COPILOT_TOOLS = ROOT / "references" / "copilot-tools.md"
+CODEX_TOOLS = ROOT / "references" / "codex-tools.md"
 EM_DASH = "\u2014"
 RUNTIME_NEVER = re.compile(
     r"runtime never reads this file|never loaded at runtime",
@@ -34,6 +39,13 @@ SCAN_OWNED = (
     CAPABILITIES,
     INTEGRATIONS,
     ADD_ISSUES,
+)
+ALIAS_OWNED = (
+    SETUP_ALIAS,
+    PLUGIN_BOOTSTRAP,
+    GROK_TOOLS,
+    COPILOT_TOOLS,
+    CODEX_TOOLS,
 )
 
 
@@ -212,6 +224,47 @@ class ScanRefreshTests(unittest.TestCase):
 
     def test_no_em_dashes_in_owned_files(self):
         for path in SCAN_OWNED:
+            text = load(path)
+            self.assertNotIn(EM_DASH, text, path)
+
+
+class SetupAliasTests(unittest.TestCase):
+    def test_wit_setup_forwarder_exists_and_passes_auto(self):
+        text = load(SETUP_ALIAS)
+        fm = frontmatter(text)
+        self.assertIn("type: Skill", fm)
+        self.assertRegex(fm, r"(?m)^name:\s*wit-setup\s*$")
+        self.assertIn("/wit-setup", text)
+        self.assertIn("$wit-setup", text)
+        self.assertIn("skills/setup/SKILL.md", text)
+        self.assertIn("--auto", text)
+        self.assertRegex(text, r"passing `--auto`")
+
+    def test_alias_description_forwards_to_setup_not_bootstrap_a_folder(self):
+        fm = frontmatter(load(SETUP_ALIAS))
+        self.assertIn("setup entry point", fm)
+        self.assertNotIn("bootstrap a folder", fm.lower())
+        self.assertNotIn("scan entry point", fm)
+
+    def test_plugin_bootstrap_copy_list_includes_wit_setup(self):
+        text = load(PLUGIN_BOOTSTRAP)
+        self.assertIn("wit-setup/", text)
+        self.assertIn("/wit-setup", text)
+        self.assertIn("$wit-setup", text)
+
+    def test_host_maps_mention_wit_setup(self):
+        self.assertIn("/wit-setup", load(COPILOT_TOOLS))
+        self.assertIn("/wit-setup", load(GROK_TOOLS))
+        self.assertIn("$wit-setup", load(CODEX_TOOLS))
+
+    def test_grok_notes_branded_wit_setup_if_bare_setup_clashes(self):
+        text = load(GROK_TOOLS)
+        self.assertRegex(text, r"branded `/wit-setup`")
+        self.assertRegex(text, r"bare `/setup`")
+        self.assertRegex(text, r"(?i)clash")
+
+    def test_no_em_dashes_in_owned_files(self):
+        for path in ALIAS_OWNED:
             text = load(path)
             self.assertNotIn(EM_DASH, text, path)
 

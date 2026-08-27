@@ -47,8 +47,9 @@ The standard wit install on Grok is **two steps**:
    source, not a local branch); a local clone + `--plugin-dir` is the fallback for testing an unpublished
    build. Publishing to the official catalog is a separate PR to `xai-org/plugin-marketplace`.
 2. **The flat `wit-*` aliases** into `~/.agents/skills/` (the shared flat-skills dir Grok scans; confirmed
-   live). The bare plugin commands are `/scan`, `/dev`, `/rpa`, `/add-issues`; the aliases add the
-   collision-free branded forms `/wit-scan`, `/wit-dev`, `/wit-rpa`, `/wit-add-issues`. scan's bootstrap
+   live). The bare plugin commands are `/setup`, `/scan`, `/dev`, `/rpa`, `/add-issues`; the aliases add the
+   collision-free branded forms `/wit-setup`, `/wit-scan`, `/wit-dev`, `/wit-rpa`, `/wit-add-issues`. Prefer
+   branded `/wit-setup` (bare `/setup` may clash). scan's bootstrap
    offers this copy (`skills/scan/references/plugin-bootstrap.md`); it is additive, one-time, and
    version-independent (the
    forwarders locate whatever wit plugin is installed).
@@ -70,7 +71,7 @@ Ids confirmed live on Grok Build `0.2.93` (spike, 2026-07-12) from the session t
 | AskUserQuestion | `ask_user_question` |
 | WebSearch | `web_search` |
 | WebFetch | `web_fetch` (also `open_page` / `open_page_with_find` for reading a page) |
-| invoke a wit skill | user-invocable skills load as bare slash commands: `/scan`, `/dev`, `/rpa`, `/add-issues` (the phase skills are `user-invocable: false`, so `/ship` etc. are not commands). On a name clash the qualifier is **scope-based** (`/user:scan`, `/local:scan`), NOT `/wit:scan` (colon-qualification is agents-only), and a built-in of the same name wins. For a collision-free branded form, install the flat `wit-*` forwarding aliases into `~/.agents/skills/` (the shared flat-skills dir Grok scans, same target as Copilot/Codex; never into Grok's own `~/.grok/skills/`) -> `/wit-scan`, `/wit-dev`, `/wit-rpa`, `/wit-add-issues`. Natural-language auto-trigger also works. (confirmed S4) |
+| invoke a wit skill | user-invocable skills load as bare slash commands: `/setup`, `/scan`, `/dev`, `/rpa`, `/add-issues` (the phase skills are `user-invocable: false`, so `/ship` etc. are not commands). On a name clash the qualifier is **scope-based** (`/user:scan`, `/local:scan`), NOT `/wit:scan` (colon-qualification is agents-only), and a built-in of the same name wins. Prefer branded `/wit-setup` if bare `/setup` clashes. For a collision-free branded form, install the flat `wit-*` forwarding aliases into `~/.agents/skills/` (the shared flat-skills dir Grok scans, same target as Copilot/Codex; never into Grok's own `~/.grok/skills/`) -> `/wit-setup`, `/wit-scan`, `/wit-dev`, `/wit-rpa`, `/wit-add-issues`. Natural-language auto-trigger also works. (confirmed S4) |
 | resolve a skill's `SKILL.md` path (dispatch pointer for pinned runners) | it is under the skill's install dir (the resolved wit root's `skills/<skill>/SKILL.md`, or `~/.agents/skills/<skill>/SKILL.md` for flat aliases); the orchestrator resolves it once and passes it in the `[frontend]`-style dispatch |
 
 ## Subagent dispatch (inline, Codex-style)

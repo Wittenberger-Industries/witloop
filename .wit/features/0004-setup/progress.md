@@ -3,7 +3,7 @@ type: Feature Progress
 title: "/wit-setup first-run"
 description: Fifth advertised command owns first-run; scan is refresh-only; models and ledger toggle live in setup.
 feature: 0004-setup
-status: ship
+status: done
 timestamp: 2026-08-27
 ---
 
@@ -11,7 +11,7 @@ timestamp: 2026-08-27
 
 - **Slug:** 0004-setup
 - **Created:** 2026-08-27
-- **Phase:** ship
+- **Phase:** done
 - **Gate mode:** interactive
 - **Flow:** dev
 - **Work type:** feature
@@ -52,7 +52,10 @@ timestamp: 2026-08-27
 - 2026-08-27T23:33:40+03:00 **Update** retarget: rebased onto origin/master after PR #94 squash-merge; 0003 commits dropped
 - 2026-08-27T23:33:40+03:00 review via wit-code-checker + superpowers:requesting-code-review[inline]
 - 2026-08-27T23:33:40+03:00 cross-provider layer skipped (none)
+- 2026-08-27T23:38:00+03:00 **Update** ship:3 retarget advertised scan leftover (checker WARNINGs 1-3)
 - 2026-08-27T23:51:04+03:00 **Update** PR opened: https://github.com/Wittenberger-Industries/witloop/pull/95
+- 2026-08-27T23:52:05+03:00 **Update** remote checks: 1/1 green · validate pass https://github.com/Wittenberger-Industries/witloop/actions/runs/33115351895/job/98668468305
+- 2026-08-27T23:52:05+03:00 **Update** phase = done https://github.com/Wittenberger-Industries/witloop/pull/95
 
 ## Tasks (mirrored from tasks.md once planned)
 - [x] 1. Setup skill plus five-command lockstep

@@ -34,10 +34,10 @@ Design rationale for this skill lives in the wit repo's `docs/design-notes/add-i
 - `gh auth status` and `gh repo view --json nameWithOwner`. If either fails, stop and tell the
   user exactly what to fix.
 - Note `gh --version` once per session: type / parent / dependency flags need ≥ 2.94.0
-  (see `${CLAUDE_PLUGIN_ROOT}/skills/add-issues/references/gh-metadata.md`).
+  (see `${PLUGIN_ROOT}/skills/add-issues/references/gh-metadata.md`).
 - Ensure `.wit/issues/` is self-gitignored before any draft lands (idempotent; same pattern as
   `.logs/` in workflow.md):
-  `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/ensure_logdir.py .wit/issues`
+  `python ${PLUGIN_ROOT}/skills/ship/scripts/ensure_logdir.py .wit/issues`
   Do not rely on a root `.gitignore` entry - scan only seeds that on greenfield setup. The
   directory is transient staging and should be empty (see wit-directory.md). If a draft is
   sitting there, a previous run didn't finish - offer to resume it or discard it before
@@ -49,7 +49,7 @@ Design rationale for this skill lives in the wit repo's `docs/design-notes/add-i
   "support", "allow", "it would be nice" → **Feature**; process, chore, refactor work →
   **Task**. Ask only when genuinely ambiguous.
 - Read the matching template in
-  `${CLAUDE_PLUGIN_ROOT}/skills/add-issues/references/templates.md` for that type's required
+  `${PLUGIN_ROOT}/skills/add-issues/references/templates.md` for that type's required
   sections.
 - `gh label list --limit 100` → propose matching existing labels. Never invent label names;
   create one only if the user explicitly asks (`gh label create`).
@@ -57,7 +57,7 @@ Design rationale for this skill lives in the wit repo's `docs/design-notes/add-i
   implies them (e.g. "part of the MoA epic" → parent). Don't ask proactively.
 - Ask ONE batched round for whatever required fields remain empty. Elicitation order: the
   superpowers plugin's brainstorming skill when available → wit's own brainstorm phase skill
-  (`${CLAUDE_PLUGIN_ROOT}/skills/brainstorm/SKILL.md`) → plain batched questions only when
+  (`${PLUGIN_ROOT}/skills/brainstorm/SKILL.md`) → plain batched questions only when
   neither exists. Then move on.
 
 ### 3. Investigate and dedup
@@ -74,9 +74,9 @@ Design rationale for this skill lives in the wit repo's `docs/design-notes/add-i
 
 - Write `.wit/issues/<slug>.md` (kebab slug from the title; uniquify on collision) using the
   type's template and frontmatter from
-  `${CLAUDE_PLUGIN_ROOT}/skills/add-issues/references/templates.md`.
+  `${PLUGIN_ROOT}/skills/add-issues/references/templates.md`.
 - Run
-  `python ${CLAUDE_PLUGIN_ROOT}/skills/add-issues/scripts/check_draft.py .wit/issues/<slug>.md`.
+  `python ${PLUGIN_ROOT}/skills/add-issues/scripts/check_draft.py .wit/issues/<slug>.md`.
   It fails on missing sections or a Bug without a new-test acceptance criterion - fix the
   draft, don't argue with the checker. (python fallback: workflow.md "Script invocation".)
 - Show the confirm gate: final title, a compact metadata table (type, labels, milestone,
@@ -91,13 +91,13 @@ Design rationale for this skill lives in the wit repo's `docs/design-notes/add-i
   UTF-8 with the CLI; do not redirect stdout with `>` (PowerShell `>` is UTF-16):
 
   ```
-  python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/strip_frontmatter.py .wit/issues/<slug>.md .wit/issues/<slug>.body.md
+  python ${PLUGIN_ROOT}/skills/ship/scripts/strip_frontmatter.py .wit/issues/<slug>.md .wit/issues/<slug>.body.md
   gh issue create --title "…" --body-file .wit/issues/<slug>.body.md [--type … --label … --milestone … --assignee …
     --parent … --blocked-by …]
   ```
 - If a metadata flag fails: retry without it, log `skipped <capability> (<reason>)`, and try to
   set it post-create via `gh issue edit` where supported
-  (`${CLAUDE_PLUGIN_ROOT}/skills/add-issues/references/gh-metadata.md` has the fallback map).
+  (`${PLUGIN_ROOT}/skills/add-issues/references/gh-metadata.md` has the fallback map).
   An issue with a missing label beats no issue - never let optional metadata block creation.
 - **On success: delete the draft and the stripped body file.** `.wit/issues/` holds only unpublished work - the GitHub
   issue is now the single source of truth. On abort at the gate: delete it too. Only a failed
@@ -128,10 +128,10 @@ Design rationale for this skill lives in the wit repo's `docs/design-notes/add-i
 
 ## Bundled files
 
-- `${CLAUDE_PLUGIN_ROOT}/skills/add-issues/references/templates.md` - per-type body templates +
+- `${PLUGIN_ROOT}/skills/add-issues/references/templates.md` - per-type body templates +
   draft frontmatter. Read the one matching the classified type in step 2.
-- `${CLAUDE_PLUGIN_ROOT}/skills/add-issues/references/gh-metadata.md` - flag matrix, version
+- `${PLUGIN_ROOT}/skills/add-issues/references/gh-metadata.md` - flag matrix, version
   gates, post-create fallbacks, degradation contract. Read before using hierarchy/dependency
   flags or when a flag fails.
-- `${CLAUDE_PLUGIN_ROOT}/skills/add-issues/scripts/check_draft.py` - deterministic draft
+- `${PLUGIN_ROOT}/skills/add-issues/scripts/check_draft.py` - deterministic draft
   validation. Always run before the confirm gate.

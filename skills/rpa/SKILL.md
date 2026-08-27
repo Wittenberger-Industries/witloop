@@ -27,21 +27,21 @@ never loaded at runtime).
 ## Procedure
 
 **Host probe (once at entry).** Detect `claude` | `codex` | `copilot` | `grok` | `cursor` per **the
-capability table** (`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md` Host probe; same tells as
-`wit:dev`). Plugin root: env if a wit root → walk-up from cwd → host cache; cwd-as-wit-root beats
-marketplace cache. When the run's `progress.md` is seeded (step 2), copy that host's cells into
+capability table** (`${PLUGIN_ROOT}/references/capabilities.md` Host probe; same tells as
+`wit:dev`). Plugin root per capabilities.md **Plugin root** (never pass unexpanded `${PLUGIN_ROOT}`).
+When the run's `progress.md` is seeded (step 2), copy that host's cells into
 `Host:`, `Plugin root (resolved):`, and `## Capabilities (resolved)`. Stamp every host including claude.
 
-1. **Bootstrap the prerequisites.** Follow `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/uipath-bootstrap.md`:
+1. **Bootstrap the prerequisites.** Follow `${PLUGIN_ROOT}/skills/rpa/references/uipath-bootstrap.md`:
    ensure **markitdown**, the **UiPath skills** plugin, and the **.NET 8 runtime** are installed (offer to
    install if absent), and on an existing UiPath repo delegate structure discovery to UiPath's
    `uipath-project-discovery-agent`.
 2. **Register inputs & components, ingest the PDD.** Follow
-   `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/ingest.md`: derive the **numbered run-slug**
+   `${PLUGIN_ROOT}/skills/rpa/references/ingest.md`: derive the **numbered run-slug**
    (`NNNN-<name>`, the next global 4-digit ordinal; ingest:1); catalog the repo's supporting files into
    `.wit/inputs.md`; detect reusable components into `.wit/components.md`; convert the PDD to `pdd.md` with
    markitdown (skip if it's already Markdown). Run the **model routing first-run setup** here too
-   (`${CLAUDE_PLUGIN_ROOT}/references/models.md` "First-run setup"), then resolve the routing once per
+   (`${PLUGIN_ROOT}/references/models.md` "First-run setup"), then resolve the routing once per
    that reference and record the `## Model routing (resolved)` block when the run's `progress.md` is
    seeded (rpa-directory.md's template); every build delegation reads the block's `rpa-build` cell (a
    routing role label, resolved per models.md), and at ship the cross-provider diff review layers on top
@@ -50,7 +50,7 @@ marketplace cache. When the run's `progress.md` is seeded (step 2), copy that ho
    `components.md`, `orchestrator.md`, `models.md`, a first-run `rpa-constitution.md`) are **committed
    where written** (`chore(wit): …`, the project-level rule in `wit-directory.md`).
 3. **Brainstorm: refine the TO-BE (the one conversation).** Follow
-   `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/brainstorm-protocol.md`: take the PDD's **existing ToBe as
+   `${PLUGIN_ROOT}/skills/rpa/references/brainstorm-protocol.md`: take the PDD's **existing ToBe as
    the baseline**, refine it (gaps, missing/redundant steps, branches, exceptions), clarify each open step
    as UI activity / API / connector **inline** (no bias: UI is valid), decompose the PDD into its **1..N
    processes**, **propose the framework** (`reframework` | `maestro`) from the process shape (heuristic in
@@ -62,9 +62,9 @@ marketplace cache. When the run's `progress.md` is seeded (step 2), copy that ho
    `, dialogue` | `, self-answered (headless)`; brainstorm-protocol.md). Log every gap you fill as an
    assumption. Parse `--auto` here (Gate mode).
 4. **Plan: write the artifacts** (layout + OKF frontmatter stubs:
-   `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/rpa-directory.md`; each file opens with its `type`):
+   `${PLUGIN_ROOT}/skills/rpa/references/rpa-directory.md`; each file opens with its `type`):
    - **`architecture.md`**: framework-aware, validated with
-     `${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py`: **REFramework** → the Runtime diagram
+     `${PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py`: **REFramework** → the Runtime diagram
      (`references/refr-architecture.md`); **Maestro** → the flow diagram
      (`references/maestro-architecture.md`).
    - **`sdd.md`**: one Solution Design Document. **Choose the ToC** per the precedence in
@@ -84,12 +84,12 @@ marketplace cache. When the run's `progress.md` is seeded (step 2), copy that ho
      rule, same as the dev flow); the gate's **Approach (ADR-NNNN)** line cites it. Nothing hard to
      reverse → no ADR (plan:2's rule: don't manufacture decisions).
 5. **Design gate.** **Pre-gate check (checker · plan mode):** first scaffold the token ledger (idempotent):
-   `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<run-slug>/tokens.md`
+   `python ${PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<run-slug>/tokens.md`
    (python fallback: workflow.md "Script invocation"). The checker is a subagent: append its `tokens.md`
    row the moment its completion notification arrives, per wit-directory.md's **ledger rule** (exact
    tokens + `Duration`; `unavailable` when unobservable, never an estimate); each checker round appends
    its own row; rpa:6's scaffold-if-absent remains the fallback. Then, before rendering the gate,
-   dispatch the **checker** (`${CLAUDE_PLUGIN_ROOT}/agents/wit-code-checker.md`) in `plan` mode over
+   dispatch the **checker** (`${PLUGIN_ROOT}/agents/wit-code-checker.md`) in `plan` mode over
    `sdd.md` (its acceptance-criteria section, sdd:10 in the base ToC, plus locked decisions), `tasks.md`,
    `assumptions.md`, `orchestrator.md`, `rpa-constitution.md`, and any Runtime State Inventory rows; it
    builds a feature-backward coverage matrix and returns BLOCKER/WARNING/INFO, writing `verification.md`.
@@ -123,22 +123,22 @@ marketplace cache. When the run's `progress.md` is seeded (step 2), copy that ho
    *candidate (pre-build)*; ship later confirms these against the build and promotes the general ones to
    `.wit/rpa-constitution.md` / `.wit/glossary.md`.
 6. **Build.** Create the worktree
-   (`${CLAUDE_PLUGIN_ROOT}/skills/build/references/worktrees-and-subagents.md`;
+   (`${PLUGIN_ROOT}/skills/build/references/worktrees-and-subagents.md`;
    `superpowers:using-git-worktrees` if installed), **framework-neutral**, the same first step as
    `wit:build`. The worktree already contains `.wit/features/<run-slug>/` (committed on main at the design
    gate; the branch starts from main). **Reuse components from `.wit/components.md` before building new**,
    and build per the **`Framework`**: **REFramework** →
-   `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/build-uipath.md`, delegating to `uipath-rpa`;
-   **Maestro** → `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/build-maestro.md`, delegating to
+   `${PLUGIN_ROOT}/skills/rpa/references/build-uipath.md`, delegating to `uipath-rpa`;
+   **Maestro** → `${PLUGIN_ROOT}/skills/rpa/references/build-maestro.md`, delegating to
    `uipath-maestro-flow`. **On the REFramework path,** delegate **low-code XAML REFramework** generation
    to `uipath-rpa` per process/sub-workflow in **parallel waves** (state the **approved paradigm** in the
    prompt: XAML-only → pure drag-drop activities, **no Invoke Code and no `.cs`**; coded-allowed → `.cs`
    workflows ok; scaffold each unit as REFramework per the SDD, never Blank), append each unit's tokens
    to `tokens.md` (scaffold it first if absent:
-   `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<run-slug>/tokens.md`;
+   `python ${PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<run-slug>/tokens.md`;
    python fallback: workflow.md "Script invocation"), and register any new reusable component back into
    `.wit/components.md`.
-7. **Verify & ship.** Gate = `${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/verification-gate.md`, **branched
+7. **Verify & ship.** Gate = `${PLUGIN_ROOT}/skills/rpa/references/verification-gate.md`, **branched
    on `Framework`**: REFramework → approved paradigm + Workflow Analyzer + `uip` validate; Maestro →
    `uip maestro flow validate` (+ `eval` if eval sets exist). Both → `tokens.md` passes `check_tokens.py`
    + the **checker · result mode**, one dispatch: the feature-level pass over the SDD's
@@ -170,10 +170,10 @@ marketplace cache. When the run's `progress.md` is seeded (step 2), copy that ho
 The design gate, isolated worktrees, **parallel build waves**, the ship PR + **docs-sync** (architecture
 diagrams kept current), **compound/learnings**, the **token report**, `check_mermaid.py`, and
 plugin-bootstrap all work unchanged. So does the **compact-reasoning rule**
-(`${CLAUDE_PLUGIN_ROOT}/references/compact-reasoning.md`): essential, decision-bearing thoughts only
+(`${PLUGIN_ROOT}/references/compact-reasoning.md`): essential, decision-bearing thoughts only
 across ingest, scheduling, and delegation; the SDD decomposition and the design gate keep full depth (the
 note's carve-outs).
 
 **Superpowers precedence** (integrations.md "Who initiates",
-`${CLAUDE_PLUGIN_ROOT}/skills/research/references/integrations.md`): delegation points only, never
+`${PLUGIN_ROOT}/skills/research/references/integrations.md`): delegation points only, never
 self-triggered mid-phase; wit's artifact formats always win.

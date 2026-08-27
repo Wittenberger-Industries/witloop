@@ -51,7 +51,7 @@ reasoned about. Keep every file small and current; these are working artifacts, 
   `NNNN-` prefixes, so non-numeric folder names contribute nothing to the max. A resumed feature keeps its
   number; a roadmap row's name is numbered when its folder is first created. Creation-time edge cases (resume,
   in-flight overlap, done-collision, roadmap rows):
-  `${CLAUDE_PLUGIN_ROOT}/references/feature-folder-cases.md`.
+  `${PLUGIN_ROOT}/references/feature-folder-cases.md`.
 - **Commit `.wit/`.** It is documentation. Feature-folder lifecycle: untracked in the main checkout through
   brainstorm/research/plan; research commits it on main at the design gate (`docs(<slug>): feature
   dossier (design gate)`), so the gate decides against committed artifacts and the build worktree
@@ -126,7 +126,7 @@ version:
   offset, e.g. `2026-07-05T14:19:47+02:00`) and a leading bold keyword (`**Created**`,
   `**Update**`, `**Decision**`); it stays append-order as a resumable run timeline. Stamps come
   from the **OS clock** (`date -Iseconds`, or
-  `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/now.py` where that shell syntax is
+  `python ${PLUGIN_ROOT}/skills/ship/scripts/now.py` where that shell syntax is
   unavailable), never a model estimate; ship's `finalize_tokens.py` derives the run's autonomous
   wall-clock from exactly these stamps (spans + exclusions: the `tokens.md` section below), so a
   date-only or invented stamp makes timing `unavailable`.
@@ -243,7 +243,7 @@ timestamp: <YYYY-MM-DD>
 
 _PENDING: the ledger is scaffolded by `check_tokens.py --init` (research:0), rows appended live, and
 ship replaces this section during the dossier tidy (BEFORE the dossier commit and the PR) by running
-`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/finalize_tokens.py --write <this file>`. That CLI
+`python ${PLUGIN_ROOT}/skills/ship/scripts/finalize_tokens.py --write <this file>`. That CLI
 reads Host: from progress.md and routes to the host parser (Claude: token_report.py; Grok:
 grok_token_report.py; Cursor/Copilot/Codex/unstamped/unknown: the honest unavailable sentinel plus
 Duration from progress.md spans). If the parse fails or the host exposes no local usage field it writes
@@ -266,7 +266,7 @@ matches the ledger `Source` above (exact tokens × published list prices,
 "as of" date shown: the tokens are exact; only the dollar figure is an estimate). Platform note: Codex
 and Copilot expose no per-subagent usage or sidecar transcripts; rows there record `unavailable`, and
 on Copilot the accountable unit is the session's **AI credits** (see
-`${CLAUDE_PLUGIN_ROOT}/references/copilot-tools.md`).
+`${PLUGIN_ROOT}/references/copilot-tools.md`).
 
 ## `roadmap.md` template (optional, multi-feature efforts)
 

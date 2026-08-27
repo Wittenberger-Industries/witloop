@@ -23,7 +23,7 @@ There are **two** architecture artifacts, mapping to the SDD:
   `tobe.md` / sdd:7.1.3).
 
 Both are mermaid and **must be validated** with
-`${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py` (safe node IDs: never `graph`/`end`/etc.;
+`${PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py` (safe node IDs: never `graph`/`end`/etc.;
 quote labels containing `:` `/` `(`).
 
 ## Flow diagram: whole solution

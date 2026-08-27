@@ -89,5 +89,5 @@ Done when: the <slug> PR is open with its remote checks green (or none configure
 
 The `relaunch` command is never printed without the warning above. Skills print only the block
 matching the stamped `keep_alive` cell. The per-host mechanism behind `/goal` / Autopilot lives in
-`${CLAUDE_PLUGIN_ROOT}/references/codex-tools.md` / `copilot-tools.md` /
+`${PLUGIN_ROOT}/references/codex-tools.md` / `copilot-tools.md` /
 `grok-tools.md` / `cursor-tools.md`.

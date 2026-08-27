@@ -96,7 +96,7 @@ existence is what later phases check; an absent registry reads as "ingest never 
 ## 4. First-run constitution → `.wit/rpa-constitution.md` (project-level)
 
 If `.wit/rpa-constitution.md` is absent, **create it now** from
-`${CLAUDE_PLUGIN_ROOT}/skills/rpa/references/rpa-constitution-template.md` (copy the template; fill what
+`${PLUGIN_ROOT}/skills/rpa/references/rpa-constitution-template.md` (copy the template; fill what
 the PDD/inputs already settle, leave the rest on its defaults) and commit it with the other project-level
 outputs. Every later step assumes it exists: brainstorm reads it as baseline (protocol:0), the gate takes its
 defaults, the verification gate's house-rules sweep enforces it. **This step owns its creation**; nothing

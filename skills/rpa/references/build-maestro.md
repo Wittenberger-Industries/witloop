@@ -32,7 +32,7 @@ Run it as wide as the DAG allows.
    `progress.md`. **Append each delegated unit's token count to `tokens.md`** the moment that subagent
    reports completion (the only point the count exists): `tokens.md` is **mandatory**; initialize it on the
    first delegation if absent
-   (`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<run-slug>/tokens.md`;
+   (`python ${PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<run-slug>/tokens.md`;
    python fallback: `references/workflow.md` "Script invocation"), and ship finalizes it
    (`token_report.py --write`) under a `check_tokens.py` close-out gate.
 5. **Register new components.** If the build created something reusable (a shared subflow, a notifier flow),

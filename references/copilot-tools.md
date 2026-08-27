@@ -10,21 +10,14 @@ tags: [copilot, tools, portability, reference]
 
 wit's skills are written with Claude Code names. On Copilot CLI, use these equivalents.
 
-## ${CLAUDE_PLUGIN_ROOT}
-Copilot has no plugin-root variable. `${CLAUDE_PLUGIN_ROOT}` means the **wit plugin root**: the directory
-holding `skills/`, `agents/`, and `.claude-plugin/`. Where that root lives depends on how wit was installed:
+## ${PLUGIN_ROOT}
 
-- **Preferred (plugin install):** `copilot plugin install Wittenberger-Industries/witloop` (Copilot CLI
-  reads `.claude-plugin/plugin.json` and defaults to `skills/` + `agents/`). The whole repo lands under
-  `~/.copilot/installed-plugins/…`; that installed directory is the wit root. Update with
-  `copilot plugin update wit`.
-- **Fallback (clone):** `git clone` + `/skills add <repo>/skills` (older CLI versions). The clone is the
-  wit root.
+Follow `references/capabilities.md` **Plugin root**. Same order on every host. Never pass an
+unexpanded `${PLUGIN_ROOT}` into the shell.
 
-Either way, install wit **whole** and resolve every `${CLAUDE_PLUGIN_ROOT}` path against that root. This is
-why per-skill `gh skill install` is discouraged: cross-skill refs such as `ship` reading
-`${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py`, and the plugin-version read from
-`.claude-plugin/plugin.json`, need the shared root.
+This host's cache (step 3): `~/.copilot/installed-plugins/…` after `copilot plugin install wit@witloop`.
+A whole-repo clone is the walk-up hit. Install wit **whole**; per-skill `gh skill install` breaks
+cross-skill refs such as `ship` reading `${PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py`.
 
 ## Tools
 | wit/skill says | Copilot equivalent |

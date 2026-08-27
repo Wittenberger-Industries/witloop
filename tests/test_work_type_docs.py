@@ -1,6 +1,6 @@
 """Contract tests for user docs and maintainer design-notes on work-type routing.
 
-Asserts README/AGENTS descriptions, four advertised commands, five hosts, and the
+Asserts README/AGENTS descriptions, four advertised commands, advertised hosts, and the
 design-note ownership split. Frozen archives (docs/plans/, docs/specs/) are not
 this feature's files; this module does not open them for writes.
 """
@@ -29,6 +29,7 @@ DOC_FILES = (
     CHECKER_NOTES,
 )
 ADVERTISED = ("scan", "dev", "rpa", "add-issues")
+README_HOSTS = ("Claude", "Copilot", "Grok", "Cursor")
 HOSTS = ("Claude", "Codex", "Copilot", "Grok", "Cursor")
 KIND = "--kind feature|bug-fix|investigation"
 WORK_TYPES = ("feature", "bug-fix", "investigation")
@@ -126,11 +127,13 @@ class ReadmeUserDocsTests(unittest.TestCase):
         self.assertNotIn("/wit:how", table)
         self.assertNotIn("/wit:investigate", table)
 
-    def test_five_hosts_remain(self):
+    def test_advertised_hosts_exclude_codex(self):
         text = load(README)
-        for host in HOSTS:
+        for host in README_HOSTS:
             self.assertIn(host, text, host)
-        self.assertIn("five hosts", text)
+        self.assertIn("four hosts", text)
+        self.assertNotIn("Codex", text)
+        self.assertNotIn("five hosts", text)
 
     def test_three_work_types_and_kind_flag(self):
         text = load(README)

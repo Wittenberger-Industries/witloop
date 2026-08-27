@@ -14,7 +14,7 @@ description: >
 `dev` captured the WHAT; you decide the HOW and get it confirmed. You own three phases (research →
 plan → **design gate**), then implementation proceeds (build → ship) to the PR, kept alive by the
 stamped `keep_alive` capability (**the capability table**,
-`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md`) if the user armed it.
+`${PLUGIN_ROOT}/references/capabilities.md`) if the user armed it.
 
 Design rationale for this skill lives in the wit repo's `docs/design-notes/research.md` (maintainer
 doc, never loaded at runtime).
@@ -24,7 +24,7 @@ doc, never loaded at runtime).
 - **Autonomous until the gate** (workflow.md's no-questions rule). No questions during research or
   planning. When a decision arises, pick the best option given `brief.md` + `constitution.md`, record
   it, continue.
-- **State on disk.** Layout: `${CLAUDE_PLUGIN_ROOT}/skills/research/references/wit-directory.md`. Never
+- **State on disk.** Layout: `${PLUGIN_ROOT}/skills/research/references/wit-directory.md`. Never
   re-derive what a file records.
 - **Hold the budget.** workflow.md's **context budget** is a hard rule: `constitution.md`,
   `repo-map.md`, `progress.md`, plus the one active artifact (`brief.md` while researching;
@@ -35,11 +35,11 @@ doc, never loaded at runtime).
   notification arrives, per wit-directory.md's **ledger rule**: exact tokens + `Duration`,
   `unavailable` when unobservable, never an estimate.
 - **Borrow.** Detect installed skills and hand off:
-  `${CLAUDE_PLUGIN_ROOT}/skills/research/references/integrations.md`.
+  `${PLUGIN_ROOT}/skills/research/references/integrations.md`.
 
 ## Bug-fix overlay
 
-When Work type is bug-fix, follow `${CLAUDE_PLUGIN_ROOT}/skills/dev/references/bug-fix.md`; before approach fan-out, run `systematic-debugging` (or the inline fallback) as the evidence step; stamp
+When Work type is bug-fix, follow `${PLUGIN_ROOT}/skills/dev/references/bug-fix.md`; before approach fan-out, run `systematic-debugging` (or the inline fallback) as the evidence step; stamp
 `debug via superpowers:systematic-debugging` or `debug via wit fallback (systematic-debugging absent)`.
 Plan and the plan-mode checker always run. Always stamp `design gate opened` first. If the narrow-fix
 predicate holds, write `## Gate bypass` and
@@ -52,10 +52,10 @@ missing Work type = feature; never consult Gate bypass.
 
 ### 0 - Engage & resume
 First act, always: append a Log line to `progress.md`: `research engine engaged (wit <version>)`,
-reading <version> from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (don't guess; if that file
+reading <version> from `${PLUGIN_ROOT}/.claude-plugin/plugin.json` (don't guess; if that file
 isn't reachable, e.g. a per-skill Copilot install, omit the version rather than inventing one). Then
 scaffold the token ledger (idempotent; no-op if it exists):
-`python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<slug>/tokens.md`
+`python ${PLUGIN_ROOT}/skills/ship/scripts/check_tokens.py --init .wit/features/<slug>/tokens.md`
 (python fallback: workflow.md "Script invocation"). Then re-enter the phase it names
 (research | plan | design-gate). **Design-gate re-entry guard:** resuming at `design-gate` requires a
 fresh plan-mode `verification.md` (`type: Verification`) in the feature folder; missing, or predating
@@ -88,7 +88,7 @@ hard the researcher hits the web; see the agent), what is OUT of scope (the sibl
 and any standing ADR it must respect. Ship each researcher `brief.md` + the relevant constitution rules
 + `repo-map.md` + any relevant learning. One small question = one researcher; never fan out for the
 sake of it. Dispatch on the `researcher` tier from `progress.md`'s resolved-routing block (resolve or
-refresh it per `${CLAUDE_PLUGIN_ROOT}/references/models.md`'s resolve-once rule).
+refresh it per `${PLUGIN_ROOT}/references/models.md`'s resolve-once rule).
 
 **d · Reconcile -> decide.** Merge the reports into one recommended approach and adopt it. A report
 that returns empty, blows its budget, or wanders off-charter gets **one** narrower re-dispatch; after
@@ -101,7 +101,7 @@ dropping one silently is a defect.
 above: N proposer researchers answer in parallel, an optional second layer refines, and one aggregator
 synthesizes `research/proposal-synthesis.md`; you still adopt the recommendation and write the ADR. Full
 contract (proposer charters, layer semantics, who-writes-what, the dissent-to-ADR/gate wiring, the
-`approach via MoA (...)` log line, `tokens.md` rows): `${CLAUDE_PLUGIN_ROOT}/references/moa.md`. MoA row
+`approach via MoA (...)` log line, `tokens.md` rows): `${PLUGIN_ROOT}/references/moa.md`. MoA row
 `none`, or `research` not in its `points` → skip this branch; the reconcile above is the unchanged default.
 
 If the decision is **hard to reverse**, record it as the next **ADR-NNNN** in the project-wide
@@ -185,7 +185,7 @@ Only an explicit approve (or auto-approve, or a recorded narrow-fix bypass) adva
 ### 4 - Hand off to implementation
 **Interactive gate only:** if persistence wasn't armed at handoff, print the ready-made keep-alive
 again (the user is present; they just approved), **verbatim from
-`${CLAUDE_PLUGIN_ROOT}/references/keep-alive.md`**, keyed by the stamped `keep_alive` cell
+`${PLUGIN_ROOT}/references/keep-alive.md`**, keyed by the stamped `keep_alive` cell
 (**the capability table**). The go-signal is that cell: `predicate_goal` / `model_judged_goal` →
 paste `/goal`; `relaunch` → paste the Autopilot command; `none` → user confirmation (the chat
 continues; never `/goal`). When the signal registers, continue into build **in the same turn**; don't
@@ -195,4 +195,4 @@ act, never wit's. A recorded narrow-fix bypass is treated like `--auto` here (no
 Then proceed: **build** (`wit:build`), worktree + parallel waves, then **ship** (`wit:ship`), which ends
 with the PR and the final report (token table included). No questions from here on.
 
-Phase contracts & resumability: `${CLAUDE_PLUGIN_ROOT}/references/workflow.md`.
+Phase contracts & resumability: `${PLUGIN_ROOT}/references/workflow.md`.

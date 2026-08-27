@@ -10,12 +10,11 @@ tags: [codex, tools, portability, reference]
 
 wit's skills are written with Claude Code names. On Codex CLI, use these equivalents.
 
-## ${CLAUDE_PLUGIN_ROOT}
-`${CLAUDE_PLUGIN_ROOT}` is the **wit plugin root**: the directory holding `skills/`, `agents/`, and
-`.claude-plugin/`. Codex sets `CLAUDE_PLUGIN_ROOT` (and `PLUGIN_ROOT`) for compatibility, so most refs
-resolve as-is. If a ref doesn't resolve in a skill context, treat it as the installed wit plugin dir and
-read the file by its path under that root. This covers cross-skill refs such as `ship` reading
-`${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py`.
+## ${PLUGIN_ROOT}
+
+Follow `references/capabilities.md` **Plugin root**. Same order on every host. Never pass an
+unexpanded `${PLUGIN_ROOT}` into the shell. Codex often sets `PLUGIN_ROOT` (and sometimes
+`CLAUDE_PLUGIN_ROOT`); those are step-1 aliases, not a reason to skip the stamp.
 
 ## Tools
 | wit/skill says | Codex equivalent |

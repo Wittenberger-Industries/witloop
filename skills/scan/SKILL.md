@@ -33,9 +33,9 @@ Plus a plugin check (scan:5) that may install the skills wit delegates to.
 ## Procedure
 
 **Host probe (once at entry).** Detect `claude` | `codex` | `copilot` | `grok` | `cursor` per **the
-capability table** (`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md` Host probe; same tells as
-`wit:dev`). Plugin root: env if a wit root → walk-up from cwd → host cache; cwd-as-wit-root beats
-marketplace cache. Scan has no feature `progress.md`: keep the slug in-session (plugin-bootstrap reads
+capability table** (`${PLUGIN_ROOT}/references/capabilities.md` Host probe; same tells as
+`wit:dev`). Plugin root per capabilities.md **Plugin root** (never pass unexpanded `${PLUGIN_ROOT}`).
+Scan has no feature `progress.md`: keep the slug in-session (plugin-bootstrap reads
 it). A later `dev` / `rpa` stamps `Host:` + `Plugin root (resolved):` + `## Capabilities (resolved)`.
 
 1. **Confirm the root & census the folder.** `git rev-parse --show-toplevel` (init only if the user wants
@@ -45,7 +45,7 @@ it). A later `dev` / `rpa` stamps `Host:` + `Plugin root (resolved):` + `## Capa
    (`git mv .wi .wit`, one commit) and treat it as `.wit/` from then on; don't create a second state dir.
 
 2. **If existing code, understand and document it.** Use the cookbook in
-   `${CLAUDE_PLUGIN_ROOT}/skills/scan/references/stack-detection.md` to read config/lock files (not source
+   `${PLUGIN_ROOT}/skills/scan/references/stack-detection.md` to read config/lock files (not source
    wholesale) and produce the three files from the templates below: `repo-map.md`, `overview.md`,
    `architecture.md`. On a large repo, **dispatch a subagent** to read broadly and return the filled-in
    templates; never pull the whole tree into this context.
@@ -69,11 +69,11 @@ it). A later `dev` / `rpa` stamps `Host:` + `Plugin root (resolved):` + `## Capa
    frontend present. Record it; build routes `[frontend]` tasks to a design skill.
 
 4. **Bootstrap the constitution.** If `.wit/constitution.md` is absent, copy
-   `${CLAUDE_PLUGIN_ROOT}/skills/scan/references/constitution-template.md`, fill in what you detected, and
+   `${PLUGIN_ROOT}/skills/scan/references/constitution-template.md`, fill in what you detected, and
    ask the user to confirm the few lines marked `(confirm)`. If it already exists, leave it.
 
 5. **Plugin bootstrap (offer, don't force).** Follow
-   `${CLAUDE_PLUGIN_ROOT}/skills/scan/references/plugin-bootstrap.md`: check which recommended plugins are
+   `${PLUGIN_ROOT}/skills/scan/references/plugin-bootstrap.md`: check which recommended plugins are
    available; for any missing, ask with the stamped `ask` tool (Claude verb AskUserQuestion, via
    the host tool map) to offer installing them, and on yes follow that file's host install commands.
    wit works fully without them.
@@ -286,7 +286,7 @@ Add a second diagram only if it genuinely adds clarity.
 **Validate the diagram for real before committing**; don't eyeball it:
 
 ```
-python ${CLAUDE_PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py .wit/architecture.md
+python ${PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py .wit/architecture.md
 ```
 
 (python fallback: `references/workflow.md` "Script invocation".)

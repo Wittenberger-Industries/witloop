@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 INVESTIGATION = ROOT / "skills" / "dev" / "references" / "investigation.md"
 INTEGRATIONS = ROOT / "skills" / "research" / "references" / "integrations.md"
 DISCOVER = (
-    "python ${CLAUDE_PLUGIN_ROOT}/skills/research/scripts/discover_skills.py --name how"
+    "python ${PLUGIN_ROOT}/skills/research/scripts/discover_skills.py --name how"
 )
 VIA_HOW = "investigation via how"
 VIA_HOW_WHY = "investigation via how + why"

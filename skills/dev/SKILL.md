@@ -18,8 +18,8 @@ gate** is where the user confirms it; after their go, nothing more is asked unti
 **`--auto` collapses everything after brainstorm**, so brainstorm becomes the only stop and the run
 goes straight through to a PR. wit pairs with a **keep-alive loop** for persistence: print the
 template keyed by the stamped `keep_alive` cell (**the capability table**,
-`${CLAUDE_PLUGIN_ROOT}/references/capabilities.md`; blocks in
-`${CLAUDE_PLUGIN_ROOT}/references/keep-alive.md`).
+`${PLUGIN_ROOT}/references/capabilities.md`; blocks in
+`${PLUGIN_ROOT}/references/keep-alive.md`).
 
 Design rationale for this skill lives in the wit repo's `docs/design-notes/dev.md` (maintainer doc,
 never loaded at runtime).
@@ -29,22 +29,22 @@ never loaded at runtime).
 **Work type first (read-only prelude).** Before the host probe, scan, models, or any other
 write-capable setup: parse `--auto` and `--kind` in memory (do not write yet). Valid `--kind` values
 are `feature|bug-fix|investigation`; an invalid value **stops** with that set (no silent infer). Load
-`${CLAUDE_PLUGIN_ROOT}/skills/dev/references/work-types.md` and deduce by semantic orchestrator
+`${PLUGIN_ROOT}/skills/dev/references/work-types.md` and deduce by semantic orchestrator
 judgment of the user's intent (not a keyword-only runtime classifier). Mixed or unclear intent
 defaults to `feature`. Never ask. Never route silently. Always print exactly:
 `Work type: <type> (<source>). Override: --kind feature|bug-fix|investigation`
 (source is `kind`, `inferred`, or `ambiguous-default`). On resume, honor a stamped `Work type:`
 without re-deduction unless `--kind` is present; the override wins. A missing stamp means `feature`.
-If the work type is `investigation`, load `${CLAUDE_PLUGIN_ROOT}/skills/dev/references/investigation.md` and exit
+If the work type is `investigation`, load `${PLUGIN_ROOT}/skills/dev/references/investigation.md` and exit
 (no host probe, scan, models, or feature-folder writes). Feature and bug-fix continue at step 1.
 
 1. **Host probe (once), then ensure the project is scanned, and current.** Detect the running harness
    (`claude` | `codex` | `copilot` | `grok` | `cursor`). Tells: **cursor** when AskQuestion is on
    the session (or Task `subagent_type` includes `wit-*`, or agent-transcripts under `~/.cursor`),
-   preferring cursor when `AskQuestion` exists and `CLAUDE_PLUGIN_ROOT` is empty;
+   preferring cursor when `AskQuestion` exists and plugin-root env vars are empty;
    **grok** when following `grok-tools.md` / grok CLI; **copilot** on Copilot CLI; **codex** on Codex CLI;
-   else **claude**. Plugin root: env if a wit root → walk-up from cwd → host cache; cwd-as-wit-root beats
-   marketplace cache. When seeding `progress.md` (step 2), copy that host's cells from **the capability
+   else **claude**. Plugin root per capabilities.md **Plugin root** (never pass unexpanded
+   `${PLUGIN_ROOT}`; stamp the absolute path). When seeding `progress.md` (step 2), copy that host's cells from **the capability
    table** into `Host:`, `Plugin root (resolved):`, and `## Capabilities (resolved)`. Stamp every host
    including claude (`Host: claude` when that is the harness). Later phases read the stamp; never re-guess.
    If the project has a legacy `.wi/` (pre-1.12.2 name)
@@ -53,7 +53,7 @@ If the work type is `investigation`, load `${CLAUDE_PLUGIN_ROOT}/skills/dev/refe
    don't proceed without a repo map and constitution. Stale (`scanned` stamp older than ~2 weeks, or
    config/lock/CI files changed since it) → run the scan skill's **`--refresh`** drift pass before
    building on the map.
-   **Model routing first-run setup** here (`${CLAUDE_PLUGIN_ROOT}/references/models.md` "First-run
+   **Model routing first-run setup** here (`${PLUGIN_ROOT}/references/models.md` "First-run
    setup"): set up `.wit/models.md` if absent, else apply it, then resolve the routing once per that
    reference. dev:2 records the result as the `## Model routing (resolved)` block when `progress.md` is
    seeded, and a resumed feature missing the block gets it written on re-entry; every later dispatch reads
@@ -65,15 +65,15 @@ If the work type is `investigation`, load `${CLAUDE_PLUGIN_ROOT}/skills/dev/refe
    `features/*/progress.md` reading as this same idea → resume; others merely in flight → overlap; a
    done feature with this name → done-collision; a matching `.wit/roadmap.md` row → roadmap-row).
    Anything but a plain new feature → follow
-   `${CLAUDE_PLUGIN_ROOT}/references/feature-folder-cases.md` for every case whose tell fires. The
+   `${PLUGIN_ROOT}/references/feature-folder-cases.md` for every case whose tell fires. The
    common path: derive a kebab-case name, prefix the **next global 4-digit ordinal** so `<slug>` =
    `NNNN-<name>` (next = highest existing `.wit/features/` ordinal + 1, else `0001`, e.g.
    `0001-stripe-webhooks`; full rule: wit-directory.md's Slugs bullet), create `.wit/features/<slug>/`,
    and seed `progress.md` (template in the research skill's `wit-directory.md`). Every Log line, the
    `**Created**` seed included, opens with a full ISO-8601 timestamp from the OS clock
-   (`date -Iseconds`, or `python ${CLAUDE_PLUGIN_ROOT}/skills/ship/scripts/now.py`); never a date-only
+   (`date -Iseconds`, or `python ${PLUGIN_ROOT}/skills/ship/scripts/now.py`); never a date-only
    or guessed stamp. When Work type is bug-fix, load
-   `${CLAUDE_PLUGIN_ROOT}/skills/dev/references/bug-fix.md`. Feature: do not load bug-fix.md.
+   `${PLUGIN_ROOT}/skills/dev/references/bug-fix.md`. Feature: do not load bug-fix.md.
 3. **Brainstorm** (skill `wit:brainstorm`): the dialogue about desired behavior, scope, constraints.
    Writes `brief.md`. **Interactive and never skipped**: `--auto` does not collapse it, and a detailed
    idea or a matching roadmap row **seeds** the dialogue, never replaces it. The only sanctioned
@@ -99,7 +99,7 @@ If the work type is `investigation`, load `${CLAUDE_PLUGIN_ROOT}/skills/dev/refe
      the keep-alive applies once a remote exists. (All checks resolve inside the brainstorm stop; they
      are not a new gate.)
    All green → recap the brief in 3-5 lines, then print the keep-alive handoff **verbatim from
-   `${CLAUDE_PLUGIN_ROOT}/references/keep-alive.md`**, keyed by the stamped `keep_alive` cell
+   `${PLUGIN_ROOT}/references/keep-alive.md`**, keyed by the stamped `keep_alive` cell
    (**the capability table**).
    **Then branch on Gate mode (from `progress.md`):**
    - **auto-approve** (`--auto`): do **not** ask for confirmation; the user already chose hands-off. Set
@@ -128,7 +128,7 @@ If the work type is `investigation`, load `${CLAUDE_PLUGIN_ROOT}/skills/dev/refe
   `progress.md`; resume detection reads each in-flight feature's `progress.md` and nothing else; the
   handoff preflight checks `brief.md` once. Bigger reads are delegated to the phase skills' subagents.
 - **Compact reasoning, run-wide** (the **compact-reasoning rule**;
-  `${CLAUDE_PLUGIN_ROOT}/references/compact-reasoning.md`): across the autonomous stretch, essential,
+  `${PLUGIN_ROOT}/references/compact-reasoning.md`): across the autonomous stretch, essential,
   decision-bearing thoughts only; classification, preflight, and sequencing are decided, not narrated.
   The note's carve-outs (plan decomposition, the design gates) keep full depth.
 - If brainstorming reveals several features, capture them in `.wit/roadmap.md`, committed where written
@@ -139,6 +139,6 @@ If the work type is `investigation`, load `${CLAUDE_PLUGIN_ROOT}/skills/dev/refe
   became); contradicts the approved design/ADR → pause, re-open the design gate with a delta summary
   (approve / amend / stop), continue on the answer.
 - **Superpowers precedence** (integrations.md "Who initiates";
-  `${CLAUDE_PLUGIN_ROOT}/skills/research/references/integrations.md`): delegation points only, never
+  `${PLUGIN_ROOT}/skills/research/references/integrations.md`): delegation points only, never
   self-triggered mid-phase; wit's artifact formats always win.
 - Keep dev thin: it sequences; the phase skills do the work; the stamped `keep_alive` loop keeps it alive.

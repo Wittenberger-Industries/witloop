@@ -20,18 +20,18 @@ Outputs: `spec.md`, `tasks.md`, `pitfalls.md` (the approach ADR is usually writt
 
 ## Procedure
 
-1. **Write the spec** → `spec.md` (template in `${CLAUDE_PLUGIN_ROOT}/skills/plan/references/spec-template.md`).
+1. **Write the spec** → `spec.md` (template in `${PLUGIN_ROOT}/skills/plan/references/spec-template.md`).
    The non-negotiable part is **acceptance criteria that are testable**: each one should map to a check
    build can actually run. If you can't state how you'd verify a criterion, it isn't done being specified.
 
 2. **Decide on an ADR (if research didn't already record it).** If the feature commits to anything hard to reverse (a datastore, a framework, an
    external service, a public API or schema shape, an auth model), record it as the next **ADR-NNNN** in the
-   project-wide `.wit/adr/` log using `${CLAUDE_PLUGIN_ROOT}/skills/plan/references/adr-template.md`
+   project-wide `.wit/adr/` log using `${PLUGIN_ROOT}/skills/plan/references/adr-template.md`
    (global numbering; append the index.md row). Trivial
    features get no ADR; don't manufacture decisions.
 
 3. **List the pitfalls** → `pitfalls.md`. Walk the catalog in
-   `${CLAUDE_PLUGIN_ROOT}/skills/plan/references/pitfalls-catalog.md` and keep only the ones that genuinely
+   `${PLUGIN_ROOT}/skills/plan/references/pitfalls-catalog.md` and keep only the ones that genuinely
    apply to *this* change. For each, note the specific way it could bite here and how a task will prevent
    it. This is cheap foresight that saves an expensive debug later.
 

@@ -24,10 +24,10 @@ FOLDER_CLASSES = (
     "new / resume / in-flight-overlap / done-collision / roadmap-row"
 )
 PLUGIN_INVESTIGATION = (
-    "${CLAUDE_PLUGIN_ROOT}/skills/dev/references/investigation.md"
+    "${PLUGIN_ROOT}/skills/dev/references/investigation.md"
 )
-PLUGIN_BUG_FIX = "${CLAUDE_PLUGIN_ROOT}/skills/dev/references/bug-fix.md"
-PLUGIN_WORK_TYPES = "${CLAUDE_PLUGIN_ROOT}/skills/dev/references/work-types.md"
+PLUGIN_BUG_FIX = "${PLUGIN_ROOT}/skills/dev/references/bug-fix.md"
+PLUGIN_WORK_TYPES = "${PLUGIN_ROOT}/skills/dev/references/work-types.md"
 USER_COMMANDS = ("add-issues", "dev", "rpa", "scan")
 
 

@@ -13,7 +13,7 @@ Checks (from the repo root, detected automatically):
      (this catches the col-0 `<example>` / block-scalar bug that stopped the agents loading).
      Needs PyYAML for the full parse (`pip install pyyaml`); without it, the YAML parse is skipped
      and only delimiters + key presence are checked.
-  3. Every `${CLAUDE_PLUGIN_ROOT}/<path>` reference in `.md` files resolves to a real file under the repo root.
+  3. Every `${PLUGIN_ROOT}/<path>` reference in `.md` files resolves to a real file under the repo root.
   4. Cross-platform portability files exist (`references/{codex,copilot,grok,cursor}-tools.md`,
      `references/capabilities.md`, `AGENTS.md`),
      keep-alive.md carries the Grok Build model-judged /goal branch (`Grok Build` + `update_goal`), the
@@ -38,7 +38,7 @@ Checks (from the repo root, detected automatically):
      "Script invocation"); and four dead strings are banned: the retired `uipath-rpa-workflows`
      slug, the dead work-unit dir `.wit/goals` (the unit is a feature; the dir is `.wit/features`;
      banned unconditionally: #48 dropped the migration, an old-format repo is simply unrecognized),
-     `python3` launching a bundled `${CLAUDE_PLUGIN_ROOT}` script (the broken Windows Store stub;
+     `python3` launching a bundled `${PLUGIN_ROOT}` script (the broken Windows Store stub;
      prose `python3`/`py -3` fallback notes are not flagged, only actual invocations), and the retired
      sdd.md acceptance-criteria anchor spelled `sdd:13` or `section 13` (the acceptance-criteria
      section is sdd:10 in the base ToC).
@@ -136,8 +136,8 @@ for f in fm_files:
             if k not in fm:
                 errors.append(f"{rel}: frontmatter missing '{k.rstrip(':')}'")
 
-# 3. ${CLAUDE_PLUGIN_ROOT} cross-refs resolve (against repo root) -----------
-rx = re.compile(r"\$\{CLAUDE_PLUGIN_ROOT\}/([^\s`)\]]+)")
+# 3. ${PLUGIN_ROOT} cross-refs resolve (against repo root) -----------
+rx = re.compile(r"\$\{PLUGIN_ROOT\}/([^\s`)\]]+)")
 ref_md = (
     list(ROOT.glob("skills/**/*.md"))
     + list(ROOT.glob("agents/*.md"))
@@ -147,9 +147,14 @@ ref_md = (
 for md in ref_md:
     if not md.is_file():
         continue
-    for ref in rx.findall(md.read_text(encoding="utf-8")):
+    txt = md.read_text(encoding="utf-8")
+    if "${CLAUDE_PLUGIN_ROOT}" in txt:
+        errors.append(
+            f"{md.relative_to(ROOT)}: leftover ${{CLAUDE_PLUGIN_ROOT}} placeholder - use ${{PLUGIN_ROOT}}"
+        )
+    for ref in rx.findall(txt):
         if not (ROOT / ref).exists():
-            errors.append(f"{md.relative_to(ROOT)}: broken ref ${{CLAUDE_PLUGIN_ROOT}}/{ref}")
+            errors.append(f"{md.relative_to(ROOT)}: broken ref ${{PLUGIN_ROOT}}/{ref}")
 
 for tm in (
     "references/codex-tools.md",
@@ -340,7 +345,7 @@ for f in desc_files:
 #     bundled scripts (broken on Windows).
 DEAD_SLUG = re.compile(r"uipath-rpa-workflows")
 DEAD_GOALS_DIR = re.compile(r"\.wit?/goals")  # goal->feature rename (M1): the work-unit dir is .wit/features (also bans the pre-rebrand .wi/ spelling)
-PY3_INVOKE = re.compile(r"python3[ \t]+\$\{CLAUDE_PLUGIN_ROOT\}")  # an invocation: bare prose `python3` won't match
+PY3_INVOKE = re.compile(r"python3[ \t]+\$\{PLUGIN_ROOT\}")  # an invocation: bare prose `python3` won't match
 SECTION_SIGN = re.compile("§")  # the section-sign symbol is banned in shipped text (#49): cite name:N locators or quoted headings
 DEAD_SDD_S13 = re.compile(r"(?i)\b(?:sdd:13|section 13)\b")  # the SDD acceptance-criteria anchor is semantic (sdd:10 in the base ToC)
 lint_scope = (
@@ -360,7 +365,7 @@ for f in lint_scope:
     if DEAD_GOALS_DIR.search(txt):
         errors.append(f"{rel}: dead path '.wit/goals' - the work unit is a feature; use '.wit/features' (goal->feature rename)")
     if PY3_INVOKE.search(txt):
-        errors.append(f"{rel}: 'python3 ${{CLAUDE_PLUGIN_ROOT}}' invocation - use 'python' (python3 is the broken Store stub on Windows)")
+        errors.append(f"{rel}: 'python3 ${{PLUGIN_ROOT}}' invocation - use 'python' (python3 is the broken Store stub on Windows)")
     if SECTION_SIGN.search(txt):
         errors.append(f"{rel}: section-sign (U+00A7) - cite a name:N locator (ship:8, sdd:7.1.3) or a quoted heading instead")
     if DEAD_SDD_S13.search(txt):

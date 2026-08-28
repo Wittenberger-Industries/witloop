@@ -11,7 +11,7 @@ timestamp: 2026-08-27
 - **Languages:** Markdown (skills, agents, references) + Python 3.13 (scripts/tests; CI is Python 3.x)
 - **Package manager:** none (no pyproject/lockfile). Optional: `pip install pyyaml` so `validate.py` runs its YAML-parse checks
 - **Frontend / backend:** neither - Claude/Codex/Copilot/Grok/Cursor plugin, not an app
-- **Layout:** plugin root. `skills/` (setup, scan, dev, brainstorm, research, plan, build, ship, rpa, add-issues), `skills/dev/references/work-types.md`, `skills/dev/references/investigation.md`, `skills/dev/references/bug-fix.md`, `agents/`, `references/` (capability table + host tool maps + workflow), `scripts/validate.py`, `tests/`, `docs/` (plans, specs, design-notes, roadmap), `.claude-plugin/`, `.codex-plugin/`
+- **Layout:** plugin root. `skills/` (setup, scan, dev, brainstorm, research, plan, build, ship, rpa, add-issues), `skills/dev/references/work-types.md`, `skills/dev/references/investigation.md`, `skills/dev/references/bug-fix.md`, `agents/`, `references/` (capability table + host tool maps + workflow), `scripts/validate.py`, `tests/`, `.claude-plugin/`, `.codex-plugin/`. Maintainer `docs/` and `.wit/features/` are local-only (gitignored).
 - **Architecture:** see `architecture.md` (mermaid module/dependency diagram)
 
 ## Commands  (verified runnable)
@@ -27,10 +27,10 @@ timestamp: 2026-08-27
 - **Provider/files:** `.github/workflows/validate.yml`  - **Enforces:** `pip install pyyaml`, `python scripts/validate.py`, `python -m unittest discover -s tests`
 
 ## Conventions
-- **Style/lint:** no ruff/mypy. Standing guardrails in `docs/roadmap.md`: no em-dashes in shipped text; citations use `name:N` locators; rules-inventory on any rule-text PR; three-manifest version bump together
+- **Style/lint:** no ruff/mypy. Standing guardrails in `constitution.md`: no em-dashes in shipped text; citations use `name:N` locators; rules-inventory on any rule-text PR; three-manifest version bump together
 - **Tests in:** `tests/test_*.py` (unittest)
 - **Imports/module style:** stdlib scripts under `skills/*/scripts/` and `scripts/validate.py`; tests add those dirs to `sys.path`
-- **Gitignore:** whitelist (`*` then `!/path`). New top-level dirs need a `!/` line or they vanish. `.wit/` is whitelisted so dogfood scan/dev artifacts can commit
+- **Gitignore:** whitelist (`*` then `!/path`). New top-level dirs need a `!/` line or they vanish. `.wit/` is whitelisted except `.wit/features/` (local dossiers)
 
 ## Entry points
 - Skills: `/wit:setup`, `/wit:scan`, `/wit:dev`, `/wit:rpa`, `/wit:add-issues` (host aliases in `references/skill-aliases/` and `AGENTS.md`). `/wit:dev` accepts `--kind feature|bug-fix|investigation`

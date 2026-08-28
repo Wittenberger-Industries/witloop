@@ -229,6 +229,8 @@ class CheckerSafetyFactTests(unittest.TestCase):
 
     def test_no_em_dash_in_edited_files(self):
         for path in (CHECKER, CHECKER_NOTES, Path(__file__)):
+            if not path.is_file():
+                continue
             self.assertNotIn(EM_DASH, load(path), path.name)
 
 
@@ -293,6 +295,8 @@ class ShipSafetyFactTests(unittest.TestCase):
 
     def test_no_em_dash_in_ship_files(self):
         for path in (SHIP, GATE, SHIP_NOTES, Path(__file__)):
+            if not path.is_file():
+                continue
             self.assertNotIn(EM_DASH, load(path), path.name)
 
 

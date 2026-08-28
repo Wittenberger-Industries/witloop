@@ -21,11 +21,11 @@ Checks (from the repo root, detected automatically):
      Autopilot/Grok lists in the always-loaded body,
      and the baseline-c contract anchors hold (dev/brainstorm: headless-only self-answer stamps;
      integrations.md: verify absence before any fallback stamp).
-  5. OKF conformance (see docs/specs/2026-06-14-okf-knowledge-format.md): every concept doc under
-     skills/ · agents/ · references/ · docs/ plus README.md/AGENTS.md opens with parseable YAML
-     frontmatter carrying a non-empty `type`. Each must also end with a trailing newline and have
-     balanced code fences, the two signatures of a truncated/interrupted write (the bug class that
-     shipped half-written docs before this guard existed). `index.md` / `log.md` are reserved and exempt.
+  5. OKF conformance: every concept doc under skills/ · agents/ · references/ plus README.md/AGENTS.md
+     opens with parseable YAML frontmatter carrying a non-empty `type`. Each must also end with a
+     trailing newline and have balanced code fences, the two signatures of a truncated/interrupted
+     write (the bug class that shipped half-written docs before this guard existed). `index.md` /
+     `log.md` are reserved and exempt. Maintainer `docs/` is local-only and is not scanned.
   6. Generated-`.wit/`-file templates (the ```markdown blocks inside skills/agents that emit the runtime
      `.wit/` files) each open with frontmatter carrying a non-empty `type`, so a generated file can't ship
      type-less. Reserved `index.md`/`log.md` listings are exempt; console/shell examples (non-`markdown`
@@ -207,7 +207,6 @@ concept_md = (
     + list(ROOT.glob("agents/*.md"))
     + list(ROOT.glob("references/*.md"))
     + list(ROOT.glob("references/skill-aliases/**/*.md"))
-    + list(ROOT.glob("docs/**/*.md"))
     + [ROOT / "AGENTS.md", ROOT / "README.md"]
 )
 okf_checked = 0

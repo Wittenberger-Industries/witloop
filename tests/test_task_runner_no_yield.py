@@ -10,6 +10,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+HAS_DOCS = (ROOT / "docs").is_dir()
 RUNNER = ROOT / "agents" / "wit-task-runner.md"
 RUNNER_NOTES = ROOT / "docs" / "design-notes" / "wit-task-runner.md"
 BUILD = ROOT / "skills" / "build" / "SKILL.md"
@@ -180,6 +181,7 @@ class HostAdapterNoYieldTests(unittest.TestCase):
         self.assertNotIn(EM_DASH, text)
 
 
+@unittest.skipUnless(HAS_DOCS, "docs/ is local-only")
 class DesignNotesNoYieldTests(unittest.TestCase):
     def test_runner_notes_retire_stop_and_ask(self):
         text = load(RUNNER_NOTES)

@@ -13,12 +13,14 @@
 !/references/**
 !/hooks/**
 !/scripts/**
-!/docs/**
 !/tests/**
 !/.wit/**
 !/AGENTS.md
 !/README.md
 !/.gitignore
+
+# Maintainer-local: stay on disk, never published.
+/.wit/features/
 
 # ...but never Python bytecode, even under the whitelisted paths above (regenerated on every run).
 __pycache__/

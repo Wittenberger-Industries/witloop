@@ -22,7 +22,7 @@ REPO_MAP = ROOT / ".wit" / "repo-map.md"
 AGENTS_DIR = ROOT / "agents"
 SKILLS_DIR = ROOT / "skills"
 
-RELEASE = "1.16.3"
+RELEASE = "1.16.4"
 MARKETPLACE_CATALOG = "0.2.0"
 USER_COMMANDS = ("add-issues", "dev", "rpa", "scan", "setup")
 NAMED_AGENTS = ("wit-code-checker", "wit-researcher", "wit-task-runner")
@@ -71,7 +71,7 @@ def wit_plugin_version(marketplace: dict) -> str | None:
 
 
 class ManifestLockstepTests(unittest.TestCase):
-    def test_three_plugin_versions_are_exactly_1_16_3(self):
+    def test_three_plugin_versions_are_exactly_1_16_4(self):
         plugin = json.loads(load(PLUGIN))
         marketplace = json.loads(load(MARKETPLACE))
         codex = json.loads(load(CODEX))
@@ -123,9 +123,10 @@ class FiveCommandTests(unittest.TestCase):
 
 
 class SourceMemoryTests(unittest.TestCase):
-    def test_overview_routes_work_types_at_1_16_3(self):
+    def test_overview_routes_work_types_at_1_16_4(self):
         text = load(OVERVIEW)
         self.assertIn(RELEASE, text)
+        self.assertNotIn("1.16.3", text)
         self.assertNotIn("1.16.2", text)
         self.assertNotIn("1.16.1", text)
         self.assertNotIn("1.16.0", text)

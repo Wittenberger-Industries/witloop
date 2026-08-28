@@ -11,14 +11,14 @@ timestamp: 2026-08-25
 Witloop (`wit`, formerly `wi`) is an opinionated, low-token spec-driven engineering loop shipped as a plugin. One source tree targets Claude Code, Codex CLI, Copilot CLI, Grok Build, and Cursor. You run `/wit:setup` once, then `/wit:dev` routes work type `feature | bug-fix | investigation` before write-capable setup. Investigation is read-only (cited answer, no dossier or PR). Bug-fix overlays the existing phases. Feature still brainstorms, designs, and ships to an open PR.
 
 ## Stack
-Markdown skills and agent charters, plus stdlib Python for validation, token ledgers, mermaid checks, and GitHub-issue drafts. No application runtime, no package lockfile. Version `1.16.3` in the three plugin manifests. Skills use `${PLUGIN_ROOT}` (ADR-0003).
+Markdown skills and agent charters, plus stdlib Python for validation, token ledgers, mermaid checks, and GitHub-issue drafts. No application runtime, no package lockfile. Version `1.16.4` in the three plugin manifests. Skills use `${PLUGIN_ROOT}` (ADR-0003).
 
 ## How it is organized
 - `skills/` - five user-facing `setup`, `scan`, `dev`, `rpa`, `add-issues`; hidden phase skills `brainstorm`, `research`, `plan`, `build`, `ship`
 - `agents/` - `wit-researcher`, `wit-task-runner`, `wit-code-checker` charters
 - `references/` - host tool maps (`codex`, `copilot`, `grok`, `cursor`), `capabilities.md`, `workflow.md`, `keep-alive.md`, `models.md`, skill aliases
 - `scripts/validate.py` - plugin-structure gate (portability files, YAML, version parity)
-- `docs/` - maintainer plans/specs/design-notes and the live `docs/roadmap.md` queue
+- `docs/` - maintainer-local plans/specs/design-notes (gitignored; not published)
 - `.claude-plugin/` and `.codex-plugin/` - marketplace/plugin manifests
 
 On-repo wit state for this source repo lives in `.wit/` (dogfood). Consumer projects get their own `.wit/` when they run setup.

@@ -1,7 +1,7 @@
 ---
 type: Readme
 title: "Witloop"
-description: Spec-driven loop (setup, scan, dev, rpa, add-issues) for Claude Code, Copilot CLI, Grok Build, and Cursor. v1.16.3.
+description: Spec-driven loop (setup, scan, dev, rpa, add-issues) for Claude Code, Copilot CLI, Grok Build, and Cursor. v1.16.4.
 timestamp: 2026-08-27
 tags: [witloop, readme, overview]
 ---
@@ -10,7 +10,7 @@ tags: [witloop, readme, overview]
 
 Witloop is a plugin (`wit`) that takes a software change or a UiPath PDD from a conversation to an open pull request. Set up a repo once. After that, one command runs the loop. You talk at brainstorm and at a design gate. The rest is autonomous.
 
-It runs on **four hosts**: Claude Code, GitHub Copilot CLI, Grok Build, and Cursor. Current release is **1.16.3**.
+It runs on **four hosts**: Claude Code, GitHub Copilot CLI, Grok Build, and Cursor. Current release is **1.16.4**.
 
 | Command | What it does |
 |---------|--------------|
@@ -177,7 +177,7 @@ Python-first defaults (uv, pytest, ruff, mypy). `scan` records whatever the repo
 ├── agents/              wit-task-runner, wit-researcher, wit-code-checker
 ├── references/          host adapters, capabilities.md, keep-alive.md, skill-aliases/
 ├── scripts/validate.py  manifests, frontmatter, cross-refs
-├── docs/                specs, plans, live roadmap
+├── tests/               contract tests
 └── AGENTS.md            bootstrap for non-Claude hosts
 ```
 
@@ -185,4 +185,4 @@ Before a release: `python scripts/validate.py` (or `python3`) and `python -m uni
 
 Any change under `skills/` or `agents/` bumps `version` in the same PR in all plugin manifests. The installed cache is keyed by version.
 
-Open work lives in `docs/roadmap.md`, not here.
+Open work lives in `.wit/roadmap.md`, not here.

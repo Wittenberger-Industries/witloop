@@ -11,6 +11,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+HAS_DOCS = (ROOT / "docs").is_dir()
 SETUP = ROOT / "skills" / "setup" / "SKILL.md"
 SETUP_NOTES = ROOT / "docs" / "design-notes" / "setup.md"
 SCAN = ROOT / "skills" / "scan" / "SKILL.md"
@@ -178,11 +179,14 @@ class SetupSkillTests(unittest.TestCase):
 
     def test_no_em_dashes_in_owned_files(self):
         for path in OWNED:
+            if not path.is_file():
+                continue
             text = load(path)
             self.assertNotIn(EM_DASH, text, path)
 
 
 class SetupDesignNotesTests(unittest.TestCase):
+    @unittest.skipUnless(HAS_DOCS, "docs/ is local-only")
     def test_design_notes_exist_and_are_not_loaded_at_runtime(self):
         text = load(SETUP_NOTES)
         fm = frontmatter(text)
@@ -257,6 +261,7 @@ class ScanRefreshTests(unittest.TestCase):
         self.assertIn("graph", text)
         self.assertIn("subgraph", text)
 
+    @unittest.skipUnless(HAS_DOCS, "docs/ is local-only")
     def test_design_notes_are_refresh_not_first_run(self):
         text = load(SCAN_NOTES)
         self.assertRegex(text, RUNTIME_NEVER)
@@ -292,6 +297,8 @@ class ScanRefreshTests(unittest.TestCase):
 
     def test_no_em_dashes_in_owned_files(self):
         for path in SCAN_OWNED:
+            if not path.is_file():
+                continue
             text = load(path)
             self.assertNotIn(EM_DASH, text, path)
 
@@ -424,6 +431,7 @@ class SetupInvokeTests(unittest.TestCase):
             self.assertRegex(text, r"(?i)models\+ledger slice")
             self.assertRegex(text, r"(?i)slice only")
 
+    @unittest.skipUnless(HAS_DOCS, "docs/ is local-only")
     def test_design_notes_sync_setup_first_and_resolve_once(self):
         dev = load(DEV_NOTES)
         self.assertRegex(dev, r"(?i)setup-first")
@@ -440,6 +448,8 @@ class SetupInvokeTests(unittest.TestCase):
 
     def test_no_em_dashes_in_owned_files(self):
         for path in INVOKE_OWNED:
+            if not path.is_file():
+                continue
             text = load(path)
             self.assertNotIn(EM_DASH, text, path)
 

@@ -21,10 +21,13 @@ elapsed time or the orchestrator's own dispatch/arrival stamps (OS clock); write
 | ship | checker: result mode | unavailable | unavailable | exact (completion notification) |
 | orchestrator | main thread, all phases | (see Orchestrator section) | n/a (see below) | finalized by finalize_tokens.py; unavailable if the host has no local usage field or the parse fails: never substitute or estimate |
 
-**Subagents (exact): <sum>.**
-**Σ compute: <dur> across <n> dispatches.**
-**Autonomous wall-clock (excl. manual steps): <dur>.**
+**Subagents (exact): 0.**
+**Σ compute: unavailable across 0 dispatches.**
+**Autonomous wall-clock (excl. manual steps): 15m48s.**
 
 ## Orchestrator
 
-_PENDING: ship replaces this section during the dossier tidy (BEFORE the dossier commit and the PR) by running `python ${PLUGIN_ROOT}/skills/ship/scripts/finalize_tokens.py --write <this file>`. That CLI reads Host: from progress.md and routes to the host parser (Claude: token_report.py; Grok: grok_token_report.py; Cursor/Copilot/Codex/unstamped/unknown: the honest unavailable sentinel plus Duration from progress.md spans). If the parse fails or the host exposes no local usage field it writes `Orchestrator: unavailable for this run`; never a substitute, estimate, invented figure, or dashboard scrape. A tokens.md still reading PENDING after ship is a defect._
+Orchestrator: unavailable for this run
+
+- host: cursor
+- NOTE: this host exposes no local orchestrator usage field; Duration totals come from progress.md Log stamps. Never a dashboard scrape.

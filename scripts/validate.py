@@ -32,7 +32,8 @@ Checks (from the repo root, detected automatically):
      fences) are skipped.
   7. Mechanical lints, scoped to skills/ · agents/ · references/ · .claude-plugin/ (never docs/ or tests/,
      which legitimately archive the very strings banned in shipped text): every SKILL.md `description`
-     stays under the 1024-char agent-skills cap; skill + reference descriptions don't trail off mid-thought
+     stays under the 1024-char agent-skills cap; the three plugin JSON description fields use the same cap;
+     skill + reference descriptions don't trail off mid-thought
      (a truncated/lazy `...` or `..`); the section-sign symbol (U+00A7) is banned outright: citations
      use the name:N locator (ship:8, sdd:7.1.3, protocol:5) or a quoted heading (workflow.md
      "Script invocation"); and four dead strings are banned: the retired `uipath-rpa-workflows`
@@ -329,6 +330,25 @@ for f in sorted(ROOT.glob("skills/**/SKILL.md")) + sorted(ROOT.glob("references/
     desc = _fm_desc(f.read_text(encoding="utf-8"))
     if desc is not None and len(desc) > DESC_CAP:
         errors.append(f"{f.relative_to(ROOT)}: SKILL description is {len(desc)} chars (> {DESC_CAP}-char cap)")
+
+# 7a-json. The three plugin JSON description fields use the same 1024-char cap.
+for rel in (".claude-plugin/plugin.json", ".codex-plugin/plugin.json", ".claude-plugin/marketplace.json"):
+    try:
+        data = json.loads((ROOT / rel).read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        continue
+    if not isinstance(data, dict):
+        continue
+    if rel == ".claude-plugin/marketplace.json":
+        desc = None
+        for plugin in data.get("plugins", []):
+            if plugin.get("name") == "wit":
+                desc = plugin.get("description")
+                break
+    else:
+        desc = data.get("description")
+    if isinstance(desc, str) and len(desc) > DESC_CAP:
+        errors.append(f"{rel}: plugin description is {len(desc)} chars (> {DESC_CAP}-char cap)")
 
 # 7b. Skill + reference descriptions must not trail off mid-thought (OKF indexes reuse them verbatim).
 desc_files = (

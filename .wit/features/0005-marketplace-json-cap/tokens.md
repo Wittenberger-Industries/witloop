@@ -17,6 +17,7 @@ elapsed time or the orchestrator's own dispatch/arrival stamps (OS clock); write
 |-------|--------|--------|----------|-------|
 | research | researcher: desc-cap-check | unavailable | unavailable | exact (completion notification) |
 | plan | checker: plan mode | unavailable | unavailable | exact (completion notification) |
+| build W1 | task-runner: task 1 | unavailable | unavailable | exact (completion notification) |
 | orchestrator | main thread, all phases | (see Orchestrator section) | n/a (see below) | finalized by finalize_tokens.py; unavailable if the host has no local usage field or the parse fails: never substitute or estimate |
 
 **Subagents (exact): <sum>.**

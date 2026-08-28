@@ -15,10 +15,10 @@ timestamp: 2026-08-28
 - **Gate mode:** interactive
 - **Flow:** dev
 - **Work type:** bug-fix
-- **Worktree:** -
-- **Branch:** -
+- **Worktree:** D:/ClaudeCowork/wi-plugin/wi-plugin-wit-0005-marketplace-json-cap
+- **Branch:** wit/0005-marketplace-json-cap
 - **Host:** cursor
-- **Plugin root (resolved):** D:/ClaudeCowork/wi-plugin/wi-plugin
+- **Plugin root (resolved):** D:/ClaudeCowork/wi-plugin/wi-plugin-wit-0005-marketplace-json-cap
 
 ## Capabilities (resolved)
 - keep_alive=model_judged_goal · tokens=unavailable · ask=AskQuestion · subagent=Task wit-* when listed else inline agents/*.md · shell=Python scripts (POSIX or PowerShell) · skill_invoke=plugin skills + natural-language auto-trigger
@@ -41,6 +41,9 @@ timestamp: 2026-08-28
 - 2026-08-28T11:14:49+03:00 **Update** design gate opened
 - 2026-08-28T11:14:49+03:00 **Update** design gate bypassed (narrow-fix): DESC_CAP 7a-json plus shortened live copy, no public contract or architecture change, phase = build
 - 2026-08-28T11:14:49+03:00 build engine engaged (wit 1.16.2)
+- 2026-08-28T11:14:49+03:00 worktree via superpowers
+- 2026-08-28T11:20:19+03:00 **Update** task 1 done
+- 2026-08-28T11:20:19+03:00 **Update** repro passed on python scripts/validate.py
 
 ## Gate bypass
 - **Status:** narrow-fix
@@ -52,7 +55,7 @@ timestamp: 2026-08-28
 - **Surface:** python scripts/validate.py
 
 ## Tasks (mirrored from tasks.md once planned)
-- [ ] 1. Cap JSON plugin descriptions at DESC_CAP
+- [x] 1. Cap JSON plugin descriptions at DESC_CAP
 
 ## Decisions / blockers
 - Cap surface: marketplace.json wit plugin `description` AND `.claude-plugin/plugin.json` / `.codex-plugin/plugin.json` descriptions (same 1024 cap on each). Not the whole marketplace.json file.

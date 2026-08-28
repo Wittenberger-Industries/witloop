@@ -15,13 +15,14 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / ".claude-plugin" / "plugin.json"
 MARKETPLACE = ROOT / ".claude-plugin" / "marketplace.json"
 CODEX = ROOT / ".codex-plugin" / "plugin.json"
+VALIDATE = ROOT / "scripts" / "validate.py"
 OVERVIEW = ROOT / ".wit" / "overview.md"
 ARCHITECTURE = ROOT / ".wit" / "architecture.md"
 REPO_MAP = ROOT / ".wit" / "repo-map.md"
 AGENTS_DIR = ROOT / "agents"
 SKILLS_DIR = ROOT / "skills"
 
-RELEASE = "1.16.2"
+RELEASE = "1.16.3"
 MARKETPLACE_CATALOG = "0.2.0"
 USER_COMMANDS = ("add-issues", "dev", "rpa", "scan", "setup")
 NAMED_AGENTS = ("wit-code-checker", "wit-researcher", "wit-task-runner")
@@ -70,7 +71,7 @@ def wit_plugin_version(marketplace: dict) -> str | None:
 
 
 class ManifestLockstepTests(unittest.TestCase):
-    def test_three_plugin_versions_are_exactly_1_16_2(self):
+    def test_three_plugin_versions_are_exactly_1_16_3(self):
         plugin = json.loads(load(PLUGIN))
         marketplace = json.loads(load(MARKETPLACE))
         codex = json.loads(load(CODEX))
@@ -87,7 +88,14 @@ class ManifestLockstepTests(unittest.TestCase):
         plugin = json.loads(load(PLUGIN))
         marketplace = json.loads(load(MARKETPLACE))
         wit = next(p for p in marketplace["plugins"] if p.get("name") == "wit")
-        for desc in (plugin["description"], wit["description"]):
+        codex = json.loads(load(CODEX))
+        src = VALIDATE.read_text(encoding="utf-8")
+        cap_match = re.search(r"DESC_CAP = (\d+)", src)
+        self.assertIsNotNone(cap_match)
+        cap = int(cap_match.group(1))
+        self.assertEqual(cap, 1024)
+        for desc in (plugin["description"], wit["description"], codex["description"]):
+            self.assertLessEqual(len(desc), cap)
             for host in HOSTS:
                 self.assertIn(host, desc, host)
             for command in (
@@ -102,6 +110,7 @@ class ManifestLockstepTests(unittest.TestCase):
             self.assertNotIn("/wit:investigate", desc)
             self.assertNotIn("/wit:how", desc)
             self.assertNotIn(EM_DASH, desc)
+        self.assertIn(": plugin description is", VALIDATE.read_text(encoding="utf-8"))
 
 
 class FiveCommandTests(unittest.TestCase):
@@ -114,9 +123,10 @@ class FiveCommandTests(unittest.TestCase):
 
 
 class SourceMemoryTests(unittest.TestCase):
-    def test_overview_routes_work_types_at_1_16_2(self):
+    def test_overview_routes_work_types_at_1_16_3(self):
         text = load(OVERVIEW)
         self.assertIn(RELEASE, text)
+        self.assertNotIn("1.16.2", text)
         self.assertNotIn("1.16.1", text)
         self.assertNotIn("1.16.0", text)
         self.assertNotIn("1.14.1", text)

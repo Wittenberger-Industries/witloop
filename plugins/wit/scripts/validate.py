@@ -2,12 +2,12 @@
 """
 validate.py: pre-release check for the wit plugin. Run from anywhere:
 
-    python3 scripts/validate.py
+    python3 plugins/wit/scripts/validate.py
 
-Checks (from the repo root, detected automatically):
-  1. JSON validity of `.claude-plugin/marketplace.json`, `.claude-plugin/plugin.json`, and
-     `.codex-plugin/plugin.json`; the Codex manifest declares name/version/skills and `skills` resolves;
-     the three manifest versions agree.
+Checks (plugin root = `plugins/wit`; marketplace lives at the git repo root):
+  1. JSON validity of repo `.claude-plugin/marketplace.json`, plugin `.claude-plugin/plugin.json`,
+     plugin `plugin.json` (Copilot), and `.codex-plugin/plugin.json`; marketplace `source` is
+     `./plugins/wit`; Codex `skills` resolves; packaged dirs exist; versions agree.
   2. Every `skills/**/SKILL.md` / `agents/*.md` / `references/skill-aliases/**/SKILL.md` has valid YAML
      frontmatter with `name` + `description`
      (this catches the col-0 `<example>` / block-scalar bug that stopped the agents loading).
@@ -51,8 +51,31 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent  # repo root (holds .claude-plugin/)
+PLUGIN_ROOT = Path(__file__).resolve().parent.parent  # plugins/wit
+
+
+def _marketplace_repo(plugin_root: Path) -> Path:
+    for parent in plugin_root.parents:
+        if (parent / ".claude-plugin" / "marketplace.json").is_file():
+            return parent
+    raise SystemExit("marketplace.json not found above plugin root")
+
+
+REPO_ROOT = _marketplace_repo(PLUGIN_ROOT)
+ROOT = PLUGIN_ROOT
+MARKETPLACE = REPO_ROOT / ".claude-plugin" / "marketplace.json"
+PLUGIN_SOURCE = "./plugins/wit"
+REQUIRED_PLUGIN_DIRS = ("agents", "references", "scripts", "skills")
 errors = []
+
+
+def _rel(path: Path) -> str:
+    for base in (REPO_ROOT, ROOT):
+        try:
+            return path.relative_to(base).as_posix()
+        except ValueError:
+            continue
+    return str(path)
 
 try:
     import yaml
@@ -61,22 +84,32 @@ except ImportError:
     HAVE_YAML = False
 
 # 1. JSON manifests --------------------------------------------------------
+copilot_plugin = ROOT / "plugin.json"
+claude_plugin = ROOT / ".claude-plugin" / "plugin.json"
+codex = ROOT / ".codex-plugin" / "plugin.json"
 manifests = [
-    ROOT / ".claude-plugin" / "marketplace.json",
-    ROOT / ".claude-plugin" / "plugin.json",
-    ROOT / ".codex-plugin" / "plugin.json",
+    MARKETPLACE,
+    claude_plugin,
+    copilot_plugin,
+    codex,
 ]
 for m in manifests:
     if not m.is_file():
-        errors.append(f"missing manifest: {m.relative_to(ROOT)}")
+        errors.append(f"missing manifest: {_rel(m)}")
         continue
     try:
         json.loads(m.read_text(encoding="utf-8"))
     except Exception as e:
-        errors.append(f"invalid JSON {m.relative_to(ROOT)}: {e}")
+        errors.append(f"invalid JSON {_rel(m)}: {e}")
+
+for name in REQUIRED_PLUGIN_DIRS:
+    if not (ROOT / name).is_dir():
+        errors.append(f"plugin root missing {name}/")
+    leftover = REPO_ROOT / name
+    if leftover.exists() and leftover.resolve() != (ROOT / name).resolve():
+        errors.append(f"required plugin dir left outside plugin root: {name}/")
 
 # Codex manifest must declare name/version/skills, and skills must resolve
-codex = ROOT / ".codex-plugin" / "plugin.json"
 if codex.is_file():
     try:
         cd = json.loads(codex.read_text(encoding="utf-8"))
@@ -89,16 +122,41 @@ if codex.is_file():
     except Exception:
         pass  # JSON validity already reported by the loop above
 
-# Manifest version parity: all three manifests ship the same version (README "Maintaining" rule)
+# Marketplace source is the standalone plugin directory (never repo root / `.git`).
 try:
-    v_plugin = json.loads((ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8")).get("version")
+    mp = json.loads(MARKETPLACE.read_text(encoding="utf-8"))
+    wit_entry = next((p for p in mp.get("plugins", []) if p.get("name") == "wit"), None)
+    if wit_entry is None:
+        errors.append("marketplace.json: no plugin named 'wit'")
+    else:
+        source = wit_entry.get("source")
+        if source != PLUGIN_SOURCE:
+            errors.append(
+                f"marketplace.json: wit source is {source!r}, expected {PLUGIN_SOURCE!r}"
+            )
+        source_dir = (REPO_ROOT / source).resolve() if isinstance(source, str) else None
+        if source_dir is None or not source_dir.is_dir():
+            errors.append(f"marketplace.json: source {source!r} is not a directory")
+        elif source_dir != ROOT.resolve():
+            errors.append(
+                f"marketplace.json: source {source!r} does not resolve to the plugin root"
+            )
+except Exception:
+    pass  # JSON validity already reported by the loop above
+
+# Manifest version parity: Claude, Copilot, Codex, and marketplace wit entry
+try:
+    v_plugin = json.loads(claude_plugin.read_text(encoding="utf-8")).get("version")
+    v_copilot = json.loads(copilot_plugin.read_text(encoding="utf-8")).get("version") if copilot_plugin.is_file() else None
     v_codex = json.loads(codex.read_text(encoding="utf-8")).get("version") if codex.is_file() else None
-    mp = json.loads((ROOT / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
+    mp = json.loads(MARKETPLACE.read_text(encoding="utf-8"))
     v_market = next((p.get("version") for p in mp.get("plugins", []) if p.get("name") == "wit"), None)
-    if len({v_plugin, v_codex, v_market}) != 1:
+    versions = {v_plugin, v_copilot, v_codex, v_market}
+    if len(versions) != 1:
         errors.append(
             f"manifest version mismatch: .claude-plugin/plugin.json={v_plugin} "
-            f"marketplace.json(wit)={v_market} .codex-plugin/plugin.json={v_codex} - bump all three together"
+            f"plugin.json={v_copilot} marketplace.json(wit)={v_market} "
+            f".codex-plugin/plugin.json={v_codex} - bump all four together"
         )
 except Exception:
     pass  # invalid JSON already reported above
@@ -330,15 +388,21 @@ for f in sorted(ROOT.glob("skills/**/SKILL.md")) + sorted(ROOT.glob("references/
     if desc is not None and len(desc) > DESC_CAP:
         errors.append(f"{f.relative_to(ROOT)}: SKILL description is {len(desc)} chars (> {DESC_CAP}-char cap)")
 
-# 7a-json. The three plugin JSON description fields use the same 1024-char cap.
-for rel in (".claude-plugin/plugin.json", ".codex-plugin/plugin.json", ".claude-plugin/marketplace.json"):
+# 7a-json. Plugin JSON description fields use the same 1024-char cap.
+_json_desc_files = (
+    (claude_plugin, ".claude-plugin/plugin.json"),
+    (copilot_plugin, "plugin.json"),
+    (codex, ".codex-plugin/plugin.json"),
+    (MARKETPLACE, ".claude-plugin/marketplace.json"),
+)
+for path, rel in _json_desc_files:
     try:
-        data = json.loads((ROOT / rel).read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
         continue
     if not isinstance(data, dict):
         continue
-    if rel == ".claude-plugin/marketplace.json":
+    if rel.endswith("marketplace.json"):
         desc = None
         for plugin in data.get("plugins", []):
             if plugin.get("name") == "wit":

@@ -9,12 +9,13 @@ import re
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-HAS_DOCS = (ROOT / "docs").is_dir()
+REPO_ROOT = Path(__file__).resolve().parents[1]
+ROOT = REPO_ROOT / "plugins" / "wit"
+HAS_DOCS = (REPO_ROOT / "docs").is_dir()
 RUNNER = ROOT / "agents" / "wit-task-runner.md"
-RUNNER_NOTES = ROOT / "docs" / "design-notes" / "wit-task-runner.md"
+RUNNER_NOTES = REPO_ROOT / "docs" / "design-notes" / "wit-task-runner.md"
 BUILD = ROOT / "skills" / "build" / "SKILL.md"
-BUILD_NOTES = ROOT / "docs" / "design-notes" / "build.md"
+BUILD_NOTES = REPO_ROOT / "docs" / "design-notes" / "build.md"
 SKELETON = ROOT / "skills" / "build" / "references" / "worktrees-and-subagents.md"
 GROK = ROOT / "references" / "grok-tools.md"
 CURSOR = ROOT / "references" / "cursor-tools.md"

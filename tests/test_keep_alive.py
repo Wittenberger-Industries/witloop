@@ -5,7 +5,8 @@ import re
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[1]
+ROOT = REPO_ROOT / "plugins" / "wit"
 CAPABILITIES = ROOT / "references" / "capabilities.md"
 KEEP_ALIVE = ROOT / "references" / "keep-alive.md"
 CURSOR_TOOLS = ROOT / "references" / "cursor-tools.md"

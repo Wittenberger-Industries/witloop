@@ -10,15 +10,16 @@ import re
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-HAS_DOCS = (ROOT / "docs").is_dir()
+REPO_ROOT = Path(__file__).resolve().parents[1]
+ROOT = REPO_ROOT / "plugins" / "wit"
+HAS_DOCS = (REPO_ROOT / "docs").is_dir()
 README = ROOT / "README.md"
 AGENTS = ROOT / "AGENTS.md"
-DEV_NOTES = ROOT / "docs" / "design-notes" / "dev.md"
-RESEARCH_NOTES = ROOT / "docs" / "design-notes" / "research.md"
-BUILD_NOTES = ROOT / "docs" / "design-notes" / "build.md"
-SHIP_NOTES = ROOT / "docs" / "design-notes" / "ship.md"
-CHECKER_NOTES = ROOT / "docs" / "design-notes" / "wit-code-checker.md"
+DEV_NOTES = REPO_ROOT / "docs" / "design-notes" / "dev.md"
+RESEARCH_NOTES = REPO_ROOT / "docs" / "design-notes" / "research.md"
+BUILD_NOTES = REPO_ROOT / "docs" / "design-notes" / "build.md"
+SHIP_NOTES = REPO_ROOT / "docs" / "design-notes" / "ship.md"
+CHECKER_NOTES = REPO_ROOT / "docs" / "design-notes" / "wit-code-checker.md"
 
 DOC_FILES = (
     README,
@@ -90,7 +91,7 @@ class DocSetTests(unittest.TestCase):
             "docs/design-notes/ship.md",
             "docs/design-notes/wit-code-checker.md",
         }
-        got = {path.relative_to(ROOT).as_posix() for path in DOC_FILES}
+        got = {path.relative_to(ROOT if path.is_relative_to(ROOT) else REPO_ROOT).as_posix() for path in DOC_FILES}
         self.assertEqual(got, expected)
         for path in DOC_FILES:
             if not HAS_DOCS and path != README and path != AGENTS:
@@ -102,12 +103,12 @@ class DocSetTests(unittest.TestCase):
         self.assertIn("docs/plans/", src)
         self.assertIn("docs/specs/", src)
         for path in DOC_FILES:
-            rel = path.relative_to(ROOT).as_posix()
+            rel = path.relative_to(ROOT if path.is_relative_to(ROOT) else REPO_ROOT).as_posix()
             self.assertFalse(rel.startswith("docs/plans/"), rel)
             self.assertFalse(rel.startswith("docs/specs/"), rel)
         if HAS_DOCS:
-            self.assertTrue((ROOT / "docs" / "plans").is_dir())
-            self.assertTrue((ROOT / "docs" / "specs").is_dir())
+            self.assertTrue((REPO_ROOT / "docs" / "plans").is_dir())
+            self.assertTrue((REPO_ROOT / "docs" / "specs").is_dir())
         self.assertNotRegex(src, r"(?m)^\s*(DOC_FILES|README|AGENTS).*=.*docs/(plans|specs)")
 
     def test_no_em_dashes_in_owned_docs(self):

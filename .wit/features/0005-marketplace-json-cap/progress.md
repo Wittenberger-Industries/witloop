@@ -3,7 +3,7 @@ type: Feature Progress
 title: "Marketplace plugin descriptions under 1024 chars"
 description: Cap marketplace.json, plugin.json, and Codex plugin description fields at 1024 characters and ship 1.16.3.
 feature: 0005-marketplace-json-cap
-status: build
+status: ship
 timestamp: 2026-08-28
 ---
 
@@ -11,7 +11,7 @@ timestamp: 2026-08-28
 
 - **Slug:** 0005-marketplace-json-cap
 - **Created:** 2026-08-28
-- **Phase:** build
+- **Phase:** ship
 - **Gate mode:** interactive
 - **Flow:** dev
 - **Work type:** bug-fix
@@ -44,6 +44,9 @@ timestamp: 2026-08-28
 - 2026-08-28T11:14:49+03:00 worktree via superpowers
 - 2026-08-28T11:20:19+03:00 **Update** task 1 done
 - 2026-08-28T11:20:19+03:00 **Update** repro passed on python scripts/validate.py
+- 2026-08-28T11:21:21+03:00 **Update** phase = ship (ship engine engaged (wit 1.16.3))
+- 2026-08-28T11:21:21+03:00 verification via superpowers:verification-before-completion
+- 2026-08-28T11:21:21+03:00 review via wit-code-checker + superpowers:requesting-code-review[inline]
 
 ## Gate bypass
 - **Status:** narrow-fix

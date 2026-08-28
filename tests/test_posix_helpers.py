@@ -5,7 +5,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[1]
+ROOT = REPO_ROOT / "plugins" / "wit"
 SCRIPTS = ROOT / "skills" / "ship" / "scripts"
 ENSURE = SCRIPTS / "ensure_logdir.py"
 STRIP = SCRIPTS / "strip_frontmatter.py"

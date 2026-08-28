@@ -8,12 +8,13 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[1]
+ROOT = REPO_ROOT / "plugins" / "wit"
 CHECKER = ROOT / "agents" / "wit-code-checker.md"
-CHECKER_NOTES = ROOT / "docs" / "design-notes" / "wit-code-checker.md"
+CHECKER_NOTES = REPO_ROOT / "docs" / "design-notes" / "wit-code-checker.md"
 SHIP = ROOT / "skills" / "ship" / "SKILL.md"
 GATE = ROOT / "skills" / "ship" / "references" / "verification-gate.md"
-SHIP_NOTES = ROOT / "docs" / "design-notes" / "ship.md"
+SHIP_NOTES = REPO_ROOT / "docs" / "design-notes" / "ship.md"
 RPA_GATE = ROOT / "skills" / "rpa" / "references" / "verification-gate.md"
 EM_DASH = "\u2014"
 

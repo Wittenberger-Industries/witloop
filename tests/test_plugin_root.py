@@ -4,7 +4,8 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[1]
+ROOT = REPO_ROOT / "plugins" / "wit"
 CAPABILITIES = ROOT / "references" / "capabilities.md"
 AGENTS = ROOT / "AGENTS.md"
 VALIDATE = ROOT / "scripts" / "validate.py"

@@ -4,18 +4,12 @@
 # ...but descend into directories so nested whitelist rules can match...
 !*/
 
-# ...then re-include only the plugin's published paths.
+# ...then re-include only the marketplace repo's published paths.
 !/.claude-plugin/**
-!/.codex-plugin/**
 !/.github/**
-!/skills/**
-!/agents/**
-!/references/**
-!/hooks/**
-!/scripts/**
+!/plugins/**
 !/tests/**
 !/.wit/**
-!/AGENTS.md
 !/README.md
 !/.gitignore
 

@@ -15,7 +15,7 @@ timestamp: 2026-08-19
 - **Canonical commands:** see .wit/repo-map.md (do not duplicate here)
 
 ## Code style
-- No project formatter or linter is configured. `python scripts/validate.py` is the structure gate and must pass before ship.
+- No project formatter or linter is configured. `python plugins/wit/scripts/validate.py` is the structure gate and must pass before ship.
 - Type checking: not configured; new Python stays stdlib-typed by convention, no mypy gate.
 - Prefer small, pure functions; isolate side effects; no dead code or commented-out blocks.
 - Naming follows existing files; match the surrounding module, don't import a new style.
@@ -31,7 +31,7 @@ timestamp: 2026-08-19
 
 ## Testing  (this is enforced, not optional)
 - New behavior ships with tests. Default to TDD: write the failing test first.
-- Tests live in `tests/`, named `test_*.py`. A change isn't done until `python scripts/validate.py` and the unit suite pass.
+- Tests live in `tests/`, named `test_*.py`. A change isn't done until `python plugins/wit/scripts/validate.py` and the unit suite pass.
 - Don't weaken or delete a test to make the suite green: fix the code or change the test deliberately with a noted reason.
 
 ## Architecture & dependencies

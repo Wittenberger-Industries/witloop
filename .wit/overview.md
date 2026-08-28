@@ -11,20 +11,21 @@ timestamp: 2026-08-25
 Witloop (`wit`, formerly `wi`) is an opinionated, low-token spec-driven engineering loop shipped as a plugin. One source tree targets Claude Code, Codex CLI, Copilot CLI, Grok Build, and Cursor. You run `/wit:setup` once, then `/wit:dev` routes work type `feature | bug-fix | investigation` before write-capable setup. Investigation is read-only (cited answer, no dossier or PR). Bug-fix overlays the existing phases. Feature still brainstorms, designs, and ships to an open PR.
 
 ## Stack
-Markdown skills and agent charters, plus stdlib Python for validation, token ledgers, mermaid checks, and GitHub-issue drafts. No application runtime, no package lockfile. Version `1.16.4` in the three plugin manifests. Skills use `${PLUGIN_ROOT}` (ADR-0003).
+Markdown skills and agent charters, plus stdlib Python for validation, token ledgers, mermaid checks, and GitHub-issue drafts. No application runtime, no package lockfile. Version `1.16.5` in the plugin manifests. Skills use `${PLUGIN_ROOT}` (ADR-0003).
 
 ## How it is organized
-- `skills/` - five user-facing `setup`, `scan`, `dev`, `rpa`, `add-issues`; hidden phase skills `brainstorm`, `research`, `plan`, `build`, `ship`
-- `agents/` - `wit-researcher`, `wit-task-runner`, `wit-code-checker` charters
-- `references/` - host tool maps (`codex`, `copilot`, `grok`, `cursor`), `capabilities.md`, `workflow.md`, `keep-alive.md`, `models.md`, skill aliases
-- `scripts/validate.py` - plugin-structure gate (portability files, YAML, version parity)
+- `plugins/wit/` - standalone plugin root Copilot/Claude/Codex copy on install (`marketplace.json` `source`: `./plugins/wit`)
+- `plugins/wit/skills/` - five user-facing `setup`, `scan`, `dev`, `rpa`, `add-issues`; hidden phase skills `brainstorm`, `research`, `plan`, `build`, `ship`
+- `plugins/wit/agents/` - `wit-researcher`, `wit-task-runner`, `wit-code-checker` charters
+- `plugins/wit/references/` - host tool maps (`codex`, `copilot`, `grok`, `cursor`), `capabilities.md`, `workflow.md`, `keep-alive.md`, `models.md`, skill aliases
+- `plugins/wit/scripts/validate.py` - plugin-structure gate (portability files, YAML, version parity)
 - `docs/` - maintainer-local plans/specs/design-notes (gitignored; not published)
-- `.claude-plugin/` and `.codex-plugin/` - marketplace/plugin manifests
+- `.claude-plugin/marketplace.json` - marketplace catalog; plugin metadata is `plugins/wit/.claude-plugin/plugin.json`, `plugins/wit/plugin.json` (Copilot), and `plugins/wit/.codex-plugin/plugin.json`
 
 On-repo wit state for this source repo lives in `.wit/` (dogfood). Consumer projects get their own `.wit/` when they run setup.
 
 ## Run it
-Install via the host marketplace (see README). Develop by editing skills/references/scripts; gate with `python scripts/validate.py` and `python -m unittest discover -s tests` (or `pytest tests/`). Exact commands: `repo-map.md`.
+Install via the host marketplace (see README). Develop by editing skills/references/scripts; gate with `python plugins/wit/scripts/validate.py` and `python -m unittest discover -s tests` (or `pytest tests/`). Exact commands: `repo-map.md`.
 
 ## Data & external services
 None at runtime. Token parsers read local transcripts (Claude) or Grok session files. Shipping uses `gh` against GitHub.

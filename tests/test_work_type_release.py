@@ -11,18 +11,20 @@ import re
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[1]
+ROOT = REPO_ROOT / "plugins" / "wit"
 PLUGIN = ROOT / ".claude-plugin" / "plugin.json"
-MARKETPLACE = ROOT / ".claude-plugin" / "marketplace.json"
+COPILOT_PLUGIN = ROOT / "plugin.json"
+MARKETPLACE = REPO_ROOT / ".claude-plugin" / "marketplace.json"
 CODEX = ROOT / ".codex-plugin" / "plugin.json"
 VALIDATE = ROOT / "scripts" / "validate.py"
-OVERVIEW = ROOT / ".wit" / "overview.md"
-ARCHITECTURE = ROOT / ".wit" / "architecture.md"
-REPO_MAP = ROOT / ".wit" / "repo-map.md"
+OVERVIEW = REPO_ROOT / ".wit" / "overview.md"
+ARCHITECTURE = REPO_ROOT / ".wit" / "architecture.md"
+REPO_MAP = REPO_ROOT / ".wit" / "repo-map.md"
 AGENTS_DIR = ROOT / "agents"
 SKILLS_DIR = ROOT / "skills"
 
-RELEASE = "1.16.4"
+RELEASE = "1.16.5"
 MARKETPLACE_CATALOG = "0.2.0"
 USER_COMMANDS = ("add-issues", "dev", "rpa", "scan", "setup")
 NAMED_AGENTS = ("wit-code-checker", "wit-researcher", "wit-task-runner")
@@ -34,7 +36,13 @@ EM_DASH = "\u2014"
 
 def load(path: Path) -> str:
     if not path.is_file():
-        raise AssertionError("%s is missing" % path.relative_to(ROOT))
+        for base in (REPO_ROOT, ROOT):
+            try:
+                rel = path.relative_to(base)
+                break
+            except ValueError:
+                rel = path
+        raise AssertionError("%s is missing" % rel)
     return path.read_text(encoding="utf-8")
 
 
@@ -71,21 +79,25 @@ def wit_plugin_version(marketplace: dict) -> str | None:
 
 
 class ManifestLockstepTests(unittest.TestCase):
-    def test_three_plugin_versions_are_exactly_1_16_4(self):
+    def test_three_plugin_versions_are_exactly_1_16_5(self):
         plugin = json.loads(load(PLUGIN))
+        copilot = json.loads(load(COPILOT_PLUGIN))
         marketplace = json.loads(load(MARKETPLACE))
         codex = json.loads(load(CODEX))
         v_plugin = plugin.get("version")
+        v_copilot = copilot.get("version")
         v_codex = codex.get("version")
         v_market = wit_plugin_version(marketplace)
         self.assertEqual(v_plugin, RELEASE)
+        self.assertEqual(v_copilot, RELEASE)
         self.assertEqual(v_codex, RELEASE)
         self.assertEqual(v_market, RELEASE)
-        self.assertEqual({v_plugin, v_codex, v_market}, {RELEASE})
+        self.assertEqual({v_plugin, v_copilot, v_codex, v_market}, {RELEASE})
         self.assertEqual(marketplace.get("metadata", {}).get("version"), MARKETPLACE_CATALOG)
 
     def test_manifest_descriptions_keep_five_commands_and_five_hosts(self):
         plugin = json.loads(load(PLUGIN))
+        copilot = json.loads(load(COPILOT_PLUGIN))
         marketplace = json.loads(load(MARKETPLACE))
         wit = next(p for p in marketplace["plugins"] if p.get("name") == "wit")
         codex = json.loads(load(CODEX))
@@ -94,7 +106,7 @@ class ManifestLockstepTests(unittest.TestCase):
         self.assertIsNotNone(cap_match)
         cap = int(cap_match.group(1))
         self.assertEqual(cap, 1024)
-        for desc in (plugin["description"], wit["description"], codex["description"]):
+        for desc in (plugin["description"], copilot["description"], wit["description"], codex["description"]):
             self.assertLessEqual(len(desc), cap)
             for host in HOSTS:
                 self.assertIn(host, desc, host)
@@ -123,9 +135,10 @@ class FiveCommandTests(unittest.TestCase):
 
 
 class SourceMemoryTests(unittest.TestCase):
-    def test_overview_routes_work_types_at_1_16_4(self):
+    def test_overview_routes_work_types_at_1_16_5(self):
         text = load(OVERVIEW)
         self.assertIn(RELEASE, text)
+        self.assertNotIn("1.16.4", text)
         self.assertNotIn("1.16.3", text)
         self.assertNotIn("1.16.2", text)
         self.assertNotIn("1.16.1", text)

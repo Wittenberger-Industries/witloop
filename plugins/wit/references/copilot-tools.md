@@ -16,7 +16,7 @@ Follow `references/capabilities.md` **Plugin root**. Same order on every host. N
 unexpanded `${PLUGIN_ROOT}` into the shell.
 
 This host's cache (step 3): `~/.copilot/installed-plugins/…` after `copilot plugin install wit@witloop`.
-A whole-repo clone is the walk-up hit. Install wit **whole**; per-skill `gh skill install` breaks
+Marketplace `source` is `./plugins/wit`, so the install copy is that plugin directory (skills, agents, references, scripts) and not the git repo root. A whole-repo clone is a walk-up last resort only. Per-skill `gh skill install` still breaks
 cross-skill refs such as `ship` reading `${PLUGIN_ROOT}/skills/scan/scripts/check_mermaid.py`.
 
 ## Tools

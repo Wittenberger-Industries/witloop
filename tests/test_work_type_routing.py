@@ -5,7 +5,8 @@ import re
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[1]
+ROOT = REPO_ROOT / "plugins" / "wit"
 DEV_SKILL = ROOT / "skills" / "dev" / "SKILL.md"
 WORK_TYPES = ROOT / "skills" / "dev" / "references" / "work-types.md"
 WIT_DEV_ALIAS = ROOT / "references" / "skill-aliases" / "wit-dev" / "SKILL.md"

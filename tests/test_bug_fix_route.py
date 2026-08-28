@@ -4,7 +4,8 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[1]
+ROOT = REPO_ROOT / "plugins" / "wit"
 BUG_FIX = ROOT / "skills" / "dev" / "references" / "bug-fix.md"
 BRAINSTORM = ROOT / "skills" / "brainstorm" / "SKILL.md"
 RESEARCH = ROOT / "skills" / "research" / "SKILL.md"

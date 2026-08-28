@@ -1,6 +1,6 @@
 {
   "name": "wit",
-  "version": "1.16.4",
+  "version": "1.16.5",
   "description": "Witloop: opinionated spec-driven loop for Claude Code, Codex CLI, Copilot CLI, Grok Build, and Cursor. /wit:setup is first-run (repo docs, constitution, models, ledger; --auto writes simple plus ledger on); /wit:scan refreshes the map (--refresh; missing repo-map runs setup first); /wit:dev routes feature | bug-fix | investigation (--kind) then brainstorms, designs at one gate (--auto), and implements to a PR with keep-alive (Claude/Codex predicate /goal; Grok and Cursor model-judged /goal; Copilot relaunch); /wit:add-issues files GitHub issues; /wit:rpa builds UiPath from a PDD. Parallel worktrees, ADR log, token report. Soft-integrates superpowers and frontend-design.",
   "author": {
     "name": "Witloop"
@@ -24,5 +24,7 @@
     "sdd",
     "reframework",
     "maestro"
-  ]
+  ],
+  "skills": "skills/",
+  "agents": "agents/"
 }

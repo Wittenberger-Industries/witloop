@@ -6,7 +6,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[1]
+ROOT = REPO_ROOT / "plugins" / "wit"
 SCRIPT = ROOT / "skills" / "research" / "scripts" / "discover_skills.py"
 sys.path.insert(0, str(SCRIPT.parent))
 

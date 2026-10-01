@@ -45,6 +45,7 @@ auto-trigger from each skill `description` are enough.
 | Bash / run a command | `Shell` (Python scripts; POSIX or PowerShell, see Shell below) |
 | Grep / Glob | `Grep` / `Glob` |
 | dispatch a subagent / task-runner | `Task` (named `wit-*` when listed, else inline; see below) |
+| agent frontmatter `tools` | ignored: Cursor subagents inherit the parent's tools (only `readonly` restricts) |
 | TodoWrite | `TodoWrite` |
 | AskUserQuestion | `AskQuestion` (schema below) |
 | WebSearch | `WebSearch` |

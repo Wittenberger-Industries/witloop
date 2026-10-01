@@ -3,7 +3,7 @@ type: Agent
 name: wit-code-checker
 model: inherit            # a dispatch may pin a cheaper tier for this verification pass; inherit is the portable default
 color: purple
-tools: ["Read", "Grep", "Glob", "Bash", "Write"]
+tools: ["Read", "Grep", "Glob", "Bash", "Write", "read", "edit", "search", "execute"]
 description: |
   Verification for wit that works backward from the feature's acceptance criteria: read-only toward the project, two modes. PLAN mode (before the design gate): verify the
   spec + tasks WILL deliver the feature (coverage, wiring, scope, no silent scope-reduction). RESULT mode (at

@@ -14,7 +14,7 @@ ROOT = REPO_ROOT / "plugins" / "wit"
 CHECKER = ROOT / "agents" / "wit-code-checker.md"
 SHIP = ROOT / "skills" / "ship" / "SKILL.md"
 
-TOOLS_LINE = 'tools: ["Read", "Grep", "Glob", "Bash", "Write"]'
+TOOLS_LINE = 'tools: ["Read", "Grep", "Glob", "Bash", "Write", "read", "edit", "search", "execute"]'
 PASSED = "## CHECK PASSED"
 ISSUES = "## ISSUES FOUND"
 
@@ -128,7 +128,7 @@ class CheckerPreservedContractTests(unittest.TestCase):
         listed = re.search(r"tools:\s*\[([^\]]*)\]", fm)
         self.assertIsNotNone(listed)
         tools = [t.strip().strip('"').strip("'") for t in listed.group(1).split(",")]
-        self.assertEqual(tools, ["Read", "Grep", "Glob", "Bash", "Write"])
+        self.assertEqual(tools, ["Read", "Grep", "Glob", "Bash", "Write", "read", "edit", "search", "execute"])
 
     def test_last_line_markers_required(self):
         text = load(CHECKER)

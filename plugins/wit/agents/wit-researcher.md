@@ -3,7 +3,7 @@ type: Agent
 name: wit-researcher
 model: inherit            # a dispatch may pin a cheaper tier for cheap/parallel charters; inherit is the portable default
 color: cyan
-tools: ["Read", "Grep", "Glob", "Bash", "Write", "WebSearch", "WebFetch"]
+tools: ["Read", "Grep", "Glob", "Bash", "Write", "WebSearch", "WebFetch", "read", "edit", "search", "execute", "web"]
 description: |
   Use this agent during the research skill's autonomous phase to investigate how to implement a feature
   (surveying prior art in the repo and, where useful, libraries/docs on the web) and to return a concise

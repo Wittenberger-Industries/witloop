@@ -32,6 +32,7 @@ cross-skill refs such as `ship` reading `${PLUGIN_ROOT}/skills/scan/scripts/chec
 | WebFetch | `web_fetch` |
 | WebSearch | no equivalent; use `web_fetch` with a search URL |
 | invoke a wit skill | skills load natively: `/wit <skill>` (plugin), `/wit-setup`/`/wit-scan`/`/wit-dev`/`/wit-rpa`/`/wit-add-issues` (flat aliases), or auto-trigger by description |
+| agent frontmatter `tools` | each `agents/*.md` lists the Claude names plus the Copilot aliases (`read`, `edit`, `search`, `execute`, `web`); Copilot and VS Code ignore the names they don't know, so no per-host rewrite |
 | resolve a skill's `SKILL.md` path (dispatch pointer for pinned runners) | it is under the skill's install dir (`~/.copilot/installed-plugins/<...>/SKILL.md`, or the clone dir from `/skills add`); the orchestrator resolves it once and passes it in the `[frontend]`-style dispatch |
 
 ## /goal keep-alive

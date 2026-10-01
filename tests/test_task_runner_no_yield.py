@@ -21,7 +21,7 @@ GROK = ROOT / "references" / "grok-tools.md"
 CURSOR = ROOT / "references" / "cursor-tools.md"
 MODELS = ROOT / "references" / "models.md"
 EM_DASH = "\u2014"
-TOOLS_LINE = 'tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]'
+TOOLS_LINE = 'tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob", "read", "edit", "search", "execute"]'
 COMPLETE = "## TASK COMPLETE"
 BLOCKED = "## TASK BLOCKED"
 AUTH = "## TASK AUTH-GATE"
@@ -59,7 +59,9 @@ class RunnerPreservedContractTests(unittest.TestCase):
         listed = re.search(r"tools:\s*\[([^\]]*)\]", fm)
         self.assertIsNotNone(listed)
         tools = [t.strip().strip('"').strip("'") for t in listed.group(1).split(",")]
-        self.assertEqual(tools, ["Read", "Write", "Edit", "Bash", "Grep", "Glob"])
+        self.assertEqual(
+            tools, ["Read", "Write", "Edit", "Bash", "Grep", "Glob", "read", "edit", "search", "execute"]
+        )
 
     def test_report_cap_self_check_no_commit_no_progress(self):
         text = load(RUNNER)

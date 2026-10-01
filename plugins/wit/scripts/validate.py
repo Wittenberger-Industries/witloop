@@ -11,6 +11,8 @@ Checks (plugin root = `plugins/wit`; marketplace lives at the git repo root):
   2. Every `skills/**/SKILL.md` / `agents/*.md` / `references/skill-aliases/**/SKILL.md` has valid YAML
      frontmatter with `name` + `description`
      (this catches the col-0 `<example>` / block-scalar bug that stopped the agents loading).
+     Every agent `tools` list carries the Copilot alias for each Claude tool it names
+     (Read→read, Write/Edit→edit, Grep/Glob→search, Bash→execute, WebSearch/WebFetch→web).
      Needs PyYAML for the full parse (`pip install pyyaml`); without it, the YAML parse is skipped
      and only delimiters + key presence are checked.
   3. Every `${PLUGIN_ROOT}/<path>` reference in `.md` files resolves to a real file under the repo root.
@@ -194,6 +196,30 @@ for f in fm_files:
         for k in ("name:", "description:"):
             if k not in fm:
                 errors.append(f"{rel}: frontmatter missing '{k.rstrip(':')}'")
+
+# 2b. Agent `tools` lists work on every host: Claude Code resolves the Claude names, Copilot (CLI,
+#     cloud, VS Code) resolves the lowercase aliases, and each host ignores the names it doesn't know.
+COPILOT_ALIAS = {
+    "Read": "read",
+    "Write": "edit",
+    "Edit": "edit",
+    "Grep": "search",
+    "Glob": "search",
+    "Bash": "execute",
+    "WebSearch": "web",
+    "WebFetch": "web",
+}
+tools_rx = re.compile(r"^tools:\s*\[([^\]]*)\]", re.M)
+for f in sorted(ROOT.glob("agents/*.md")):
+    rel = f.relative_to(ROOT)
+    listed = tools_rx.search(f.read_text(encoding="utf-8").split("---", 2)[1])
+    if not listed:
+        errors.append(f"{rel}: frontmatter needs a one-line `tools: [...]` list")
+        continue
+    tools = [t.strip().strip("\"'") for t in listed.group(1).split(",") if t.strip()]
+    for claude_name, alias in COPILOT_ALIAS.items():
+        if claude_name in tools and alias not in tools:
+            errors.append(f"{rel}: tools lists '{claude_name}' but not its Copilot alias '{alias}'")
 
 # 3. ${PLUGIN_ROOT} cross-refs resolve (against repo root) -----------
 rx = re.compile(r"\$\{PLUGIN_ROOT\}/([^\s`)\]]+)")

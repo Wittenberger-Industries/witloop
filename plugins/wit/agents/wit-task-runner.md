@@ -3,7 +3,7 @@ type: Agent
 name: wit-task-runner
 model: inherit            # a dispatch may pin a cheaper tier for simple/parallel tasks; inherit is the portable default
 color: green
-tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
+tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob", "read", "edit", "search", "execute"]
 description: |
   Use this agent to implement exactly one task from a wit plan, under TDD, in the feature's
   worktree. The build phase dispatches a fresh task-runner per task so context stays clean across a long
